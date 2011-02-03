@@ -32,7 +32,7 @@ end
 
 get '/' do
 	statuses = options.db.view('status/by_status')
-	haml :index, :locals => {:statuses => statuses}
+	haml :index, :locals => {:statuses => statuses['rows']}
 end
 
 not_found do
