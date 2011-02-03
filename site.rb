@@ -25,14 +25,7 @@ get %r{/(\d{3})} do
 	if(statuses['rows'].length === 1)
 		status = statuses['rows'].first['value']
 		bodyText = status['excludeBody'] ? nil : "#{code} #{status['description']}"
-		headers = status['headers']
-		if(status['sendContentRange'])
-			if (!headers)
-				headers = Array.new()
-			end
-			headers.push(["Content-Range", "bytes 1-#{bodyText.length.to_s}/#{bodyText.length.to_s}"])
-		end
-		return code.to_i, headers, bodyText
+		return code.to_i, status['headers'], bodyText
 	else
 		return code.to_i, "#{code} Unknown Status"
 	end
