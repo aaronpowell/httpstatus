@@ -37,7 +37,7 @@
 		"excludeBody": "true" 
 	},
 	{
-		"status": "206"		
+		"status": "206",		
 		"description": "Partial Content",
 		"headers": { "Content-Range": "0-30" }
 	},
@@ -77,8 +77,8 @@
 	},
 	{
 		"status": "307",
-		"description": "Temporary Redirect"
-		header: { "Location": "http://httpstat.us" }
+		"description": "Temporary Redirect",
+		"headers": { "Location": "http://httpstat.us" }
 	},
 	{
 		"status": "400",
@@ -86,7 +86,7 @@
 	},
 	{
 		"status": "401",
-		"description": "Unauthorized"
+		"description": "Unauthorized",
 		"headers": { "WWW-Authenticate": "Basic realm=\"Fake Realm\"" }
 	},
 	{
@@ -94,7 +94,7 @@
 		"description": "Payment Required"
 	},
 	{
-		"status": "403"
+		"status": "403",
 		"description": "Forbidden" 
 	},
 	{
@@ -111,7 +111,7 @@
 	},
 	{
 		"status": "407", 
-		"description": "Proxy Authentication Required"
+		"description": "Proxy Authentication Required",
 		"headers": { "Proxy-Authenticate": "Basic realm=\"Fake Realm\"" }
 	},
 	{

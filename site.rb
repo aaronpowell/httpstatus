@@ -31,5 +31,6 @@ get %r{/(\d{3})} do
 end
 
 get '/' do
-	haml :index
+	statuses = options.db.view('status/by_status')
+	haml :index, :locals => {:statuses => statuses}
 end
