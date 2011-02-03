@@ -49,6 +49,10 @@ strong {
   list-style-position: inside;
 }
 
+code {
+  white-space: pre;
+}
+
 
 footer {
   margin: 50px 0 30px;
@@ -57,4 +61,10 @@ footer {
   font-size: 11px;
   color: #777;
   text-transform: uppercase;
+}
+
+footer a:link,
+footer a:active,
+footer a:visited {
+  color: #777;
 }
