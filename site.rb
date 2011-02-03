@@ -24,6 +24,11 @@ get %r{/(\d{3})} do
 	statuses = options.db.view('status/by_status', :key => code)
 	if(statuses['rows'].length === 1)
 		status = statuses['rows'].first['value']
+		headers = { :"Content-Type" => "text/plain", :"Content-Length" => "21" }
+		if(status['headers'])
+			customHeaders = status['headers']
+			customHeaders.each {|key, value| headers[key] = value }
+		end
 		return code.to_i, status['headers'], "#{code} #{status['description']}"
 	else
 		return 652, {'Content-Type' => 'text/plain', 'Content-Length' => '18'}, "652 Unknown Status"
