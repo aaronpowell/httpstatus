@@ -44,6 +44,12 @@ strong {
   margin: 15px 0;
 }
 
+#view a:link,
+#view a:active,
+#view a:visited {
+  color: #3a0;
+}
+
 #view ul li {
   list-style-type: circle;
   list-style-position: inside;
