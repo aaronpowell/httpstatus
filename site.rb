@@ -24,8 +24,15 @@ get %r{/(\d{3})} do
 	statuses = options.db.view('status/by_status', :key => code)
 	if(statuses['rows'].length === 1)
 		status = statuses['rows'].first['value']
-		excludeBody = status['excludeBody']
-		return code.to_i, status['headers'], excludeBody ? "#{code} #{status['description']}" : nil
+		bodyText = status['excludeBody'] ? nil : "#{code} #{status['description']}"
+		headers = status['headers']
+		if(status['sendContentRange'])
+			if (!headers)
+				headers = Array.new()
+			end
+			headers.push(["Content-Range", "0-" + bodyText.length.to_s])
+		end
+		return code.to_i, headers, bodyText
 	else
 		return code.to_i, "#{code} Unknown Status"
 	end
