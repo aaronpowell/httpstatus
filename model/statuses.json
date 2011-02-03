@@ -32,33 +32,39 @@
 		description: 'Use Proxy',
 		headers: { 'Location': 'http://httpstat.us' }
 	},
-	306: Unused
-	307: Temporary Redirect
-		Location: http://httpstat.us
-	400: Bad Request
-	401: Unauthorized
-		WWW-Authenticate: Basic realm="Fake Realm"
-	402: Payment Required
-	403: Forbidden
-	404: Not Found
-	405: Method Not Allowed
-	406: Not Acceptable
-	407: Proxy Authentication Required
-		Proxy-Authenticate: Basic realm="Fake Realm"
-	408: 'Request Timeout',
-	409: 'Conflict',
-	410: 'Gone',
-	411: 'Length Required',
-	412: 'Precondition Required',
-	413: 'Request Entity Too Large',
-	414: 'Request-URI Too Long',
-	415: 'Unsupported Media Type',
-	416: 'Requested Range Not Satisfiable',
-	417: 'Expectation Failed',
-	500: 'Internal Server Error',
-	501: 'Not Implemented',
-	502: 'Bad Gateway',
-	503: 'Service Unavailable',
-	504: 'Gateway Timeout',
-	505: 'HTTP Version Not Supported'
+	306: { description: 'Unused' },
+	307: { 
+		description: 'Temporary Redirect'
+		header: { 'Location': 'http://httpstat.us' }
+	},
+	400: { description: 'Bad Request' },
+	401: { 
+		description: 'Unauthorized'
+		headers: { 'WWW-Authenticate': 'Basic realm="Fake Realm"' }
+	},
+	402: { description: 'Payment Required' },
+	403: { description: 'Forbidden' },
+	404: { description: 'Not Found' },
+	405: { description: 'Method Not Allowed' },
+	406: { description: 'Not Acceptable' },
+	407: { 
+		description: 'Proxy Authentication Required'
+		headers: { 'Proxy-Authenticate': 'Basic realm="Fake Realm"' }
+	},
+	408: { description: 'Request Timeout' },
+	409: { description: 'Conflict' },
+	410: { desctiption: 'Gone' },
+	411: { desctiption: 'Length Required' },
+	412: { desctiption: 'Precondition Required' },
+	413: { desctiption: 'Request Entity Too Large' },
+	414: { desctiption: 'Request-URI Too Long' },
+	415: { desctiption: 'Unsupported Media Type' },
+	416: { desctiption: 'Requested Range Not Satisfiable' },
+	417: { desctiption: 'Expectation Failed' },
+	500: { desctiption: 'Internal Server Error' },
+	501: { desctiption: 'Not Implemented' },
+	502: { desctiption: 'Bad Gateway' },
+	503: { desctiption: 'Service Unavailable' },
+	504: { desctiption: 'Gateway Timeout' },
+	505: { desctiption: 'HTTP Version Not Supported' }
 }
