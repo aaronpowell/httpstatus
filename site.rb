@@ -30,7 +30,7 @@ get %r{/(\d{3})} do
 			if (!headers)
 				headers = Array.new()
 			end
-			headers.push(["Content-Range", "0-" + bodyText.length.to_s])
+			headers.push(["Content-Range", "bytes 1-#{bodyText.length.to_s}/#{bodyText.length.to_s}"])
 		end
 		return code.to_i, headers, bodyText
 	else
