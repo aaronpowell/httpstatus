@@ -24,7 +24,8 @@ get %r{/(\d{3})} do
 	statuses = options.db.view('status/by_status', :key => code)
 	if(statuses['rows'].length === 1)
 		status = statuses['rows'].first['value']
-		return code.to_i, status['headers'], "#{code} #{status['description']}"
+		excludeBody = status['excludeBody']
+		return code.to_i, status['headers'], excludeBody ? "#{code} #{status['description']}" : nil
 	else
 		return code.to_i, "#{code} Unknown Status"
 	end

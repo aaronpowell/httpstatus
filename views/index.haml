@@ -27,6 +27,9 @@
     - statuses.each do |s|
         %dt= s['value']['status']
         %dd= s['value']['description']
+        - if s['value']['excludeBody']
+            %dd.note
+                Won't return a response body
         - if s['value']['headers']
             %dd.note
                 Will also return these extra headers:
