@@ -4,7 +4,7 @@
     %a{:href => "http://httpstat.us/200"} http://httpstat.us/200
 %p We'll generally return a response like this:
 %code
-    :escaped
+    :preserve
         HTTP/1.1 {status code} {status description}
         Content-Type: text/plain
         Content-Length: {something}
@@ -14,7 +14,7 @@
         {list of any custom response headers we added}
 %p For example:
 %code
-    :escaped
+    :preserve
         HTTP/1.1 307 Temporary Redirect
         Content-Type: text/plain
         Content-Length: 52
@@ -80,7 +80,7 @@
     505 HTTP Version Not Supported
 %p If you send any other three digit number that's not in that list, we'll return it too.
 %code
-    :escaped
+    :preserve
         HTTP/1.1 652 Unknown Status
         Content-Type: text/plain
         Content-Length: 18
