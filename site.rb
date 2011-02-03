@@ -44,6 +44,10 @@ post %r{/(\d{3})} do processStatusCode() end
 put %r{/(\d{3})} do processStatusCode() end
 delete %r{/(\d{3})} do processStatusCode() end
 
+get '/im-a-teapot' do
+	redirect 'http://www.ietf.org/rfc/rfc2324.txt'
+end
+
 get '/' do
 	statuses = options.db.view('status/by_status')
 	haml :index, :locals => {:statuses => statuses['rows']}
