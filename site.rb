@@ -32,7 +32,7 @@ def processStatusCode()
 		if(status['exclude'])
 			status['exclude'].each {|key| headers[key] = nil }
 		end
-		bodyText = status['excludeBody'] ? nil : "#{code} #{status['description']}"
+		bodyText = status['excludeBody'] ? nil : "#{code} #{status['description']}\r\n#{headers}"
 		return code.to_i, headers, bodyText
 	else
 		return code.to_i, "#{code} Unknown Status"
