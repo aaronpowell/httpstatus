@@ -1,6 +1,6 @@
-:escaped
-    Unless otherwise specified, all return:
-
+%p Unless otherwise specified, all return:
+%code
+    :escaped
         HTTP/1.1 {status code} {status description}
         Content-Type: text/plain
         Content-Length: {something}
@@ -8,19 +8,18 @@
 
         {status code} {status description}
         {list of any custom response headers we added}
-
-    For example:
-
+%p For example:
+%code
+    :escaped
         HTTP/1.1 307 Temporary Redirect
         Content-Type: text/plain
-        Content-Length: 153
+        Content-Length: 52
         Location: http://httpstat.us
 
         307 Temporary Redirect
         Location: http://httpstat.us
-
-    Here are all the codes we support (and any special responses):
-
+%p Here are all the codes we support (and any special responses):
+:escaped
     100 Continue
     101 Switching Protocols
         Upgrade: HTTP/1.1
@@ -34,7 +33,7 @@
     205 Reset Content
         Doesn't return a body, Content-Type or Content-Length header
     206 Partial Content
-        Content-Range: 0-30
+        Content-Range: 0-{same value as Content-Length}
     300 Multiple Choices
     301 Moved Permanently
         Location: http://httpstat.us
@@ -75,9 +74,9 @@
     503 Service Unavailable
     504 Gateway Timeout
     505 HTTP Version Not Supported
-
-    If you send any other three digit number that's not in that list, we'll return it too.
-
+%p If you send any other three digit number that's not in that list, we'll return it too.
+%code
+    :escaped
         HTTP/1.1 652 Unknown Status
         Content-Type: text/plain
         Content-Length: 153
