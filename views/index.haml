@@ -16,7 +16,11 @@
 %dl
     - statuses.each do |s|
         %dt= s['value']['status']
-        %dd= s['value']['description']
+        - if s['value']['link']
+            %dd
+                %a{:href => s['value']['link']}= s['value']['description']
+        - else
+            %dd= s['value']['description']
         - if s['value']['excludeBody']
             %dd.note
                 Won't return a response body
