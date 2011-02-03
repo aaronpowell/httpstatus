@@ -19,7 +19,7 @@ end
 
 set :haml, :format => :html5
 
-get %r{/(\d{3})} do
+def processStatusCode()
 	code = params[:captures].first
 	statuses = options.db.view('status/by_status', :key => code)
 	if(statuses['rows'].length === 1)
@@ -30,6 +30,11 @@ get %r{/(\d{3})} do
 		return code.to_i, "#{code} Unknown Status"
 	end
 end
+
+get %r{/(\d{3})} do processStatusCode() end
+post %r{/(\d{3})} do processStatusCode() end
+put %r{/(\d{3})} do processStatusCode() end
+delete %r{/(\d{3})} do processStatusCode() end
 
 get '/' do
 	statuses = options.db.view('status/by_status')
