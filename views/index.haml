@@ -12,16 +12,6 @@
 
         {status code} {status description}
         {list of any custom response headers we added}
-%p For example:
-%code
-    :preserve
-        HTTP/1.1 307 Temporary Redirect
-        Content-Type: text/plain
-        Content-Length: 52
-        Location: http://httpstat.us
-
-        307 Temporary Redirect
-        Location: http://httpstat.us
 %p Here are all the codes we support (and any special notes):
 %dl
     - statuses.each do |s|
