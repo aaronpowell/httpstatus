@@ -38,6 +38,7 @@ def processStatusCode()
 			bodyText = "#{code} #{status['description']}#{headerText}"
 			headers["Content-Type"] = "text/plain"
 		end
+		headers["Access-Control-Allow-Origin"] = "*"
 		return code.to_i, headers, bodyText
 	else
 		return code.to_i, "#{code} Unknown Status"
