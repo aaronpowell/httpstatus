@@ -27,6 +27,10 @@
     - statuses.each do |s|
         %dt= s['value']['status']
         %dd= s['value']['description']
+        - if s['value']['headers']
+            %dd.note
+                Will also return these extra headers:
+                = s['value']['headers'].collect {|h| h[0] + ': ' + h[1]}.join(", ")
 %p If you send any other three digit number that's not in that list, we'll return it too.
 %code
     :preserve

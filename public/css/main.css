@@ -50,9 +50,26 @@ strong {
   color: #3a0;
 }
 
-#view ul li {
-  list-style-type: circle;
-  list-style-position: inside;
+#view dl {
+  width: 100%;
+  overflow: hidden;
+  margin-left: 30px;
+}
+
+#view dl dt {
+  float: left;
+  clear: left;
+}
+
+#view dl dd {
+  float: left;
+  margin-left: 10px;
+}
+
+#view dl dd.note {
+  clear: left;
+  margin-left: 0;
+  color: #999;
 }
 
 code {
