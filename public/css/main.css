@@ -51,6 +51,8 @@ strong {
 
 code {
   white-space: pre;
+  font-family: Consolas, monospace;
+  margin-left: 30px;
 }
 
 
