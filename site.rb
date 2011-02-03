@@ -1,4 +1,4 @@
-['rubygems', 'sinatra', 'haml', 'pony', 'couchrest'].each {|gem| require gem}
+['rubygems', 'sinatra', 'haml', 'couchrest'].each {|gem| require gem}
 require 'sinatra/reloader' if development?
 
 if ENV['CLOUDANT_URL']
