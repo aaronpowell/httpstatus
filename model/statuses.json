@@ -2,7 +2,7 @@
 	"100": { "description": "Continue" },
 	"101": {
 		"description": "Switching Protocols",
-		"headers": { "Upgrade": HTTP/1.1", "Connection": Upgrade" }
+		"headers": { "Upgrade": "HTTP/1.1", "Connection": "Upgrade" }
 	},
 	"200": { "description": "OK" },
 	"201": { "description": "Created" },
