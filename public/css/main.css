@@ -1,0 +1,60 @@
+/* ------------------------------ *
+ * Reset Reloaded (by Eric Meyer) *
+ * ------------------------------ */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-weight:inherit;font-style:inherit;font-size:100%;font-family:inherit;vertical-align:baseline}body{line-height:1;color:black;background:white}ol,ul{list-style:none}table{border-collapse:separate;border-spacing:0}caption,th,td{text-align:left;font-weight:normal}blockquote:before,blockquote:after,q:before,q:after{content:""}blockquote,q{quotes:""""}
+
+
+
+html {
+  margin: 20px;
+}
+
+body {
+  width: 778px;
+  margin: 0 auto;
+  padding: 15px 40px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  color: #111;
+}
+
+section, header, article, footer {
+  display: block;
+}
+
+h1, h2, h3 {
+  font-family: Georgia, Times, serif;
+}
+
+strong {
+  font-weight: bold;
+}
+
+#header {
+  margin-bottom: 30px;
+}
+
+#title {
+  font-size: 32px;
+  color: #3A0;
+}
+
+#view p {
+  margin: 15px 0;
+}
+
+#view ul li {
+  list-style-type: circle;
+  list-style-position: inside;
+}
+
+
+footer {
+  margin: 50px 0 30px;
+  padding-top: 50px;
+  border-top: 1px solid #CCC;
+  font-size: 11px;
+  color: #777;
+  text-transform: uppercase;
+}
