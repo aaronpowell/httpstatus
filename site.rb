@@ -26,7 +26,7 @@ get %r{/(\d{3})} do
 		status = statuses['rows'].first['value']
 		return code.to_i, status['headers'], "#{code} #{status['description']}"
 	else
-		return code.to_i, {'Content-Type' => 'text/plain', 'Content-Length' => '18'}, "#{code} Unknown Status"
+		return code.to_i, "#{code} Unknown Status"
 	end
 end
 
