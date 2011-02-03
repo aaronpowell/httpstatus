@@ -32,4 +32,5 @@
                 = "Will also return #{singleHeader ? "this" : "these"} extra #{singleHeader ? "header" : "headers"}:"
                 = s['value']['headers'].collect {|h| h[0] + ': ' + h[1]}.join(", ")
 %p If you send any other three digit number that's not in that list, we'll return it too.
-%p Don't have too much fun!
+%p We <em>can't</em> send 100 or 101 responses because the caching layer on the front of Heroku eats them. We hope you won't miss them too much.
+%p Enjoy!
