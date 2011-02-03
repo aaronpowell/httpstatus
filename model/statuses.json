@@ -1,0 +1,64 @@
+{
+	100: { desciption: 'Continue' },
+	101: {
+		desciption: 'Switching Protocols',
+		headers: { 'Upgrade': HTTP/1.1', 'Connection': Upgrade' }
+	},
+	200: { desciption: 'OK' },
+	201: { desciption: 'Created' },
+	202: { desciption: 'Accepted' },
+	203: { desciption: 'Non-Authoritative Information' },
+	204: { desciption: 'No Content', exclude: [ 'Content-Type', 'Content-Length'], excludeBody: true },
+	205: { description: 'Reset Content', exclude: [ 'Content-Type', 'Content-Length'], excludeBody: true },
+	206: { 
+		description: 'Partial Content',
+		headers: { 'Content-Range': '0-30' }
+	},
+	300: { description: 'Multiple Choices' },
+	301: {
+		desctiption: 'Moved Permanently',
+		headers: { 'Location': 'http://httpstat.us' }
+	},
+	302: {
+		desctiption: 'Found',
+		headers: { 'Location': 'http://httpstat.us' }
+	},
+	303: { 
+		description: 'See Other',
+		headers: { 'Location': 'http://httpstat.us' }
+	},
+	304: { description: 'Not Modified', exclude: [ 'Content-Type', 'Content-Length'], excludeBody: true },
+	305: { 
+		description: 'Use Proxy',
+		headers: { 'Location': 'http://httpstat.us' }
+	},
+	306: Unused
+	307: Temporary Redirect
+		Location: http://httpstat.us
+	400: Bad Request
+	401: Unauthorized
+		WWW-Authenticate: Basic realm="Fake Realm"
+	402: Payment Required
+	403: Forbidden
+	404: Not Found
+	405: Method Not Allowed
+	406: Not Acceptable
+	407: Proxy Authentication Required
+		Proxy-Authenticate: Basic realm="Fake Realm"
+	408: 'Request Timeout',
+	409: 'Conflict',
+	410: 'Gone',
+	411: 'Length Required',
+	412: 'Precondition Required',
+	413: 'Request Entity Too Large',
+	414: 'Request-URI Too Long',
+	415: 'Unsupported Media Type',
+	416: 'Requested Range Not Satisfiable',
+	417: 'Expectation Failed',
+	500: 'Internal Server Error',
+	501: 'Not Implemented',
+	502: 'Bad Gateway',
+	503: 'Service Unavailable',
+	504: 'Gateway Timeout',
+	505: 'HTTP Version Not Supported'
+}
