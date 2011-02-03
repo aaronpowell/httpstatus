@@ -50,6 +50,7 @@ strong {
 }
 
 code {
+  display: block;
   white-space: pre;
   font-family: Consolas, monospace;
   margin-left: 30px;
