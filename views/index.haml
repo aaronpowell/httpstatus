@@ -26,11 +26,4 @@
                 = "Will also return #{singleHeader ? "this" : "these"} extra #{singleHeader ? "header" : "headers"}:"
                 = s['value']['headers'].collect {|h| h[0] + ': ' + h[1]}.join(", ")
 %p If you send any other three digit number that's not in that list, we'll return it too.
-%code
-    :preserve
-        HTTP/1.1 652 Unknown Status
-        Content-Type: text/plain
-        Content-Length: 18
-
-        652 Unknown Status
 %p Don't have too much fun!
