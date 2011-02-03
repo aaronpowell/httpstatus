@@ -2,7 +2,7 @@
    "_id": "_design/status",
    "views": {
        "by_status": {
-           "map": "function(doc) { emit(doc.status, doc); }"
+           "map": "function(doc) { if (doc.enabled != "false") emit(doc.status, doc); }"
        }
    }
 }
