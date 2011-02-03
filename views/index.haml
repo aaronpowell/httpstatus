@@ -32,7 +32,8 @@
                 Won't return a response body
         - if s['value']['headers']
             %dd.note
-                = "Will also return #{s['value']['headers'].length == 1 ? "this" : "these"} extra headers:"
+                - singleHeader = s['value']['headers'].length == 1
+                = "Will also return #{singleHeader ? "this" : "these"} extra #{singleHeader ? "header" : "headers"}:"
                 = s['value']['headers'].collect {|h| h[0] + ': ' + h[1]}.join(", ")
 %p If you send any other three digit number that's not in that list, we'll return it too.
 %code
