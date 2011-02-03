@@ -24,15 +24,20 @@ def processStatusCode()
 	statuses = options.db.view('status/by_status', :key => code)
 	if(statuses['rows'].length === 1)
 		status = statuses['rows'].first['value']
-		headers = { "Content-Type" => "text/plain", "Content-Length" => "42" }
+
+		headers = { }
 		if(status['headers'])
 			customHeaders = status['headers']
 			customHeaders.each {|key, value| headers[key] = value }
 		end
-		if(status['exclude'])
-			status['exclude'].each {|key| headers[key] = nil }
+		if (!status['excludeBody'])
+			headerText = headers.keys.map {|k| "#{k}: #{headers[k]}"}.join("\r\n")
+			if (headerText.length > 0)
+				headerText = "\r\n\r\n#{headerText}"
+			end
+			bodyText = "#{code} #{status['description']}#{headerText}"
+			headers["Content-Type"] = "text/plain"
 		end
-		bodyText = status['excludeBody'] ? nil : "#{code} #{status['description']}\r\n#{headers}"
 		return code.to_i, headers, bodyText
 	else
 		return code.to_i, "#{code} Unknown Status"
