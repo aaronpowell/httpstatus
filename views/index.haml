@@ -1,8 +1,9 @@
 %p This is a super simple service for generating different HTTP codes.
+%p It's useful for testing how your own scripts deal with varying responses.
 %p
-    Try this:
-    %a{:href => "http://httpstat.us/200"} http://httpstat.us/200
-%p We'll generally return a response like this:
+    Just add the status code you want to the URL, like this:
+    %a{:href => "http://httpstat.us/200"} httpstat.us/200
+%p We'll return a response like this:
 %code
     :preserve
         HTTP/1.1 {status code} {status description}
@@ -12,77 +13,23 @@
 
         {status code} {status description}
         {list of any custom response headers we added}
-%p For example:
-%code
-    :preserve
-        HTTP/1.1 307 Temporary Redirect
-        Content-Type: text/plain
-        Content-Length: 52
-        Location: http://httpstat.us
-
-        307 Temporary Redirect
-        Location: http://httpstat.us
 %p Here are all the codes we support (and any special notes):
-:escaped
-    100 Continue
-    101 Switching Protocols
-        Upgrade: HTTP/1.1
-        Connection: Upgrade
-    200 OK
-    201 Created
-    202 Accepted
-    203 Non-Authoritative Information
-    204 No Content
-        Doesn't return a body, Content-Type or Content-Length header
-    205 Reset Content
-        Doesn't return a body, Content-Type or Content-Length header
-    206 Partial Content
-        Content-Range: 0-{same value as Content-Length}
-    300 Multiple Choices
-    301 Moved Permanently
-        Location: http://httpstat.us
-    302 Found
-        Location: http://httpstat.us
-    303 See Other
-        Location: http://httpstat.us
-    304 Not Modified
-        Doesn't return a body, Content-Type or Content-Length header
-    305 Use Proxy
-        Location: http://httpstat.us
-    306 Unused
-    307 Temporary Redirect
-        Location: http://httpstat.us
-    400 Bad Request
-    401 Unauthorized
-        WWW-Authenticate: Basic realm="Fake Realm"
-    402 Payment Required
-    403 Forbidden
-    404 Not Found
-    405 Method Not Allowed
-    406 Not Acceptable
-    407 Proxy Authentication Required
-        Proxy-Authenticate: Basic realm="Fake Realm"
-    408 Request Timeout
-    409 Conflict
-    410 Gone
-    411 Length Required
-    412 Precondition Required
-    413 Request Entity Too Large
-    414 Request-URI Too Long
-    415 Unsupported Media Type
-    416 Requested Range Not Satisfiable
-    417 Expectation Failed
-    500 Internal Server Error
-    501 Not Implemented
-    502 Bad Gateway
-    503 Service Unavailable
-    504 Gateway Timeout
-    505 HTTP Version Not Supported
+%dl
+    - statuses.each do |s|
+        %dt
+            %a{:href => "/#{s['value']['status']}"}= s['value']['status']
+        - if s['value']['link']
+            %dd
+                %a{:href => s['value']['link']}= s['value']['description']
+        - else
+            %dd= s['value']['description']
+        - if s['value']['excludeBody']
+            %dd.note
+                Won't return a response body
+        - if s['value']['headers']
+            %dd.note
+                - singleHeader = s['value']['headers'].length == 1
+                = "Will also return #{singleHeader ? "this" : "these"} extra #{singleHeader ? "header" : "headers"}:"
+                = s['value']['headers'].collect {|h| h[0] + ': ' + h[1]}.join(", ")
 %p If you send any other three digit number that's not in that list, we'll return it too.
-%code
-    :preserve
-        HTTP/1.1 652 Unknown Status
-        Content-Type: text/plain
-        Content-Length: 18
-
-        652 Unknown Status
+%p Don't have too much fun!

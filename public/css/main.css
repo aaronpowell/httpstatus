@@ -44,9 +44,32 @@ strong {
   margin: 15px 0;
 }
 
-#view ul li {
-  list-style-type: circle;
-  list-style-position: inside;
+#view a:link,
+#view a:active,
+#view a:visited {
+  color: #3a0;
+}
+
+#view dl {
+  width: 100%;
+  overflow: hidden;
+  margin-left: 30px;
+}
+
+#view dl dt {
+  float: left;
+  clear: left;
+}
+
+#view dl dd {
+  float: left;
+  margin-left: 10px;
+}
+
+#view dl dd.note {
+  clear: left;
+  margin-left: 0;
+  color: #999;
 }
 
 code {

@@ -19,7 +19,7 @@ end
 
 set :haml, :format => :html5
 
-get %r{/(\d{3})} do
+def processStatusCode()
 	code = params[:captures].first
 	statuses = options.db.view('status/by_status', :key => code)
 	if(statuses['rows'].length === 1)
@@ -29,15 +29,21 @@ get %r{/(\d{3})} do
 			customHeaders = status['headers']
 			customHeaders.each {|key, value| headers[key] = value }
 		end
-		return code.to_i, status['headers'], "#{code} #{status['description']}"
+		bodyText = status['excludeBody'] ? nil : "#{code} #{status['description']}"
+		return code.to_i, status['headers'], bodyText
 	else
-		return 652, {'Content-Type' => 'text/plain', 'Content-Length' => '18'}, "652 Unknown Status"
+		return code.to_i, "#{code} Unknown Status"
 	end
 end
 
+get %r{/(\d{3})} do processStatusCode() end
+post %r{/(\d{3})} do processStatusCode() end
+put %r{/(\d{3})} do processStatusCode() end
+delete %r{/(\d{3})} do processStatusCode() end
+
 get '/' do
 	statuses = options.db.view('status/by_status')
-	haml :index, :locals => {:statuses => statuses}
+	haml :index, :locals => {:statuses => statuses['rows']}
 end
 
 not_found do
