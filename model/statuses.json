@@ -1,0 +1,70 @@
+{
+	100: { desciption: 'Continue' },
+	101: {
+		desciption: 'Switching Protocols',
+		headers: { 'Upgrade': HTTP/1.1', 'Connection': Upgrade' }
+	},
+	200: { desciption: 'OK' },
+	201: { desciption: 'Created' },
+	202: { desciption: 'Accepted' },
+	203: { desciption: 'Non-Authoritative Information' },
+	204: { desciption: 'No Content', exclude: [ 'Content-Type', 'Content-Length'], excludeBody: true },
+	205: { description: 'Reset Content', exclude: [ 'Content-Type', 'Content-Length'], excludeBody: true },
+	206: { 
+		description: 'Partial Content',
+		headers: { 'Content-Range': '0-30' }
+	},
+	300: { description: 'Multiple Choices' },
+	301: {
+		desctiption: 'Moved Permanently',
+		headers: { 'Location': 'http://httpstat.us' }
+	},
+	302: {
+		desctiption: 'Found',
+		headers: { 'Location': 'http://httpstat.us' }
+	},
+	303: { 
+		description: 'See Other',
+		headers: { 'Location': 'http://httpstat.us' }
+	},
+	304: { description: 'Not Modified', exclude: [ 'Content-Type', 'Content-Length'], excludeBody: true },
+	305: { 
+		description: 'Use Proxy',
+		headers: { 'Location': 'http://httpstat.us' }
+	},
+	306: { description: 'Unused' },
+	307: { 
+		description: 'Temporary Redirect'
+		header: { 'Location': 'http://httpstat.us' }
+	},
+	400: { description: 'Bad Request' },
+	401: { 
+		description: 'Unauthorized'
+		headers: { 'WWW-Authenticate': 'Basic realm="Fake Realm"' }
+	},
+	402: { description: 'Payment Required' },
+	403: { description: 'Forbidden' },
+	404: { description: 'Not Found' },
+	405: { description: 'Method Not Allowed' },
+	406: { description: 'Not Acceptable' },
+	407: { 
+		description: 'Proxy Authentication Required'
+		headers: { 'Proxy-Authenticate': 'Basic realm="Fake Realm"' }
+	},
+	408: { description: 'Request Timeout' },
+	409: { description: 'Conflict' },
+	410: { desctiption: 'Gone' },
+	411: { desctiption: 'Length Required' },
+	412: { desctiption: 'Precondition Required' },
+	413: { desctiption: 'Request Entity Too Large' },
+	414: { desctiption: 'Request-URI Too Long' },
+	415: { desctiption: 'Unsupported Media Type' },
+	416: { desctiption: 'Requested Range Not Satisfiable' },
+	417: { desctiption: 'Expectation Failed' },
+	500: { desctiption: 'Internal Server Error' },
+	501: { desctiption: 'Not Implemented' },
+	502: { desctiption: 'Bad Gateway' },
+	503: { desctiption: 'Service Unavailable' },
+	504: { desctiption: 'Gateway Timeout' },
+	505: { desctiption: 'HTTP Version Not Supported' }
+}
