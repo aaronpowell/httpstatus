@@ -19,6 +19,10 @@ end
 
 set :haml, :format => :html5
 
+get %r{/\d{3}} do
+	"You hit a status"
+end
+
 get '/' do
 	haml :index
 end
