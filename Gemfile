@@ -6,3 +6,7 @@ gem 'couchrest', '>= 0.37'
 group :development do
   gem 'sinatra-reloader'
 end
+
+group :production do
+  gem 'newrelic_rpm'
+end
