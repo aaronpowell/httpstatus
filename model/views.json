@@ -1,0 +1,8 @@
+{
+   "_id": "_design/status",
+   "views": {
+       "by_status": {
+           "map": "function(doc) { emit(doc.status, doc); }"
+       }
+   }
+}

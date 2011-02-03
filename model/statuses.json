@@ -1,71 +1,185 @@
 {
-	"100": { "description": "Continue" },
-	"101": {
+	{ 
+		"status": "100", 
+		"description": "Continue"
+	},
+	{
+		"status": "101",
 		"description": "Switching Protocols",
 		"headers": { "Upgrade": "HTTP/1.1", "Connection": "Upgrade" }
 	},
-	"200": { "description": "OK" },
-	"201": { "description": "Created" },
-	"202": { "description": "Accepted" },
-	"203": { "description": "Non-Authoritative Information" },
-	"204": { "description": "No Content", "exclude": [ "Content-Type", "Content-Length"], "excludeBody": "true" },
-	"205": { "description": "Reset Content", "exclude": [ "Content-Type", "Content-Length"], "excludeBody": "true" },
-	"206": { 
+	{
+		"status": "200",
+		"description": "OK" 
+	},
+	{
+		"status": "201",
+		"description": "Created" 
+	},
+	{
+		"status": "202",
+		"description": "Accepted" 
+	},
+	{
+		"status": "203",
+		"description": "Non-Authoritative Information" 
+	},
+	{
+		"status": "204",
+		"description": "No Content", 
+		"exclude": [ "Content-Type", "Content-Length"], 
+		"excludeBody": "true"
+	},
+	{
+		"status": "205",
+		"description": "Reset Content", 
+		"exclude": [ "Content-Type", "Content-Length"],
+		"excludeBody": "true" 
+	},
+	{
+		"status": "206"		
 		"description": "Partial Content",
 		"headers": { "Content-Range": "0-30" }
 	},
-	"300": { "description": "Multiple Choices" },
-	"301": {
+	{
+		"status": "300",
+		"description": "Multiple Choices"
+	},
+	{
+		"status": "301",
 		"description": "Moved Permanently",
 		"headers": { "Location": "http://httpstat.us" }
 	},
-	"302": {
+	{
+		"status": "302",
 		"description": "Found",
 		"headers": { "Location": "http://httpstat.us" }
 	},
-	"303": { 
+	{
+		"status": "303",
 		"description": "See Other",
 		"headers": { "Location": "http://httpstat.us" }
 	},
-	"304": { "description": "Not Modified", "exclude": [ "Content-Type", "Content-Length"], "excludeBody": "true" },
-	"305": { 
+	{
+		"status": "304",
+		"description": "Not Modified", 
+		"exclude": [ "Content-Type", "Content-Length"], 
+		"excludeBody": "true" 
+	},
+	{
+		"status": "305",
 		"description": "Use Proxy",
 		"headers": { "Location": "http://httpstat.us" }
 	},
-	"306": { "description": "Unused" },
-	"307": { 
+	{
+		"status": "306",
+		"description": "Unused" 
+	},
+	{
+		"status": "307",
 		"description": "Temporary Redirect"
 		header: { "Location": "http://httpstat.us" }
 	},
-	"400": { "description": "Bad Request" },
-	"401": { 
+	{
+		"status": "400",
+		"description": "Bad Request" 
+	},
+	{
+		"status": "401",
 		"description": "Unauthorized"
 		"headers": { "WWW-Authenticate": "Basic realm=\"Fake Realm\"" }
 	},
-	"402": { "description": "Payment Required" },
-	"403": { "description": "Forbidden" },
-	"404": { "description": "Not Found" },
-	"405": { "description": "Method Not Allowed" },
-	"406": { "description": "Not Acceptable" },
-	"407": { 
+	{
+		"status": "402",
+		"description": "Payment Required"
+	},
+	{
+		"status": "403"
+		"description": "Forbidden" 
+	},
+	{
+		"status": "404",
+		"description": "Not Found" 
+	},
+	{
+		"status": "405",
+		"description": "Method Not Allowed" 
+	},
+	{
+		"status": "406",
+		"description": "Not Acceptable" 
+	},
+	{
+		"status": "407", 
 		"description": "Proxy Authentication Required"
 		"headers": { "Proxy-Authenticate": "Basic realm=\"Fake Realm\"" }
 	},
-	"408": { "description": "Request Timeout" },
-	"409": { "description": "Conflict" },
-	"410": { "description": "Gone" },
-	"411": { "description": "Length Required" },
-	"412": { "description": "Precondition Required" },
-	"413": { "description": "Request Entity Too Large" },
-	"414": { "description": "Request-URI Too Long" },
-	"415": { "description": "Unsupported Media Type" },
-	"416": { "description": "Requested Range Not Satisfiable" },
-	"417": { "description": "Expectation Failed" },
-	"418": { "description": "I'm a teapot" },
-	"500": { "description": "Internal Server Error" },
-	"501": { "description": "Not Implemented" },
-	"502": { "description": "Bad Gateway" },
-	"503": { "description": "Service Unavailable" },
-	"504": { "description": "Gateway Timeout" },
-	"505": { "description": "HTTP Version Not Supported" }
+	{
+		"status": "408",
+		"description": "Request Timeout" 
+	},
+	{
+		"status": "409",
+		"description": "Conflict" 
+	},
+	{
+		"status": "410",
+		"description": "Gone" 
+	},
+	{
+		"status": "411",
+		"description": "Length Required" 
+	},
+	{
+		"status": "412",
+		"description": "Precondition Required" 
+	},
+	{
+		"status": "413",
+		"description": "Request Entity Too Large" 
+	},
+	{
+		"status": "414",
+		"description": "Request-URI Too Long"
+	},
+	{
+		"status": "415",
+		"description": "Unsupported Media Type" 
+	},
+	{
+		"status": "416",
+		"description": "Requested Range Not Satisfiable" 
+	},
+	{
+		"status": "417",
+		"description": "Expectation Failed"
+	},
+	{
+		"status": "418",
+		"description": "I'm a teapot"
+	},
+	{
+		"status": "500",
+		"description": "Internal Server Error"
+	},
+	{
+		"status": "501",
+		"description": "Not Implemented" 
+	},
+	{
+		"status": "502",
+		"description": "Bad Gateway" 
+	},
+	{
+		"status": "503",
+		"description": "Service Unavailable" 
+	},
+	{
+		"status": "504",
+		"description": "Gateway Timeout" 
+	},
+	{
+		"status": "505",
+		"description": "HTTP Version Not Supported" 
+	}
 }

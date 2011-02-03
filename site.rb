@@ -19,8 +19,15 @@ end
 
 set :haml, :format => :html5
 
-get %r{/\d{3}} do
-	"You hit a status"
+get %r{/(\d{3})} do
+	code = params[:captures].first
+	statuses = options.db.view('status/by_status', :key => code)
+	if(statuses['rows'].length === 1)
+		status = statuses['rows'].first['value']
+		[code.to_i, "#{code} #{status['description']}"]
+	else
+		"Oh snap"
+	end
 end
 
 get '/' do
