@@ -13,12 +13,18 @@
 			%div#view
 				=yield
 			%footer
-				Copyright &copy; 2011 - #{Time.now.year}
+				A
+				%a{:href => "http://sinatrarb.com", :title => "Sinatra"} Sinatra
+				\+
+				%a{:href => "http://haml-lang.com", :title => "Haml"} Haml
+				\+
+				%a{:href => "https://github.com/tathamoddie/teapot"} GitHub
+				\+
+				%a{:href => "http://heroku.com"} Heroku
+				\ experiment by
 				%a{:href => "http://aaron-powell.com"} Aaron Powell
-				,
+				and
 				%a{:href => "http://tath.am"} Tatham Oddie
-				\.
-				%a{:href => "https://github.com/tathamoddie/teapot"} Fork us on GitHub
 				\.
 			
 			:javascript
