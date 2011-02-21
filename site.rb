@@ -2,29 +2,20 @@
 require 'sinatra/reloader' if development?
 require 'newrelic_rpm' if production?
 
-helpers do
-  include Rack::Utils
-
-  def h(source)
-    escape_html(source).gsub(' ', '%20')
-  end
-
-end
-
 set :haml, :format => :html5
 
 $codes = { '200' => { 'status' => '200', 'description' => 'OK'  },
            '201' => { 'status' => '201', 'description' => 'Created' },
            '202' => { 'status' => '202', 'description' => 'Accepted' },
            '203' => { 'status' => '203', 'description' => 'Non-Authoritative Information' },
-           '204' => { 'status' => '204', 'description' => 'No Content', 'exclude' => [ 'Content-Type', 'Content-Length'], 'excludeBody' => 'true' },
-           '205' => { 'status' => '205', 'description' => 'Reset Content', 'exclude' => [ 'Content-Type', 'Content-Length'], 'excludeBody' => 'true' },
+           '204' => { 'status' => '204', 'description' => 'No Content', 'exclude' => [ 'Content-Type', 'Content-Length'], 'excludeBody' => true },
+           '205' => { 'status' => '205', 'description' => 'Reset Content', 'exclude' => [ 'Content-Type', 'Content-Length'], 'excludeBody' => true },
            '206' => { 'status' => '206', 'description' => 'Partial Content', 'headers' => { 'Content-Range' => '0-30' } },
            '300' => { 'status' => '300', 'description' => 'Multiple Choices' },
            '301' => { 'status' => '301', 'description' => 'Moved Permanently', 'headers' => { 'Location' => 'http://httpstat.us' } },
            '302' => { 'status' => '302', 'description' => 'Found', 'headers' => { 'Location' => 'http://httpstat.us' } },
            '303' => { 'status' => '303', 'description' => 'See Other', 'headers' => { 'Location' => 'http://httpstat.us' } },
-           '304' => { 'status' => '304', 'description' => 'Not Modified', 'exclude' => [ 'Content-Type', 'Content-Length'], 'excludeBody' => 'true' },
+           '304' => { 'status' => '304', 'description' => 'Not Modified', 'exclude' => [ 'Content-Type', 'Content-Length'], 'excludeBody' => true },
            '305' => { 'status' => '305', 'description' => 'Use Proxy', 'headers' => { 'Location' => 'http://httpstat.us' } },
            '306' => { 'status' => '306', 'description' => 'Unused' },
            '307' => { 'status' => '307', 'description' => 'Temporary Redirect', 'headers' => { 'Location' => 'http://httpstat.us' } },
@@ -59,8 +50,8 @@ def processStatusCode()
 	status = $codes[code]
 
 	unless(status.nil?)
+        headers = status['headers'] == nil ? { } : { }.merge(status['headers'])
         if (!status['excludeBody'])
-            headers = status['headers'] == nil ? { } : { }.merge(status['headers'])
             headerText = headers.keys.map {|k| "#{k}: #{headers[k]}"}.join("\r\n")
             if (headerText.length > 0)
                 headerText = "\r\n\r\n#{headerText}"
