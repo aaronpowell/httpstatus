@@ -19,23 +19,23 @@ $codes = { '200' => { 'status' => '200', 'description' => 'OK'  },
            '203' => { 'status' => '203', 'description' => 'Non-Authoritative Information' },
            '204' => { 'status' => '204', 'description' => 'No Content', 'exclude' => [ 'Content-Type', 'Content-Length'], 'excludeBody' => 'true' },
            '205' => { 'status' => '205', 'description' => 'Reset Content', 'exclude' => [ 'Content-Type', 'Content-Length'], 'excludeBody' => 'true' },
-           '206' => { 'status' => '206',	'description' => 'Partial Content', 'headers' => { 'Content-Range' => '0-30' } },
+           '206' => { 'status' => '206', 'description' => 'Partial Content', 'headers' => { 'Content-Range' => '0-30' } },
            '300' => { 'status' => '300', 'description' => 'Multiple Choices' },
            '301' => { 'status' => '301', 'description' => 'Moved Permanently', 'headers' => { 'Location' => 'http://httpstat.us' } },
            '302' => { 'status' => '302', 'description' => 'Found', 'headers' => { 'Location' => 'http://httpstat.us' } },
            '303' => { 'status' => '303', 'description' => 'See Other', 'headers' => { 'Location' => 'http://httpstat.us' } },
-           '304' => { 'status' => '304',	'description' => 'Not Modified', 'exclude' => [ 'Content-Type', 'Content-Length'], 'excludeBody' => 'true' },
+           '304' => { 'status' => '304', 'description' => 'Not Modified', 'exclude' => [ 'Content-Type', 'Content-Length'], 'excludeBody' => 'true' },
            '305' => { 'status' => '305', 'description' => 'Use Proxy', 'headers' => { 'Location' => 'http://httpstat.us' } },
            '306' => { 'status' => '306', 'description' => 'Unused' },
            '307' => { 'status' => '307', 'description' => 'Temporary Redirect', 'headers' => { 'Location' => 'http://httpstat.us' } },
            '400' => { 'status' => '400', 'description' => 'Bad Request' },
-           '401' => { 'status' => '401', 'description' => 'Unauthorized', 'headers' => { 'WWW-Authenticate' => 'Basic realm=\"Fake Realm\"' } },
+           '401' => { 'status' => '401', 'description' => 'Unauthorized', 'headers' => { 'WWW-Authenticate' => 'Basic realm="Fake Realm"' } },
            '402' => { 'status' => '402', 'description' => 'Payment Required' },
            '403' => { 'status' => '403', 'description' => 'Forbidden' },
            '404' => { 'status' => '404', 'description' => 'Not Found' },
            '405' => { 'status' => '405', 'description' => 'Method Not Allowed' },
            '406' => { 'status' => '406', 'description' => 'Not Acceptable' },
-           '407' => { 'status' => '407', 'description' => 'Proxy Authentication Required', 'headers' => { 'Proxy-Authenticate' => 'Basic realm=\"Fake Realm\"' } },
+           '407' => { 'status' => '407', 'description' => 'Proxy Authentication Required', 'headers' => { 'Proxy-Authenticate' => 'Basic realm="Fake Realm"' } },
            '408' => { 'status' => '408', 'description' => 'Request Timeout' },
            '409' => { 'status' => '409', 'description' => 'Conflict' },
            '410' => { 'status' => '410', 'description' => 'Gone' },
@@ -59,15 +59,11 @@ def processStatusCode()
 	status = $codes[code]
 
 	unless(status.nil?)
-		headers = { }
-		if(status['headers'])
-			customHeaders = status['headers']
-			customHeaders.each {|key, value| headers[key] = value }
-		end
-		if (!status['excludeBody'])
-			headerText = headers.keys.map {|k| "#{k}: #{headers[k]}"}.join("\r\n")
-			if (headerText.length > 0)
-				headerText = "\r\n\r\n#{headerText}"
+        if (!status['excludeBody'])
+            headers = status['headers'] == nil ? { } : { }.merge(status['headers'])
+            headerText = headers.keys.map {|k| "#{k}: #{headers[k]}"}.join("\r\n")
+            if (headerText.length > 0)
+                headerText = "\r\n\r\n#{headerText}"
 			end
 			bodyText = "#{code} #{status['description']}#{headerText}"
 			headers["Content-Type"] = "text/plain"
