@@ -61,6 +61,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\StatusCode.cs" />
     <Compile Include="Models\StatusCodes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
