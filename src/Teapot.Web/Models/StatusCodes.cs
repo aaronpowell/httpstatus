@@ -25,7 +25,6 @@ namespace Teapot.Web.Models
             Add(204, new StatusCode
             {
                 Description = "No Content",
-                ExcludeHeaders = new[] { "Content-Type", "Content-Length" },
                 ExcludeBody = true
             });
         }
