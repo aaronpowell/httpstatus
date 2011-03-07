@@ -6,7 +6,7 @@ namespace Teapot.Web.Models
     public class StatusCodeResult
     {
         public string Description { get; set; }
-        public IEnumerable<string> IncludeHeaders { get; set; }
+        public Dictionary<string, string> IncludeHeaders { get; set; }
         public bool ExcludeBody { get; set; }
         public Uri Link { get; set; }
     }
