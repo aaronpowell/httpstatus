@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Teapot.Web.Models;
 
 namespace Teapot.Web.Controllers
@@ -13,14 +12,13 @@ namespace Teapot.Web.Controllers
             return View(_statusCodes);
         }
 
-        public ActionResult StatusCode(string status)
+        public ActionResult StatusCode(int statusCode)
         {
-            if (_statusCodes.ContainsKey(status))
-            {
-                return new HttpStatusCodeResult(int.Parse(status));
-            }
+            var status = _statusCodes.ContainsKey(statusCode)
+                ? _statusCodes[statusCode]
+                : new StatusCode {Description = string.Format("{0} Unknown Code", statusCode)};
 
-            throw new NotImplementedException();
+            return new HttpStatusCodeResult(statusCode, status.Description);
         }
     }
 }

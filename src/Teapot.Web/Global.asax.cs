@@ -19,10 +19,10 @@ namespace Teapot.Web
 
             routes.MapRoute(
                 "StatusCode",
-                "{status}",
+                "{statusCode}",
                 new { controller = "Status", action = "StatusCode" },
-                new { status = "\\d{3}" }
-                );
+                new { statusCode = @"\d{3}" }
+            );
 
             routes.MapRoute(
                 "Default", // Route name
