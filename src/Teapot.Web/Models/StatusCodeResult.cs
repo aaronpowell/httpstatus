@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Teapot.Web.Models
 {
-    public class StatusCode
+    public class StatusCodeResult
     {
         public string Description { get; set; }
         public IEnumerable<string> IncludeHeaders { get; set; }

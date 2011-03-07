@@ -5,7 +5,7 @@ namespace Teapot.Web.Controllers
 {
     public class StatusController : Controller
     {
-        private static readonly StatusCodes _statusCodes = new StatusCodes();
+        private static readonly StatusCodeResults _statusCodes = new StatusCodeResults();
 
         public ActionResult Index()
         {
@@ -16,7 +16,7 @@ namespace Teapot.Web.Controllers
         {
             var status = _statusCodes.ContainsKey(statusCode)
                 ? _statusCodes[statusCode]
-                : new StatusCode {Description = string.Format("{0} Unknown Code", statusCode)};
+                : new StatusCodeResult {Description = string.Format("{0} Unknown Code", statusCode)};
 
             return new HttpStatusCodeResult(statusCode, status.Description);
         }
