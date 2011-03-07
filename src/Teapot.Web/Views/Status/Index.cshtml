@@ -1,8 +1,10 @@
-﻿<p>This is a super simple service for generating different HTTP codes.</p>
+﻿@model Teapot.Web.Models.StatusCodeResults
+
+<p>This is a super simple service for generating different HTTP codes.</p>
 <p>It's useful for testing how your own scripts deal with varying responses.</p>
 <p>
     Just add the status code you want to the URL, like this:
-    <a href='http://httpstat.us/200'>httpstat.us/200</a>
+    @Html.RouteLink("httpstat.us/200", "StatusCode", new {statusCode = 200})
 </p>
 <p>We'll return a response like this:</p>
 <code>HTTP/1.1 {status code} {status description}
@@ -14,11 +16,9 @@ Content-Length: {something}
 {list of any custom response headers we added}</code>
 <p>Here are all the codes we support (and any special notes):</p>
 <dl>
-    @foreach (var item in @Model)
+    @foreach (var item in Model)
     {
-        <dt>
-            <a href="/@item.Key">@item.Key</a>
-        </dt>
+        <dt>@Html.RouteLink(item.Key.ToString(), "StatusCode", new {statusCode = item.Key})</dt>
         <dd>@item.Value.Description</dd>
     }
 </dl>
