@@ -18,6 +18,13 @@ namespace Teapot.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                "I'm a teapot",
+                "im-a-teapot",
+                new {controller = "Teapot", action = "Teapot"}
+                );
+
+
+            routes.MapRoute(
                 "StatusCode",
                 "{statusCode}",
                 new { controller = "Status", action = "StatusCode" },
@@ -29,7 +36,6 @@ namespace Teapot.Web
                 "{controller}/{action}", // URL with parameters
                 new { controller = "Status", action = "Index" } // Parameter defaults
             );
-
         }
 
         protected void Application_Start()

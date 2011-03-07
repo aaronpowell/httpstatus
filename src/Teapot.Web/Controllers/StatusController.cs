@@ -1,22 +1,21 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Teapot.Web.Models;
 
 namespace Teapot.Web.Controllers
 {
     public class StatusController : Controller
     {
-        static readonly StatusCodeResults statusCodes = new StatusCodeResults();
+        static readonly StatusCodeResults StatusCodes = new StatusCodeResults();
 
         public ActionResult Index()
         {
-            return View(statusCodes);
+            return View(StatusCodes);
         }
 
         public ActionResult StatusCode(int statusCode)
         {
-            var statusData = statusCodes.ContainsKey(statusCode)
-                ? statusCodes[statusCode]
+            var statusData = StatusCodes.ContainsKey(statusCode)
+                ? StatusCodes[statusCode]
                 : new StatusCodeResult {Description = string.Format("{0} Unknown Code", statusCode)};
 
             return new CustomHttpStatusCodeResult(statusCode, statusData);
