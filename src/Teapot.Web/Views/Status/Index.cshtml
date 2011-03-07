@@ -6,12 +6,12 @@
 </p>
 <p>We'll return a response like this:</p>
 <code>HTTP/1.1 {status code} {status description}
-    Content-Type: text/plain
-    Content-Length: {something}
-    {any custom response headers}
-    
-    {status code} {status description}
-    {list of any custom response headers we added}</code>
+Content-Type: text/plain
+Content-Length: {something}
+{any custom response headers}
+
+{status code} {status description}
+{list of any custom response headers we added}</code>
 <p>Here are all the codes we support (and any special notes):</p>
 <dl>
     @foreach (var item in @Model)
@@ -23,5 +23,4 @@
     }
 </dl>
 <p>If you send any other three digit number that's not in that list, we'll return it too.</p>
-<p>We <em>can't</em> send 100 or 101 responses because the caching layer on the front of Heroku eats them. We hope you won't miss them too much.</p>
 <p>Enjoy!</p>
