@@ -19,7 +19,15 @@ Content-Length: {something}
     @foreach (var item in Model)
     {
         <dt>@Html.RouteLink(item.Key.ToString(), "StatusCode", new {statusCode = item.Key})</dt>
-        <dd>@item.Value.Description</dd>
+        <dd>
+        @if(item.Value.Link != null)
+        {
+            <a href="@item.Value.Link" target="_blank" title="@item.Value.Description">@item.Value.Description</a>
+        }else
+        {
+            @item.Value.Description
+        }
+        </dd>
     }
 </dl>
 <p>If you send any other three digit number that's not in that list, we'll return it too.</p>
