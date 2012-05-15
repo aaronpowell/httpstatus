@@ -174,7 +174,7 @@ namespace Teapot.Web.Models
                          });
             Add(418, new StatusCodeResult
                          {
-                             Description = "I'm a Teapot",
+                             Description = "I'm a teapot",
                              Link = new Uri("http://www.ietf.org/rfc/rfc2324.txt")
                          });
             Add(500, new StatusCodeResult
