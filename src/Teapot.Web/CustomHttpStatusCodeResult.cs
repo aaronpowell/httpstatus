@@ -35,8 +35,6 @@ namespace Teapot.Web
                 foreach (var header in _statusData.IncludeHeaders)
                     context.HttpContext.Response.Headers.Add(header.Key, header.Value);
 
-            
-
             base.ExecuteResult(context);
         }
     }

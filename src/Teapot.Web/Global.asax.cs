@@ -21,8 +21,7 @@ namespace Teapot.Web
                 "I'm a teapot",
                 "im-a-teapot",
                 new {controller = "Teapot", action = "Teapot"}
-                );
-
+            );
 
             routes.MapRoute(
                 "StatusCode",
