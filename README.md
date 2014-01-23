@@ -1,3 +1,1 @@
-This is the code for [httpstatus]. More doco over there.
-
-[httpstatus]: http://httpstat.us
+This is the code for [httpstat.us](http://httpstat.us). More doco over there.
