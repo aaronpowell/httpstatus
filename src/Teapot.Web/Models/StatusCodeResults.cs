@@ -161,7 +161,7 @@ namespace Teapot.Web.Models
             });
             Add(415, new StatusCodeResult
             {
-                Description = "Unsuppored Media Type"
+                Description = "Unsupported Media Type"
             });
             Add(416, new StatusCodeResult
             {
