@@ -77,7 +77,10 @@ namespace Teapot.Web.Models
             Add(305, new StatusCodeResult
             {
                 Description = "Use Proxy",
-                ExcludeBody = true
+                IncludeHeaders = new Dictionary<string, string>
+                {
+                    {"Location", "http://httpstat.us"}
+                }
             });
             Add(306, new StatusCodeResult
             {
