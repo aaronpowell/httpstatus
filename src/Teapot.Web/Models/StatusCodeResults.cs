@@ -50,7 +50,7 @@ namespace Teapot.Web.Models
                 Description = "Moved Permanently",
                 IncludeHeaders = new Dictionary<string, string>
                 {
-                    {"Locaation", "http://httpstat.us"}
+                    {"Location", "http://httpstat.us"}
                 }
             });
             Add(302, new StatusCodeResult
@@ -58,7 +58,7 @@ namespace Teapot.Web.Models
                 Description = "Found",
                 IncludeHeaders = new Dictionary<string, string>
                 {
-                    {"Locaation", "http://httpstat.us"}
+                    {"Location", "http://httpstat.us"}
                 }
             });
             Add(303, new StatusCodeResult
@@ -88,7 +88,7 @@ namespace Teapot.Web.Models
                 Description = "Temporary Redirect",
                 IncludeHeaders = new Dictionary<string, string>
                 {
-                    {"Location", "httpstatus.us"}
+                    {"Location", "http://httpstat.us"}
                 }
             });
             Add(400, new StatusCodeResult
