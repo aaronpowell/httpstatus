@@ -94,6 +94,14 @@ namespace Teapot.Web.Models
                     {"Location", "http://httpstat.us"}
                 }
             });
+            Add(308, new StatusCodeResult
+            {
+                Description = "Permanent Redirect",
+                IncludeHeaders = new Dictionary<string, string>
+                {
+                    {"Location", "http://httpstat.us"}
+                }
+            });            
             Add(400, new StatusCodeResult
             {
                 Description = "Bad Request"
