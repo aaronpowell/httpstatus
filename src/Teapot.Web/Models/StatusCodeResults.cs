@@ -187,6 +187,18 @@ namespace Teapot.Web.Models
                 Description = "I'm a teapot",
                 Link = new Uri("http://www.ietf.org/rfc/rfc2324.txt")
             });
+            Add(428, new StatusCodeResult
+            {
+                Description = "Precondition Required"
+            });
+            Add(429, new StatusCodeResult
+            {
+                Description = "Too Many Requests"
+            });
+            Add(431, new StatusCodeResult
+            {
+                Description = "Request Header Fields Too Large"
+            });
             Add(500, new StatusCodeResult
             {
                 Description = "Internal Server Error"
@@ -210,6 +222,10 @@ namespace Teapot.Web.Models
             Add(505, new StatusCodeResult
             {
                 Description = "HTTP Version Not Supported"
+            });
+            Add(511, new StatusCodeResult
+            {
+                Description = "Network Authentication Required"
             });
         }
     }
