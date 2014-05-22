@@ -193,7 +193,11 @@ namespace Teapot.Web.Models
             });
             Add(429, new StatusCodeResult
             {
-                Description = "Too Many Requests"
+                Description = "Too Many Requests",
+                IncludeHeaders = new Dictionary<string, string>
+                {
+                    {"Retry-After", "3600"}
+                }
             });
             Add(431, new StatusCodeResult
             {
