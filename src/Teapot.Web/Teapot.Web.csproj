@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Images\teapot.jpg" />
+    <Content Include="crossdomain.xml" />
     <Content Include="Global.asax" />
     <Content Include="Content\main.css" />
     <Content Include="Web.config" />
