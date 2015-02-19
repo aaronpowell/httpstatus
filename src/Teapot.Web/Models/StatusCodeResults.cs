@@ -187,6 +187,10 @@ namespace Teapot.Web.Models
                 Description = "I'm a teapot",
                 Link = new Uri("http://www.ietf.org/rfc/rfc2324.txt")
             });
+            Add(422, new StatusCodeResult
+            {
+                Description = "Unprocessable Entity"
+            });
             Add(428, new StatusCodeResult
             {
                 Description = "Precondition Required"
