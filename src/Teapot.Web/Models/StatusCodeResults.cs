@@ -235,6 +235,18 @@ namespace Teapot.Web.Models
             {
                 Description = "Network Authentication Required"
             });
+            Add(520, new StatusCodeResult
+            {
+                Description = "Web server is returning an unknown error"
+            });
+            Add(522, new StatusCodeResult
+            {
+                Description = "Connection timed out"
+            });
+            Add(524, new StatusCodeResult
+            {
+                Description = "A timeout occurred"
+            });
         }
     }
 }
