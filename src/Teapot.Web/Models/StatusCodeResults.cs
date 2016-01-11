@@ -207,6 +207,10 @@ namespace Teapot.Web.Models
             {
                 Description = "Request Header Fields Too Large"
             });
+            Add(451, new StatusCodeResult
+            {
+                Description = "Unavailable For Legal Reasons"
+            });
             Add(500, new StatusCodeResult
             {
                 Description = "Internal Server Error"
