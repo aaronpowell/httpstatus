@@ -13,7 +13,7 @@ namespace Teapot.Web.Models
             });
             Add(101, new StatusCodeResult
             {
-                Description = "Switching protocols",
+                Description = "Switching Protocols",
             });
             Add(102, new StatusCodeResult
             {
