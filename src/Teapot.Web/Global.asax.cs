@@ -43,13 +43,6 @@ namespace Teapot.Web
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-
-            this.BeginRequest += MvcApplication_BeginRequest;
-        }
-
-        private void MvcApplication_BeginRequest(object sender, System.EventArgs e)
-        {
-            Response.AppendHeader("Access-Control-Allow-Origin", "*");
         }
     }
 }
