@@ -36,16 +36,6 @@ namespace Teapot.Web
                 new { controller = "Status", action = "Index" } // Parameter defaults
             );
         }
-        
-        protected void Application_BeginRequest(object sender, EventArgs e)
-        {
-            HttpApplication application = (HttpApplication)sender;
-            HttpContext context = application.Context;
-            
-            context.Response.setHeader("Access-Control-Allow-Origin", "*");
-            // Complete.
-            base.CompleteRequest();
-        }
 
         protected void Application_Start()
         {
