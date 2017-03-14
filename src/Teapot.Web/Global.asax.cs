@@ -31,6 +31,13 @@ namespace Teapot.Web
             );
 
             routes.MapRoute(
+                "Cors",
+                "{statusCode}/cors",
+                new { controller = "Status", action = "Cors" },
+                new { statusCode = @"\d{3}" }
+            );
+
+            routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}", // URL with parameters
                 new { controller = "Status", action = "Index" } // Parameter defaults
