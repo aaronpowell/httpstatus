@@ -1,9 +1,11 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web;
+using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace Teapot.Web
 {
-    // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
+    // Note: For instructions on enabling IIS6 or IIS7 classic mode,
     // visit http://go.microsoft.com/?LinkId=9394801
 
     public class MvcApplication : System.Web.HttpApplication
@@ -36,13 +38,13 @@ namespace Teapot.Web
                 new { controller = "Status", action = "Index" } // Parameter defaults
             );
         }
-        
+
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
             HttpApplication application = (HttpApplication)sender;
             HttpContext context = application.Context;
-            
-            context.Response.setHeader("Access-Control-Allow-Origin", "*");
+
+            context.Response.AddHeader("Access-Control-Allow-Origin", "*");
             // Complete.
             base.CompleteRequest();
         }
