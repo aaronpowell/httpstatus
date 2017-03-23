@@ -39,16 +39,6 @@ namespace Teapot.Web
             );
         }
 
-        protected void Application_BeginRequest(object sender, EventArgs e)
-        {
-            HttpApplication application = (HttpApplication)sender;
-            HttpContext context = application.Context;
-
-            context.Response.AddHeader("Access-Control-Allow-Origin", "*");
-            // Complete.
-            base.CompleteRequest();
-        }
-
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
