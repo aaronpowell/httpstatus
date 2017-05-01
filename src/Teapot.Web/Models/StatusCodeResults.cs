@@ -7,6 +7,18 @@ namespace Teapot.Web.Models
     {
         public StatusCodeResults()
         {
+            Add(100, new StatusCodeResult
+            {
+                Description = "Continue",
+            });
+            Add(101, new StatusCodeResult
+            {
+                Description = "Switching Protocols",
+            });
+            Add(102, new StatusCodeResult
+            {
+                Description = "Processing",
+            });
             Add(200, new StatusCodeResult
             {
                 Description = "OK",
