@@ -1,24 +1,36 @@
-﻿using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Teapot.Web.Models;
+using Teapot.Web.WebModels;
 
 namespace Teapot.Web.Controllers
 {
     public class StatusController : Controller
     {
-        static readonly StatusCodeResults StatusCodes = new StatusCodeResults();
+        //TODO: remove this hard coded value.
+        private static CustomStatusCodeResults customResults = new CustomStatusCodeResults("http://localhost:58447");
 
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            return View(StatusCodes);
+            return View(customResults);
         }
 
-        public ActionResult StatusCode(int statusCode)
+        public IActionResult Status(int statuscode)
         {
-            var statusData = StatusCodes.ContainsKey(statusCode)
-                ? StatusCodes[statusCode]
-                : new StatusCodeResult {Description = string.Format("{0} Unknown Code", statusCode)};
-
-            return new CustomHttpStatusCodeResult(statusCode, statusData);
+            CustomHttpStatusObjectResult obj;
+            if (customResults[statuscode] != null)
+                obj = new CustomHttpStatusObjectResult(customResults[statuscode]);
+            else
+            {
+                obj = new CustomHttpStatusObjectResult(new CustomStatusCodeResult
+                {
+                    StatusCode = 400,
+                    Description = statuscode.ToString() + " Bad Request"
+                });
+            }
+            return obj;
         }
     }
 }
+ 
+ 
+ 
