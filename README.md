@@ -20,6 +20,11 @@ https://tools.ietf.org/html/rfc7236
 
 https://tools.ietf.org/html/rfc7237
 
+https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+
+https://www.w3.org/Protocols/HTTP/HTRESP.html
+
+
 Additional Codes were also detected from this URL:
 https://httpstatuses.com/
 
