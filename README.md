@@ -19,3 +19,10 @@ https://tools.ietf.org/html/rfc7235
 https://tools.ietf.org/html/rfc7236
 
 https://tools.ietf.org/html/rfc7237
+
+Additional Codes were also detected from this URL:
+https://httpstatuses.com/
+
+Original Code from: https://github.com/Readify/httpstatus
+
+Fork Updated by https://github.com/JayDevOps/httpstatus/ using .net core
