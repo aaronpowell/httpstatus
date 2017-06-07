@@ -98,6 +98,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CorsAllowAnyOriginAttribute.cs" />
     <Compile Include="Controllers\TeapotController.cs" />
     <Compile Include="CustomHttpStatusCodeResult.cs" />
     <Compile Include="Controllers\StatusController.cs" />
