@@ -22,14 +22,9 @@ namespace Teapot.Web.Controllers
         {
             var statusData = StatusCodes.ContainsKey(statusCode)
                 ? StatusCodes[statusCode]
-                : new StatusCodeResult {Description = string.Format("{0} Unknown Code", statusCode) };
+                : new StatusCodeResult { Description = string.Format("{0} Unknown Code", statusCode) };
 
-            int sleepData = SanitizeSleepParameter(sleep, SLEEP_MIN, SLEEP_MAX);
-
-            if (sleepData > 0)
-            {
-                System.Threading.Thread.Sleep(sleepData);
-            }
+            DoSleep(sleep);
 
             return new CustomHttpStatusCodeResult(statusCode, statusData);
         }
@@ -54,14 +49,19 @@ namespace Teapot.Web.Controllers
 
             var statusData = new StatusCodeResult { IncludeHeaders = responseHeaders };
 
+            DoSleep(sleep);
+
+            return new CustomHttpStatusCodeResult((int)HttpStatusCode.OK, statusData);
+        }
+
+        private static void DoSleep(int? sleep)
+        {
             int sleepData = SanitizeSleepParameter(sleep, SLEEP_MIN, SLEEP_MAX);
 
             if (sleepData > 0)
             {
                 System.Threading.Thread.Sleep(sleepData);
             }
-
-            return new CustomHttpStatusCodeResult((int)HttpStatusCode.OK, statusData);
         }
 
         /// <summary>
