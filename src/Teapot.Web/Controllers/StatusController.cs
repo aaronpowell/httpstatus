@@ -10,15 +10,15 @@ namespace Teapot.Web.Controllers
     {
         static readonly StatusCodeResults StatusCodes = new StatusCodeResults();
 
-        private static readonly int SLEEP_MIN = 0;
-        private static readonly int SLEEP_MAX = 300000; // 5 mins in milliseconds
+        private const int SLEEP_MIN = 0;
+        private const int SLEEP_MAX = 300000; // 5 mins in milliseconds
 
         public ActionResult Index()
         {
             return View(StatusCodes);
         }
 
-        public ActionResult StatusCode(int statusCode, int? sleep = 0)
+        public ActionResult StatusCode(int statusCode, int? sleep = SLEEP_MIN)
         {
             var statusData = StatusCodes.ContainsKey(statusCode)
                 ? StatusCodes[statusCode]
@@ -29,7 +29,7 @@ namespace Teapot.Web.Controllers
             return new CustomHttpStatusCodeResult(statusCode, statusData);
         }
 
-        public ActionResult Cors(int statusCode, int? sleep=0)
+        public ActionResult Cors(int statusCode, int? sleep = SLEEP_MIN)
         {
             if (Request.HttpMethod != "OPTIONS")
             {
@@ -64,11 +64,6 @@ namespace Teapot.Web.Controllers
             }
         }
 
-        /// <summary>
-        /// Limits the sleep parameter 
-        /// </summary>
-        /// <param name="sleep"></param>
-        /// <returns></returns>
         private static int SanitizeSleepParameter(int? sleep, int min, int max)
         {
             var sleepData = sleep ?? 0;
