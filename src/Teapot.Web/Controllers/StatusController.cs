@@ -15,20 +15,22 @@ namespace Teapot.Web.Controllers
             return View(StatusCodes);
         }
 
-        public ActionResult StatusCode(int statusCode)
+        public ActionResult StatusCode(int statusCode, int? sleep = 0)
         {
             var statusData = StatusCodes.ContainsKey(statusCode)
                 ? StatusCodes[statusCode]
                 : new StatusCodeResult {Description = string.Format("{0} Unknown Code", statusCode)};
 
+            System.Threading.Thread.Sleep(sleep.Value);
+
             return new CustomHttpStatusCodeResult(statusCode, statusData);
         }
 
-        public ActionResult Cors(int statusCode)
+        public ActionResult Cors(int statusCode, int? sleep=0)
         {
             if (Request.HttpMethod != "OPTIONS")
             {
-                return StatusCode(statusCode);
+                return StatusCode(statusCode, sleep);
             }
 
             var allowedOrigin = Request.Headers.Get("Origin") ?? "*";
