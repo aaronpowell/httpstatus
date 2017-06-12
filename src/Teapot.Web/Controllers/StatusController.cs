@@ -22,7 +22,7 @@ namespace Teapot.Web.Controllers
         {
             var statusData = StatusCodes.ContainsKey(statusCode)
                 ? StatusCodes[statusCode]
-                : new StatusCodeResult { Description = string.Format("{0} Unknown Code", statusCode) };
+                : new StatusCodeResult {Description = string.Format("{0} Unknown Code", statusCode) };
 
             int sleepData = SanitizeSleepParameter(sleep, SLEEP_MIN, SLEEP_MAX);
 
@@ -32,30 +32,6 @@ namespace Teapot.Web.Controllers
             }
 
             return new CustomHttpStatusCodeResult(statusCode, statusData);
-        }
-
-        /// <summary>
-        /// Limits the sleep parameter 
-        /// </summary>
-        /// <param name="sleep"></param>
-        /// <returns></returns>
-        private static int SanitizeSleepParameter(int? sleep, int min, int max)
-        {
-            var sleepData = sleep ?? 0;
-
-            // range check - minimum should be 0
-            if (sleepData < min)
-            {
-                sleepData = min;
-            }
-
-            // range check- maximum should be 300000 (5 mins)
-            if (sleepData > max)
-            {
-                sleepData = max;
-            }
-
-            return sleepData;
         }
 
         public ActionResult Cors(int statusCode, int? sleep=0)
@@ -86,6 +62,30 @@ namespace Teapot.Web.Controllers
             }
 
             return new CustomHttpStatusCodeResult((int)HttpStatusCode.OK, statusData);
+        }
+
+        /// <summary>
+        /// Limits the sleep parameter 
+        /// </summary>
+        /// <param name="sleep"></param>
+        /// <returns></returns>
+        private static int SanitizeSleepParameter(int? sleep, int min, int max)
+        {
+            var sleepData = sleep ?? 0;
+
+            // range check - minimum should be 0
+            if (sleepData < min)
+            {
+                sleepData = min;
+            }
+
+            // range check- maximum should be 300000 (5 mins)
+            if (sleepData > max)
+            {
+                sleepData = max;
+            }
+
+            return sleepData;
         }
     }
 }
