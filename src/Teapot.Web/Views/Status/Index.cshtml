@@ -1,4 +1,4 @@
-﻿@model Teapot.Web.Models.StatusCodeResults
+@model Teapot.Web.Models.StatusCodeResults
 
 <p>This is a super simple service for generating different HTTP codes.</p>
 <p>It's useful for testing how your own scripts deal with varying responses.</p>
@@ -14,6 +14,12 @@ Content-Length: {something}
 
 {status code} {status description}
 {list of any custom response headers we added}</code>
+
+<p>
+    If you want a delay on the response add a query string of sleep (the time in ms, max 5 minutes), like this:
+    @Html.RouteLink("httpstat.us/200?sleep=5000", "StatusCode", new {statusCode = 200, sleep = 5000})
+</p>
+
 <p>Here are all the codes we support (and any special notes):</p>
 <dl>
     @foreach (var item in Model)
