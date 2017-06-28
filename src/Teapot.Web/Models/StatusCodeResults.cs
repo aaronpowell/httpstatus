@@ -160,7 +160,7 @@ namespace Teapot.Web.Models
             });
             Add(412, new StatusCodeResult
             {
-                Description = "Precondition Required"
+                Description = "Precondition Failed"
             });
             Add(413, new StatusCodeResult
             {
