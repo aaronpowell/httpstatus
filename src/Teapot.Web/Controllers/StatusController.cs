@@ -18,11 +18,11 @@ namespace Teapot.Web.Controllers
             return View(StatusCodes);
         }
 
-        public ActionResult StatusCode(int statusCode, int? sleep = SLEEP_MIN)
+        public ActionResult StatusCode(int statusCode, string message = null, int? sleep = SLEEP_MIN)
         {
             var statusData = StatusCodes.ContainsKey(statusCode)
                 ? StatusCodes[statusCode]
-                : new StatusCodeResult { Description = string.Format("{0} Unknown Code", statusCode) };
+                : new StatusCodeResult { Description = $"{statusCode} {message ?? "Unknown Code" }" };
 
             DoSleep(sleep);
 
@@ -33,7 +33,7 @@ namespace Teapot.Web.Controllers
         {
             if (Request.HttpMethod != "OPTIONS")
             {
-                return StatusCode(statusCode, sleep);
+                return StatusCode(statusCode, null, sleep);
             }
 
             var allowedOrigin = Request.Headers.Get("Origin") ?? "*";
