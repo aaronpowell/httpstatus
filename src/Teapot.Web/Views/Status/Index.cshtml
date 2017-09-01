@@ -8,12 +8,16 @@
 </p>
 <p>We'll return a response like this:</p>
 <code>HTTP/1.1 {status code} {status description}
-Content-Type: text/plain
+Content-Type: text/plain or application/json
 Content-Length: {something}
 {any custom response headers}
 
 {status code} {status description}
 {list of any custom response headers we added}</code>
+
+<p>
+    To get a JSON response back, you need to ensure that the Accept header contains 'application/json'. Then we'll JSON encode the response and sent the Content-Type header accordingly.
+</p>
 
 <p>
     If you want a delay on the response add a query string of sleep (the time in ms, max 5 minutes), like this:

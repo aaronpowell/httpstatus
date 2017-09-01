@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
 using Teapot.Web.Models;
 
 namespace Teapot.Web
@@ -26,9 +27,17 @@ namespace Teapot.Web
             }
             else
             {
-                //Set the body to be the status code and description with a blain content type response
-                context.HttpContext.Response.Write(StatusCode + " " + StatusDescription);
-                context.HttpContext.Response.ContentType = "text/plain";
+                if (context.HttpContext.Request.AcceptTypes.Contains("application/json"))
+                {
+                    //Set the body to be the status code and description with a plain content type response
+                    context.HttpContext.Response.Write("\"" + StatusCode + " " + StatusDescription + "\"");
+                    context.HttpContext.Response.ContentType = "application/json";
+                } else
+                {
+                    //Set the body to be the status code and description with a plain content type response
+                    context.HttpContext.Response.Write(StatusCode + " " + StatusDescription);
+                    context.HttpContext.Response.ContentType = "text/plain";
+                }
             }
 
             if (_statusData.IncludeHeaders != null)
