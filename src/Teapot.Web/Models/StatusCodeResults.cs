@@ -65,7 +65,7 @@ namespace Teapot.Web.Models
                 Description = "Moved Permanently",
                 IncludeHeaders = new Dictionary<string, string>
                 {
-                    {"Location", "http://httpstat.us"}
+                    {"Location", "https://httpstat.us"}
                 }
             });
             Add(302, new StatusCodeResult
@@ -73,7 +73,7 @@ namespace Teapot.Web.Models
                 Description = "Found",
                 IncludeHeaders = new Dictionary<string, string>
                 {
-                    {"Location", "http://httpstat.us"}
+                    {"Location", "https://httpstat.us"}
                 }
             });
             Add(303, new StatusCodeResult
@@ -81,7 +81,7 @@ namespace Teapot.Web.Models
                 Description = "See Other",
                 IncludeHeaders = new Dictionary<string, string>
                 {
-                    {"Location", "http://httpstat.us"}
+                    {"Location", "https://httpstat.us"}
                 }
             });
             Add(304, new StatusCodeResult
@@ -94,7 +94,7 @@ namespace Teapot.Web.Models
                 Description = "Use Proxy",
                 IncludeHeaders = new Dictionary<string, string>
                 {
-                    {"Location", "http://httpstat.us"}
+                    {"Location", "https://httpstat.us"}
                 }
             });
             Add(306, new StatusCodeResult
@@ -106,7 +106,7 @@ namespace Teapot.Web.Models
                 Description = "Temporary Redirect",
                 IncludeHeaders = new Dictionary<string, string>
                 {
-                    {"Location", "http://httpstat.us"}
+                    {"Location", "https://httpstat.us"}
                 }
             });
             Add(308, new StatusCodeResult
@@ -114,9 +114,9 @@ namespace Teapot.Web.Models
                 Description = "Permanent Redirect",
                 IncludeHeaders = new Dictionary<string, string>
                 {
-                    {"Location", "http://httpstat.us"}
+                    {"Location", "https://httpstat.us"}
                 }
-            });            
+            });
             Add(400, new StatusCodeResult
             {
                 Description = "Bad Request"
@@ -200,7 +200,7 @@ namespace Teapot.Web.Models
             Add(418, new StatusCodeResult
             {
                 Description = "I'm a teapot",
-                Link = new Uri("http://www.ietf.org/rfc/rfc2324.txt")
+                Link = new Uri("https://www.ietf.org/rfc/rfc2324.txt")
             });
             Add(422, new StatusCodeResult
             {
