@@ -6,7 +6,7 @@ namespace Teapot.Web.Controllers
     {
         public ActionResult Teapot()
         {
-            return Redirect("http://www.ietf.org/rfc/rfc2324.txt");
+            return Redirect("https://www.ietf.org/rfc/rfc2324.txt");
         }
 
         public ActionResult Index()
