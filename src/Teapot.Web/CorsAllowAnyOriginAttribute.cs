@@ -10,6 +10,14 @@ namespace Teapot.Web
             {
                 filterContext.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
             }
+
+            if (filterContext.HttpContext.Request.Headers["Access-Control-Request-Headers"] != null)
+            {
+                filterContext.HttpContext.Response.Headers.Add(
+                    "Access-Control-Allow-Headers",
+                    filterContext.HttpContext.Request.Headers["Access-Control-Request-Headers"]
+                );
+            }
             base.OnResultExecuted(filterContext);
         }
     }
