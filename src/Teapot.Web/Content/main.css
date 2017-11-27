@@ -136,3 +136,8 @@ footer {
 p.img {
     text-align: center;
 }
+
+em {
+    font-style: italic;
+    font-size: 12px;
+}
