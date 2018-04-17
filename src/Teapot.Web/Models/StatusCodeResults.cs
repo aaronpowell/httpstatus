@@ -179,7 +179,7 @@ namespace Teapot.Web.Models
             });
             Add(413, new StatusCodeResult
             {
-                Description = "Request Entry Too Large"
+                Description = "Request Entity Too Large"
             });
             Add(414, new StatusCodeResult
             {
