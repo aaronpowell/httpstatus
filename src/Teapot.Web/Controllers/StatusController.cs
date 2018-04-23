@@ -11,7 +11,7 @@ namespace Teapot.Web.Controllers
         static readonly StatusCodeResults StatusCodes = new StatusCodeResults();
 
         private const int SLEEP_MIN = 0;
-        private const int SLEEP_MAX = 300000; // 5 mins in milliseconds
+        private const int SLEEP_MAX = 900000; // 15 mins in milliseconds
 
         public ActionResult Index()
         {
