@@ -202,6 +202,10 @@ namespace Teapot.Web.Models
                 Description = "I'm a teapot",
                 Link = new Uri("https://www.ietf.org/rfc/rfc2324.txt")
             });
+            Add(421, new StatusCodeResult
+            {
+                Description = "Misdirected Request"
+            });
             Add(422, new StatusCodeResult
             {
                 Description = "Unprocessable Entity"
