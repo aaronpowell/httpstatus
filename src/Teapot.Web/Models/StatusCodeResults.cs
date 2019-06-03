@@ -210,6 +210,14 @@ namespace Teapot.Web.Models
             {
                 Description = "Unprocessable Entity"
             });
+            Add(425, new StatusCodeResult
+            {
+                Description = "Too Early"
+            });
+            Add(426, new StatusCodeResult
+            {
+                Description = "Upgrade Required"
+            });
             Add(428, new StatusCodeResult
             {
                 Description = "Precondition Required"
