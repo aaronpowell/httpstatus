@@ -56,6 +56,10 @@ namespace Teapot.Web.Models
                     {"Content-Range", "0-30"}
                 }
             });
+            Add(207, new StatusCodeResult
+            {
+                Description = "Multi-Status"
+            });
             Add(300, new StatusCodeResult
             {
                 Description = "Multiple Choices"
