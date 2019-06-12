@@ -30,8 +30,8 @@ namespace Teapot.Web
                 var acceptTypes = context.HttpContext.Request.AcceptTypes;
                 if (acceptTypes != null) {
                     if (acceptTypes.Contains("application/json")) {
-                        //Set the body to be the status code and description with a plain content type response
-                        context.HttpContext.Response.Write("\"" + StatusCode + " " + StatusDescription + "\"");
+                        //Set the body to be the status code and description with a JSON object type response
+                        context.HttpContext.Response.Write("{\"code\": " + StatusCode + ", \"description\": \"" + StatusDescription + "\"}");
                         context.HttpContext.Response.ContentType = "application/json";
                     } else
                     {
