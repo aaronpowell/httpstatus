@@ -262,6 +262,10 @@ namespace Teapot.Web.Models
             {
                 Description = "HTTP Version Not Supported"
             });
+            Add(506, new StatusCodeResult
+            {
+                Description = "Variant Also Negotiates"
+            });
             Add(511, new StatusCodeResult
             {
                 Description = "Network Authentication Required"
