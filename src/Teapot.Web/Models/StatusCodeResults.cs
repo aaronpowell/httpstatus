@@ -22,6 +22,15 @@ namespace Teapot.Web.Models
                 Description = "Processing",
                 ExcludeBody = true
             });
+            Add(103, new StatusCodeResult
+            {
+                Description = "Early Hints",
+                ExcludeBody = true,
+                IncludeHeaders = new Dictionary<string, string>
+                {
+                    {"Link", "</Content/main.css>; rel=preload"}
+                }
+            });
             Add(200, new StatusCodeResult
             {
                 Description = "OK",
