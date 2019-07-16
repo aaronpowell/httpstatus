@@ -65,6 +65,22 @@ namespace Teapot.Web.Models
                     {"Content-Range", "0-30"}
                 }
             });
+            Add(207, new StatusCodeResult
+            {
+                Description = "Multi-Status"
+            });
+            Add(208, new StatusCodeResult
+            {
+                Description = "Already Reported"
+            });
+            Add(210, new StatusCodeResult
+            {
+                Description = "Content Different"
+            });
+            Add(226, new StatusCodeResult
+            {
+                Description = "IM Used"
+            });
             Add(300, new StatusCodeResult
             {
                 Description = "Multiple Choices"
@@ -125,6 +141,10 @@ namespace Teapot.Web.Models
                 {
                     {"Location", "https://httpstat.us"}
                 }
+            });
+            Add(310, new StatusCodeResult
+            {
+                Description = "Too many Redirects"
             });
             Add(400, new StatusCodeResult
             {
@@ -223,6 +243,10 @@ namespace Teapot.Web.Models
             {
                 Description = "Locked"
             });
+            Add(424, new StatusCodeResult
+            {
+                Description = "Method failure"
+            });
             Add(425, new StatusCodeResult
             {
                 Description = "Too Early"
@@ -247,9 +271,41 @@ namespace Teapot.Web.Models
             {
                 Description = "Request Header Fields Too Large"
             });
+            Add(449, new StatusCodeResult
+            {
+                Description = "Retry With"
+            });
+            Add(450, new StatusCodeResult
+            {
+                Description = "Blocked by Windows Parental Controls"
+            });
             Add(451, new StatusCodeResult
             {
                 Description = "Unavailable For Legal Reasons"
+            });
+            Add(456, new StatusCodeResult
+            {
+                Description = "Unrecoverable Error"
+            });
+            Add(495, new StatusCodeResult
+            {
+                Description = "SSL Certificate Error"
+            });
+            Add(496, new StatusCodeResult
+            {
+                Description = "SSL Certificate Required"
+            });
+            Add(497, new StatusCodeResult
+            {
+                Description = "HTTP Request Sent to HTTPS Port"
+            });
+            Add(498, new StatusCodeResult
+            {
+                Description = "Token expired/invalid"
+            });
+            Add(499, new StatusCodeResult
+            {
+                Description = "Client Closed Request"
             });
             Add(500, new StatusCodeResult
             {
@@ -279,21 +335,53 @@ namespace Teapot.Web.Models
             {
                 Description = "Variant Also Negotiates"
             });
+            Add(507, new StatusCodeResult
+            {
+                Description = "Insufficient storage"
+            });
+            Add(508, new StatusCodeResult
+            {
+                Description = "Loop detected"
+            });
+            Add(509, new StatusCodeResult
+            {
+                Description = "Bandwidth Limit Exceeded"
+            });
+            Add(510, new StatusCodeResult
+            {
+                Description = "Not Extended"
+            });
             Add(511, new StatusCodeResult
             {
                 Description = "Network Authentication Required"
             });
             Add(520, new StatusCodeResult
             {
-                Description = "Web server is returning an unknown error"
+                Description = "Unknown Error"
+            });
+            Add(521, new StatusCodeResult
+            {
+                Description = "Web Server Is Down"
             });
             Add(522, new StatusCodeResult
             {
-                Description = "Connection timed out"
+                Description = "Connection Timed Out"
             });
             Add(524, new StatusCodeResult
             {
-                Description = "A timeout occurred"
+                Description = "A Timeout Occurred"
+            });
+            Add(525, new StatusCodeResult
+            {
+                Description = "SSL Handshake Failed"
+            });
+            Add(526, new StatusCodeResult
+            {
+                Description = "Invalid SSL Certificate"
+            });
+            Add(527, new StatusCodeResult
+            {
+                Description = "Railgun Error"
             });
         }
     }
