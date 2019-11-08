@@ -279,6 +279,9 @@ namespace Teapot.Web.Models
             {
                 Description = "Variant Also Negotiates"
             });
+            Add(507, new StatusCodeResult {
+                Description = "Insufficient Storage"
+            });
             Add(511, new StatusCodeResult
             {
                 Description = "Network Authentication Required"
