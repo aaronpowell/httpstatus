@@ -240,7 +240,7 @@ namespace Teapot.Web.Models
                 Description = "Too Many Requests",
                 IncludeHeaders = new Dictionary<string, string>
                 {
-                    {"Retry-After", "3600"}
+                    {"Retry-After", "5"}
                 }
             });
             Add(431, new StatusCodeResult
