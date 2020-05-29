@@ -12,20 +12,27 @@ namespace Teapot.Web.Controllers
 
         private const int SLEEP_MIN = 0;
         private const int SLEEP_MAX = 300000; // 5 mins in milliseconds
-
+        private const int FAIL_CHANCE_MIN = 1;
+        private const int FAIL_CHANCE_MAX = 100;
+ 
         public ActionResult Index()
         {
             return View(StatusCodes);
         }
 
-        public ActionResult StatusCode(int statusCode, string message = null, int? sleep = SLEEP_MIN)
+        public ActionResult StatusCode(int statusCode, string message = null, int? sleep = SLEEP_MIN, int? failChance = null)
         {
+            if (MaybeFail(failChance))
+            {
+                statusCode = 403;
+            }
+ 
             var statusData = StatusCodes.ContainsKey(statusCode)
                 ? StatusCodes[statusCode]
                 : new StatusCodeResult { Description = $"{statusCode} {message ?? "Unknown Code" }" };
 
             DoSleep(sleep);
-
+ 
             return new CustomHttpStatusCodeResult(statusCode, statusData);
         }
 
@@ -56,7 +63,7 @@ namespace Teapot.Web.Controllers
 
         private static void DoSleep(int? sleep)
         {
-            int sleepData = SanitizeSleepParameter(sleep, SLEEP_MIN, SLEEP_MAX);
+            int sleepData = SanitizeIntegerParameter(sleep, SLEEP_MIN, SLEEP_MAX);
 
             if (sleepData > 0)
             {
@@ -64,23 +71,37 @@ namespace Teapot.Web.Controllers
             }
         }
 
-        private static int SanitizeSleepParameter(int? sleep, int min, int max)
+        private static bool MaybeFail(int? failChance)
         {
-            var sleepData = sleep ?? 0;
+            int failData = SanitizeIntegerParameter(failChance, FAIL_CHANCE_MIN, FAIL_CHANCE_MAX);
 
-            // range check - minimum should be 0
-            if (sleepData < min)
+            if (failData > 0)
             {
-                sleepData = min;
+                System.Random random = new System.Random();
+
+                return random.Next(0, failData) == 1;
             }
 
-            // range check- maximum should be 300000 (5 mins)
-            if (sleepData > max)
+            return false;
+        }
+  
+        private static int SanitizeIntegerParameter(int? parameter, int min, int max)
+        {
+            var parameterData = parameter ?? min;
+
+            // range check - minimum should be min
+            if (parameterData < min)
             {
-                sleepData = max;
+                parameterData = min;
             }
 
-            return sleepData;
+            // range check- maximum should be max
+            if (parameterData > max)
+            {
+                parameterData = max;
+            }
+
+            return parameterData;
         }
     }
 }
