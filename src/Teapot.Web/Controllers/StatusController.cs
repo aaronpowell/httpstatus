@@ -12,7 +12,7 @@ namespace Teapot.Web.Controllers
 
         private const int SLEEP_MIN = 0;
         private const int SLEEP_MAX = 300000; // 5 mins in milliseconds
-        private const int FAIL_CHANCE_MIN = 1;
+        private const int FAIL_CHANCE_MIN = 0;
         private const int FAIL_CHANCE_MAX = 100;
  
         public ActionResult Index()
@@ -24,7 +24,7 @@ namespace Teapot.Web.Controllers
         {
             if (MaybeFail(failChance))
             {
-                statusCode = 403;
+                statusCode = 500;
             }
  
             var statusData = StatusCodes.ContainsKey(statusCode)
