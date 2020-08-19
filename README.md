@@ -1,3 +1,11 @@
-This is the code for [httpstat.us](https://httpstat.us). More documentation can be found there.
+## httpstat.us
 
-Any changes pushed to the main repo (https://github.com/Readify/httpstatus) are auto-deployed to Windows Azure Websites.
+This repository holds the the code for [httpstat.us](https://httpstat.us). Click to read more documentation.
+
+## Note on raising a PR
+
+Any changes pushed to the main repo (https://github.com/Readify/httpstatus) are auto-deployed to **Microsoft Azure** cloud.
+
+## LICENSE
+
+[License](./License.md).
