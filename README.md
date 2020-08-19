@@ -8,4 +8,4 @@ Any changes pushed to the main repo (https://github.com/Readify/httpstatus) are 
 
 ## LICENSE
 
-[License](LICENSE).
+[License](./LICENSE.md).
