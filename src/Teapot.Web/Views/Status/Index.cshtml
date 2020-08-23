@@ -1,4 +1,4 @@
-@model Teapot.Web.Models.StatusCodeResults
+@model Teapot.Web.Models.TeapotStatusCodeResults
 
 <p>This is a super simple service for generating different HTTP codes.</p>
 <p>It's useful for testing how your own scripts deal with varying responses.</p>
@@ -23,7 +23,7 @@ Content-Length: {something}
     If you want a delay on the response add a query string of sleep (the time in ms, max 5 minutes*), like this:
     @Html.RouteLink("httpstat.us/200?sleep=5000", "StatusCode", new {statusCode = 200, sleep = 5000})
     <br />
-    <em>*When using the hosted instance the timeout is actually 230 seconds, which is the max timeout allowed by an Azure WebApp (see <a href="https://social.msdn.microsoft.com/Forums/en-US/05f254a6-9b34-4eb2-a5f7-2a82fb40135f/time-out-after-230-seconds?forum=windowsazurewebsitespreview" target="_blank">this thread post</a>). If you host it yourself in IIS/IIS Express you won't have that limit.</em>
+    <em>*When using the hosted instance the timeout is actually 230 seconds, which is the max timeout allowed by an Azure App Service (see <a href="https://social.msdn.microsoft.com/Forums/en-US/05f254a6-9b34-4eb2-a5f7-2a82fb40135f/time-out-after-230-seconds?forum=windowsazurewebsitespreview" target="_blank">this thread post</a>). If you host it yourself in IIS/IIS Express you won't have that limit.</em>
 </p>
 
 <p>Here are all the codes we support (and any special notes):</p>

@@ -1,16 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teapot.Web", "Teapot.Web\Teapot.Web.csproj", "{4CAF82E1-026A-42D6-B8BC-4FD91C881E41}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1ABB3CD4-6260-403A-AB2E-BF360E42B7BE}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teapot.Web", "Teapot.Web\Teapot.Web.csproj", "{37FE30E4-1FDF-44FB-8E87-BF8D7008CBAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,12 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4CAF82E1-026A-42D6-B8BC-4FD91C881E41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4CAF82E1-026A-42D6-B8BC-4FD91C881E41}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4CAF82E1-026A-42D6-B8BC-4FD91C881E41}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4CAF82E1-026A-42D6-B8BC-4FD91C881E41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37FE30E4-1FDF-44FB-8E87-BF8D7008CBAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37FE30E4-1FDF-44FB-8E87-BF8D7008CBAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37FE30E4-1FDF-44FB-8E87-BF8D7008CBAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37FE30E4-1FDF-44FB-8E87-BF8D7008CBAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {747C0F1A-E365-4E04-BF1B-37985E3F9FCD}
 	EndGlobalSection
 EndGlobal

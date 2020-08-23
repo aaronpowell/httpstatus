@@ -1,86 +1,55 @@
-﻿using System.Collections.Generic;
-using System.Net;
-using System.Web.Mvc;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Teapot.Web;
 using Teapot.Web.Models;
 
 namespace Teapot.Web.Controllers
 {
-    [CorsAllowAnyOrigin]
+    //[EnableCors]
     public class StatusController : Controller
     {
-        static readonly StatusCodeResults StatusCodes = new StatusCodeResults();
+        private static readonly TeapotStatusCodeResults StatusCodes = new TeapotStatusCodeResults();
 
-        private const int SLEEP_MIN = 0;
-        private const int SLEEP_MAX = 300000; // 5 mins in milliseconds
+        [HttpGet("")]
+        public IActionResult Index() => View(StatusCodes);
 
-        public ActionResult Index()
-        {
-            return View(StatusCodes);
-        }
-
-        public ActionResult StatusCode(int statusCode, string message = null, int? sleep = SLEEP_MIN)
+        [Route("{statusCode}", Name = "StatusCode")]
+        public async Task<IActionResult> StatusCode(int statusCode, int? sleep)
         {
             var statusData = StatusCodes.ContainsKey(statusCode)
                 ? StatusCodes[statusCode]
-                : new StatusCodeResult { Description = $"{statusCode} {message ?? "Unknown Code" }" };
+                : new TeapotStatusCodeResult { Description = $"{statusCode} Unknown Code" };
 
-            DoSleep(sleep);
+            await DoSleep(sleep);
 
             return new CustomHttpStatusCodeResult(statusCode, statusData);
         }
 
-        public ActionResult Cors(int statusCode, int? sleep = SLEEP_MIN)
+        [EnableCors(Constants.CorsPolicy)]
+        [Route("{statusCode}/cors", Name = "Cors")]
+        public async Task<IActionResult> Cors(int statusCode, int? sleep)
         {
-            if (Request.HttpMethod != "OPTIONS")
-            {
-                return StatusCode(statusCode, null, sleep);
-            }
+            var statusData = StatusCodes.ContainsKey(statusCode)
+                ? StatusCodes[statusCode]
+                : new TeapotStatusCodeResult { Description = $"{statusCode} Unknown Code" };
 
-            var allowedOrigin = Request.Headers.Get("Origin") ?? "*";
-            var allowedMethod = Request.Headers.Get("Access-Control-Request-Method") ?? "GET";
-            var allowedHeaders = Request.Headers.Get("Access-Control-Request-Headers") ?? "X-Anything";
+            await DoSleep(sleep);
 
-            var responseHeaders = new Dictionary<string, string>
-            {
-                { "Access-Control-Allow-Origin", allowedOrigin },
-                { "Access-Control-Allow-Headers", allowedHeaders },
-                { "Access-Control-Allow-Methods", allowedMethod }
-            };
-
-            var statusData = new StatusCodeResult { IncludeHeaders = responseHeaders };
-
-            DoSleep(sleep);
-
-            return new CustomHttpStatusCodeResult((int)HttpStatusCode.OK, statusData);
+            return new CustomHttpStatusCodeResult(statusCode, statusData);
         }
 
-        private static void DoSleep(int? sleep)
+        private static async Task DoSleep(int? sleep)
         {
-            int sleepData = SanitizeSleepParameter(sleep, SLEEP_MIN, SLEEP_MAX);
+            const int SLEEP_MIN = 0;
+            const int SLEEP_MAX = 5 * 60 * 1000; // 5 mins in milliseconds
 
+            var sleepData = Math.Clamp(sleep ?? 0, SLEEP_MIN, SLEEP_MAX);
             if (sleepData > 0)
             {
-                System.Threading.Thread.Sleep(sleepData);
+                await Task.Delay(sleepData);
             }
-        }
-
-        private static int SanitizeSleepParameter(int? sleep, int min, int max)
-        {
-            var sleepData = sleep ?? 0;
-
-            // range check - minimum should be 0
-            if (sleepData < min)
-            {
-                sleepData = min;
-            }
-
-            // range check- maximum should be 300000 (5 mins)
-            if (sleepData > max)
-            {
-                sleepData = max;
-            }
-
-            return sleepData;
         }
     }
 }
