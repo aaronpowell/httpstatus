@@ -11,6 +11,10 @@ namespace Teapot.Web
                 filterContext.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
             }
 
+            filterContext.HttpContext.Response.Headers.Add(
+                "Access-Control-Allow-Headers", "Link, Content-Range, Location, WWW-Authenticate, Proxy-Authenticate, Retry-After"
+            );
+
             if (filterContext.HttpContext.Request.Headers["Access-Control-Request-Headers"] != null)
             {
                 filterContext.HttpContext.Response.Headers.Add(
