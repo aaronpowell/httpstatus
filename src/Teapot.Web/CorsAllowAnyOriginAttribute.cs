@@ -13,27 +13,25 @@ namespace Teapot.Web
                 filterContext.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
             }
 
-            var accessControlAllowHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            accessControlAllowHeaders.Add("Retry-After");
-
-            var accessControlRequestHeadersHeaderValue = filterContext.HttpContext.Request.Headers["Access-Control-Request-Headers"];
-            if (!string.IsNullOrWhiteSpace(accessControlRequestHeadersHeaderValue))
+            if (filterContext.HttpContext.Request.Headers["Access-Control-Request-Headers"] != null)
             {
-                var accessControlRequestHeaders = accessControlRequestHeadersHeaderValue
-                    .Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (var accessControlRequestHeader in accessControlRequestHeaders)
-                {
-                    if (!accessControlAllowHeaders.Contains(accessControlRequestHeader))
-                    {
-                        accessControlAllowHeaders.Add(accessControlRequestHeader);
-                    }
-                }
+                filterContext.HttpContext.Response.Headers.Add(
+                    "Access-Control-Allow-Headers",
+                    filterContext.HttpContext.Request.Headers["Access-Control-Request-Headers"]
+                );
             }
 
+            var accessControlExposeHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            accessControlExposeHeaders.Add("Link"); // 103
+            accessControlExposeHeaders.Add("Content-Range"); // 206
+            accessControlExposeHeaders.Add("Location"); // 301, 302, 303, 305, 307, 308
+            accessControlExposeHeaders.Add("WWW-Authenticate"); // 401
+            accessControlExposeHeaders.Add("Proxy-Authenticate"); // 407
+            accessControlExposeHeaders.Add("Retry-After"); // 429
+
             filterContext.HttpContext.Response.Headers.Add(
-                "Access-Control-Allow-Headers",
-                string.Join(", ", accessControlAllowHeaders));
+                "Access-Control-Expose-Headers",
+                string.Join(", ", accessControlExposeHeaders));
 
             base.OnResultExecuted(filterContext);
         }
