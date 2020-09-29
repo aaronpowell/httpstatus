@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Teapot.Web.Models;
 
 namespace Teapot.Web
 {
@@ -17,6 +18,8 @@ namespace Teapot.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(new TeapotStatusCodeResults());
+
             services.AddCors(options =>
             {
                 options.AddPolicy(Constants.CorsPolicy, builder => builder
