@@ -19,6 +19,7 @@ namespace Teapot.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(new TeapotStatusCodeResults());
+            services.AddApplicationInsightsTelemetry();
 
             services.AddCors(options =>
             {
