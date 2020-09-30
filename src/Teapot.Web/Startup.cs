@@ -20,24 +20,6 @@ namespace Teapot.Web
         {
             services.AddSingleton(new TeapotStatusCodeResults());
             services.AddApplicationInsightsTelemetry();
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy(Constants.CorsPolicy, builder => builder
-                    .AllowAnyHeader()
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .WithExposedHeaders(new[]
-                    {
-                        "Link", // 103
-                        "Content-Range", // 206
-                        "Location", // 301, 302, 303, 305, 307, 308
-                        "WWW-Authenticate", // 401
-                        "Proxy-Authenticate", // 407
-                        "Retry-After" // 429
-                    }));
-            });
-
             services.AddControllersWithViews();
         }
 
@@ -52,7 +34,22 @@ namespace Teapot.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseCors();
+            app.UseCors(builder =>
+            {
+                builder
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .WithExposedHeaders(new[]
+                    {
+                        "Link", // 103
+                        "Content-Range", // 206
+                        "Location", // 301, 302, 303, 305, 307, 308
+                        "WWW-Authenticate", // 401
+                        "Proxy-Authenticate", // 407
+                        "Retry-After" // 429
+                    });
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

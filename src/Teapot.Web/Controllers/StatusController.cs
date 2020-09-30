@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Teapot.Web.Models;
 
 namespace Teapot.Web.Controllers
 {
-    //[EnableCors]
     public class StatusController : Controller
     {
         private readonly TeapotStatusCodeResults _statusCodes;
@@ -21,19 +19,6 @@ namespace Teapot.Web.Controllers
 
         [Route("{statusCode}", Name = "StatusCode")]
         public async Task<IActionResult> StatusCode(int statusCode, int? sleep)
-        {
-            var statusData = _statusCodes.ContainsKey(statusCode)
-                ? _statusCodes[statusCode]
-                : new TeapotStatusCodeResult { Description = $"{statusCode} Unknown Code" };
-
-            await DoSleep(sleep);
-
-            return new CustomHttpStatusCodeResult(statusCode, statusData);
-        }
-
-        [EnableCors(Constants.CorsPolicy)]
-        [Route("{statusCode}/cors", Name = "Cors")]
-        public async Task<IActionResult> Cors(int statusCode, int? sleep)
         {
             var statusData = _statusCodes.ContainsKey(statusCode)
                 ? _statusCodes[statusCode]
