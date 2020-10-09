@@ -19,10 +19,18 @@ namespace Teapot.Web
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            // Looks like someone is hammering this endpoint
+            // nooping it as a temp fix
+            routes.MapRoute(
+                "504-bypass",
+                "504",
+                new { controller = "Status", action = "Noop" }
+            );
+
             routes.MapRoute(
                 "I'm a teapot",
                 "im-a-teapot",
-                new {controller = "Teapot", action = "Teapot"}
+                new { controller = "Teapot", action = "Teapot" }
             );
 
             routes.MapRoute(

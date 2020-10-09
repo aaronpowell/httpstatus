@@ -29,6 +29,11 @@ namespace Teapot.Web.Controllers
             return new CustomHttpStatusCodeResult(statusCode, statusData);
         }
 
+        public ActionResult Noop()
+        {
+            return new EmptyResult();
+        }
+
         public ActionResult Cors(int statusCode, int? sleep = SLEEP_MIN)
         {
             if (Request.HttpMethod != "OPTIONS")
