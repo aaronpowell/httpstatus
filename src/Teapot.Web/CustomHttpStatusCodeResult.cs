@@ -43,12 +43,12 @@ namespace Teapot.Web
             if (_statusCodeResult.ExcludeBody)
             {
                 //remove Content-Length and Content-Type when there isn't any body
-                if (!StringValues.IsNullOrEmpty(context.HttpContext.Response.Headers["Content-Length"]))
+                if (context.HttpContext.Response.Headers.ContainsKey("Content-Length"))
                 {
                     context.HttpContext.Response.Headers.Remove("Content-Length");
                 }
 
-                if (!StringValues.IsNullOrEmpty(context.HttpContext.Response.Headers["Content-Type"]))
+                if (context.HttpContext.Response.Headers.ContainsKey("Content-Type"))
                 {
                     context.HttpContext.Response.Headers.Remove("Content-Type");
                 }

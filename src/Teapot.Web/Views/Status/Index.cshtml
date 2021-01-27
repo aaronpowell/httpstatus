@@ -7,13 +7,15 @@
     @Html.RouteLink("httpstat.us/200", "StatusCode", new {statusCode = 200})
 </p>
 <p>We'll return a response like this:</p>
-<code>HTTP/1.1 {status code} {status description}
-Content-Type: text/plain or application/json
-Content-Length: {something}
-{any custom response headers}
+<code>
+    HTTP/1.1 {status code} {status description}
+    Content-Type: text/plain or application/json
+    Content-Length: {something}
+    {any custom response headers}
 
-{status code} {status description}
-{list of any custom response headers we added}</code>
+    {status code} {status description}
+    {list of any custom response headers we added}
+</code>
 
 <p>
     To get a JSON response back, you need to ensure that the Accept header contains 'application/json'. Then we'll JSON encode the response and send the Content-Type header accordingly.
@@ -32,13 +34,14 @@ Content-Length: {something}
     {
         <dt>@Html.RouteLink(item.Key.ToString(), "StatusCode", new {statusCode = item.Key})</dt>
         <dd>
-        @if(item.Value.Link != null)
-        {
-            <a href="@item.Value.Link" target="_blank" title="@item.Value.Description">@item.Value.Description</a>
-        }else
-        {
-            @item.Value.Description
-        }
+            @if (item.Value.Link != null)
+            {
+                <a href="@item.Value.Link" target="_blank" title="@item.Value.Description">@item.Value.Description</a>
+            }
+            else
+            {
+                @item.Value.Description
+            }
         </dd>
     }
 </dl>
