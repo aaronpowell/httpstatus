@@ -9,5 +9,6 @@ namespace Teapot.Web.Models
         public Dictionary<string, string> IncludeHeaders { get; set; }
         public bool ExcludeBody { get; set; }
         public Uri Link { get; set; }
+        public string Body { get; set; }
     }
 }

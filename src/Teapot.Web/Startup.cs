@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Teapot.Web.Models;
+using Teapot.Web.Models.Unofficial;
 
 namespace Teapot.Web
 {
@@ -18,7 +19,8 @@ namespace Teapot.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(new TeapotStatusCodeResults());
+            services.AddSingleton<CloudflareStatusCodeResults>();
+            services.AddSingleton<TeapotStatusCodeResults>();
             services.AddApplicationInsightsTelemetry();
             services.AddControllersWithViews();
         }

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Teapot.Web.Models;
 
@@ -62,13 +61,13 @@ namespace Teapot.Web
                     {
                         //Set the body to be the status code and description with a JSON object type response
                         context.HttpContext.Response.ContentType = "application/json";
-                        await context.HttpContext.Response.WriteAsync("{\"code\": " + StatusCode + ", \"description\": \"" + _statusCodeResult.Description + "\"}");
+                        await context.HttpContext.Response.WriteAsync("{\"code\": " + StatusCode + ", \"description\": \"" + (_statusCodeResult.Body ?? _statusCodeResult.Description) + "\"}");
                     }
                     else
                     {
                         //Set the body to be the status code and description with a plain content type response
                         context.HttpContext.Response.ContentType = "text/plain";
-                        await context.HttpContext.Response.WriteAsync(StatusCode + " " + _statusCodeResult.Description);
+                        await context.HttpContext.Response.WriteAsync(_statusCodeResult.Body ?? $"{StatusCode} {_statusCodeResult.Description}");
                     }
                 }
             }

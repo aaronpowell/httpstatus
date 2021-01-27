@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Teapot.Web.Models.Unofficial;
 
 namespace Teapot.Web.Models
 {
     public class TeapotStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
     {
-        public TeapotStatusCodeResults()
+        public TeapotStatusCodeResults(CloudflareStatusCodeResults cloudflareStatusCodes)
         {
+            // 1xx range
             Add(100, new TeapotStatusCodeResult
             {
                 Description = "Continue",
@@ -31,6 +33,8 @@ namespace Teapot.Web.Models
                     {"Link", "</css/main.css>; rel=preload"}
                 }
             });
+
+            // 2xx range
             Add(200, new TeapotStatusCodeResult
             {
                 Description = "OK",
@@ -65,6 +69,34 @@ namespace Teapot.Web.Models
                     {"Content-Range", "0-30"}
                 }
             });
+            Add(207, new TeapotStatusCodeResult
+            {
+                Description = "Multi-Status",
+                IncludeHeaders = new Dictionary<string, string>
+                {
+                    { "Content-Type", "application/xml; charset=\"utf-8\"" }
+                },
+                Link = new Uri("https://tools.ietf.org/html/rfc4918"),
+                Body = @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<d:multistatus xmlns:d=""DAV:"">
+<d:response>
+    <d:href>http://www.example.com/container/resource3</d:href>
+    <d:status>HTTP/1.1 423 Locked</d:status>
+    <d:error><d:lock-token-submitted/></d:error>
+</d:response>
+</d:multistatus>"
+            });
+            Add(208, new TeapotStatusCodeResult
+            {
+                Description = "Already Reported"
+            });
+            Add(226, new TeapotStatusCodeResult
+            {
+                Description = "IM Used",
+                Link = new Uri("https://tools.ietf.org/html/rfc3229#section-10.4.1")
+            });
+
+            // 3xx range
             Add(300, new TeapotStatusCodeResult
             {
                 Description = "Multiple Choices"
@@ -108,7 +140,7 @@ namespace Teapot.Web.Models
             });
             Add(306, new TeapotStatusCodeResult
             {
-                Description = "Unused"
+                Description = "Switch Proxy"
             });
             Add(307, new TeapotStatusCodeResult
             {
@@ -126,6 +158,8 @@ namespace Teapot.Web.Models
                     {"Location", "https://httpstat.us"}
                 }
             });
+
+            // 4xx
             Add(400, new TeapotStatusCodeResult
             {
                 Description = "Bad Request"
@@ -251,6 +285,8 @@ namespace Teapot.Web.Models
             {
                 Description = "Unavailable For Legal Reasons"
             });
+
+            // 5xx
             Add(500, new TeapotStatusCodeResult
             {
                 Description = "Internal Server Error"
@@ -279,25 +315,29 @@ namespace Teapot.Web.Models
             {
                 Description = "Variant Also Negotiates"
             });
-            Add(507, new TeapotStatusCodeResult {
+            Add(507, new TeapotStatusCodeResult
+            {
                 Description = "Insufficient Storage"
+            });
+            Add(508, new TeapotStatusCodeResult
+            {
+                Description = "Loop Detected",
+                Link = new Uri("https://tools.ietf.org/html/rfc5842")
+            });
+            Add(510, new TeapotStatusCodeResult
+            {
+                Description = "Not Extended",
+                Link = new Uri("https://tools.ietf.org/html/rfc2774")
             });
             Add(511, new TeapotStatusCodeResult
             {
                 Description = "Network Authentication Required"
             });
-            Add(520, new TeapotStatusCodeResult
+
+            foreach (var item in cloudflareStatusCodes)
             {
-                Description = "Web server is returning an unknown error"
-            });
-            Add(522, new TeapotStatusCodeResult
-            {
-                Description = "Connection timed out"
-            });
-            Add(524, new TeapotStatusCodeResult
-            {
-                Description = "A timeout occurred"
-            });
+                Add(item.Key, item.Value);
+            }
         }
     }
 }
