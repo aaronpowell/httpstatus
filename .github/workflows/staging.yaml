@@ -29,9 +29,11 @@ jobs:
 
     - name: Restore
       run: dotnet restore
+      working-directory: src
 
     - name: Build
       run: dotnet build --configuration Release --no-restore --output ${{ env.DOTNET_OUTPUT }}
+      working-directory: src
 
     - name: 'Deploy to Azure WebApp'
       uses: azure/webapps-deploy@v2
