@@ -24,6 +24,7 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Docker Build & Push to ACR
+        working-directory: src
         run: |
             docker build . -t ${{ secrets.REGISTRY_URL }}/httpstatus:${{ github.sha }}
             docker push ${{ secrets.REGISTRY_URL }}/httpstatus:${{ github.sha }} 
