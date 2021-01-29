@@ -26,7 +26,7 @@ jobs:
       - name: Docker Build & Push to ACR
         working-directory: src/Teapot.Web
         run: |
-            docker build . -t ${{ secrets.REGISTRY_URL }}/httpstatus:${{ github.sha }}
+            docker build -f Dockerfile -t ${{ secrets.REGISTRY_URL }}/httpstatus:${{ github.sha }} ..
             docker push ${{ secrets.REGISTRY_URL }}/httpstatus:${{ github.sha }} 
 
       - name: Deploy to Azure WebApp
