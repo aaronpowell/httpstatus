@@ -8,6 +8,7 @@ namespace Teapot.Web
     {
         public static void Main(string[] args)
         {
+            System.Console.WriteLine("Starting httpstat.us");
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -15,7 +16,8 @@ namespace Teapot.Web
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                        .UseUrls($"http://*:{Environment.GetEnvironmentVariable("PORT") ?? "5000"}");
                 });
     }
 }
