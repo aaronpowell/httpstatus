@@ -10,4 +10,12 @@ RUN dotnet publish "Teapot.Web.csproj" -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
 COPY --from=build /app/publish .
+# Install OpenSSH and set the password for root to "Docker!". In this example, "apk add" is the install instruction for an Alpine Linux-based image.
+RUN apk add openssh \
+     && echo "root:Docker!" | chpasswd 
+
+# Copy the sshd_config file to the /etc/ssh/ directory
+COPY sshd_config /etc/ssh/
+# Open port 2222 for SSH access
+EXPOSE 80 2222
 ENTRYPOINT ["dotnet", "Teapot.Web.dll"]
