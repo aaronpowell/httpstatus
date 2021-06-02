@@ -7,7 +7,7 @@ WORKDIR "/src/Teapot.Web"
 RUN dotnet build "Teapot.Web.csproj" -c Release -o /app/build
 RUN dotnet publish "Teapot.Web.csproj" -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine-amd64
 WORKDIR /app
 COPY --from=build /app/publish .
 # Install OpenSSH and set the password for root to "Docker!". In this example, "apk add" is the install instruction for an Alpine Linux-based image.
