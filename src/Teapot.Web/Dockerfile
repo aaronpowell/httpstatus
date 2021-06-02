@@ -17,6 +17,6 @@ RUN dotnet publish "Teapot.Web.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-EXPOSE 443
-EXPOSE 80
+# EXPOSE 443
+# EXPOSE 80
 ENTRYPOINT ["dotnet", "Teapot.Web.dll"]
