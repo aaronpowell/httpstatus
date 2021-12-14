@@ -21,6 +21,7 @@ namespace Teapot.Web.Controllers
         public IActionResult Noop() => new EmptyResult();
 
         [Route("{statusCode}", Name = "StatusCode")]
+        [Route("{statusCode}/{*wildcard}", Name = "StatusCodeWildcard")]
         public async Task<IActionResult> StatusCode(int statusCode, int? sleep)
         {
             var statusData = _statusCodes.ContainsKey(statusCode)
