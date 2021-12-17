@@ -34,34 +34,28 @@ namespace Teapot.Web
             app.UseStaticFiles();
             app.UseRouting();
 
+            app.UseCors(builder =>
+            {
+                builder
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .WithExposedHeaders(new[]
+                    {
+                        "Link", // 103
+                        "Content-Range", // 206
+                        "Location", // 301, 302, 303, 305, 307, 308
+                        "WWW-Authenticate", // 401
+                        "Proxy-Authenticate", // 407
+                        "Retry-After" // 429
+                    });
+            });
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
-
-            //app.UseCors(builder =>
-            //{
-            //    builder
-            //        .AllowAnyHeader()
-            //        .AllowAnyOrigin()
-            //        .AllowAnyMethod()
-            //        .WithExposedHeaders(new[]
-            //        {
-            //            "Link", // 103
-            //            "Content-Range", // 206
-            //            "Location", // 301, 302, 303, 305, 307, 308
-            //            "WWW-Authenticate", // 401
-            //            "Proxy-Authenticate", // 407
-            //            "Retry-After" // 429
-            //        });
-            //});
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllers();
-            //    endpoints.MapFallbackToController("Index", "Teapot");
-            //});
         }
-
     }
 }
