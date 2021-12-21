@@ -16,6 +16,7 @@ permissions:
 jobs:
   build-images:
     runs-on: ubuntu-latest
+    environment: build
 
     steps:
       - uses: actions/checkout@v2
@@ -24,7 +25,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: name/app
+          images: ${{ secrets.GH_REGISTRY_URL }}/aaronpowell/httpstatus,${{ secrets.AZURE_REGISTRY_URL }}/aaronpowell/httpstatus
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -44,7 +45,7 @@ jobs:
       #- name: Build Docker images
       #  working-directory: src/Teapot.Web
       #  run: |
-      #      docker build -f Dockerfile -t ${{ secrets.AZURE_REGISTRY_URL }}/httpstatus:${{ github.sha }} -t ${{ secrets.GITHUB_REGISTRY_URL }}/httpstatus:${{ github.sha }} ..
+      #      docker build -f Dockerfile -t ${{ secrets.AZURE_REGISTRY_URL }}/httpstatus:${{ github.sha }} -t ${{ secrets.GH_REGISTRY_URL }}/httpstatus:${{ github.sha }} ..
 
   #    - name: ACR authentication
   #      uses: azure/docker-login@v1
@@ -64,7 +65,7 @@ jobs:
   #        password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
 
   #    - name: Publish to GPR
-  #      run: docker push ${{ secrets.GITHUB_REGISTRY_URL }}/httpstatus:${{ github.sha }}
+  #      run: docker push ${{ secrets.GH_REGISTRY_URL }}/httpstatus:${{ github.sha }}
 
   #deploy-azure:
   #  runs-on: ubuntu-latest
