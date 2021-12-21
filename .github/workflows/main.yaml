@@ -35,12 +35,19 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=sha,format=long,prefix=
 
+      - name: ACR authentication
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.AZURE_REGISTRY_URL }}
+          username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+          password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: src
           file: src/Teapot.Web/Dockerfile
-          push: false
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
@@ -49,12 +56,6 @@ jobs:
       #  run: |
       #      docker build -f Dockerfile -t ${{ secrets.AZURE_REGISTRY_URL }}/httpstatus:${{ github.sha }} -t ${{ secrets.GH_REGISTRY_URL }}/httpstatus:${{ github.sha }} ..
 
-      - name: ACR authentication
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.AZURE_REGISTRY_URL }}
-          username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
-          password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
 
   #    - name: Publish to ACR
   #      run: docker push ${{ secrets.AZURE_REGISTRY_URL }}/httpstatus:${{ github.sha }}
