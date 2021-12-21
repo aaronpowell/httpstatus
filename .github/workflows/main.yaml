@@ -2,6 +2,7 @@ name: Build and deploy
 
 env:
   AZURE_WEBAPP_NAME: httpstatus-prod
+  IMAGE_NAME: ${{ github.actor }}/${{ github.repository }}
 
 on:
   push:
@@ -19,6 +20,9 @@ jobs:
     name: Build Docker images for Azure Container Registry and GitHub Container Registry
     environment:
       name: build
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - uses: actions/checkout@v2
@@ -27,7 +31,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ${{ secrets.GH_REGISTRY_URL }}/aaronpowell/httpstatus,${{ secrets.AZURE_REGISTRY_URL }}/aaronpowell/httpstatus
+          images: ${{ secrets.GH_REGISTRY_URL }}/${{ env.IMAGE_NAME }},${{ secrets.AZURE_REGISTRY_URL }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
