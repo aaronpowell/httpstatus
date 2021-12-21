@@ -2,7 +2,7 @@ name: Build and deploy
 
 env:
   AZURE_WEBAPP_NAME: httpstatus-prod
-  IMAGE_NAME: ${{ github.actor }}/${{ github.repository }}
+  IMAGE_NAME: ${{ github.repository }}
 
 on:
   push:
@@ -62,38 +62,22 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      #- name: Build Docker images
-      #  working-directory: src/Teapot.Web
-      #  run: |
-      #      docker build -f Dockerfile -t ${{ secrets.AZURE_REGISTRY_URL }}/httpstatus:${{ github.sha }} -t ${{ secrets.GH_REGISTRY_URL }}/httpstatus:${{ github.sha }} ..
+  deploy-azure:
+    runs-on: ubuntu-latest
+    name: Deploy to Azure
+    environment:
+      name: production
 
+    steps:
+      - name: Azure authentication
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-  #    - name: Publish to ACR
-  #      run: docker push ${{ secrets.AZURE_REGISTRY_URL }}/httpstatus:${{ github.sha }}
-
-  #    - name: GPR authentication
-  #      uses: azure/docker-login@v1
-  #      with:
-  #        login-server: ${{ secrets.AZURE_REGISTRY_URL }}
-  #        username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
-  #        password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
-
-  #    - name: Publish to GPR
-  #      run: docker push ${{ secrets.GH_REGISTRY_URL }}/httpstatus:${{ github.sha }}
-
-  #deploy-azure:
-  #  runs-on: ubuntu-latest
-
-  #  steps:
-  #    - name: Azure authentication
-  #      uses: azure/login@v1
-  #      with:
-  #        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-  #        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-  #        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-  #    - name: Deploy to Azure WebApp
-  #      uses: azure/webapps-deploy@v2
-  #      with:
-  #        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-  #        images: ${{ secrets.AZURE_REGISTRY_URL }}/httpstatus:${{ github.sha }}
+      - name: Deploy to Azure WebApp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          images: ${{ secrets.AZURE_REGISTRY_URL }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
