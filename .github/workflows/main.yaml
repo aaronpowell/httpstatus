@@ -67,6 +67,7 @@ jobs:
     name: Deploy to Azure
     environment:
       name: production
+    needs: [build-images]
 
     steps:
       - name: Azure authentication
