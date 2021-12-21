@@ -16,7 +16,8 @@ permissions:
 jobs:
   build-images:
     runs-on: ubuntu-latest
-    environment: build
+    environment:
+        name: build
 
     steps:
       - uses: actions/checkout@v2
