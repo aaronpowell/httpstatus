@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.Json;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
@@ -55,20 +56,18 @@ namespace Teapot.Web
             else
             {
                 var acceptTypes = context.HttpContext.Request.GetTypedHeaders().Accept;
+
                 if (acceptTypes != null)
                 {
-                    if (acceptTypes.Contains(new MediaTypeHeaderValue("application/json")))
+                    var (body, contentType) = acceptTypes.Contains(new MediaTypeHeaderValue("application/json")) switch
                     {
-                        //Set the body to be the status code and description with a JSON object type response
-                        context.HttpContext.Response.ContentType = "application/json";
-                        await context.HttpContext.Response.WriteAsync("{\"code\": " + StatusCode + ", \"description\": \"" + (_statusCodeResult.Body ?? _statusCodeResult.Description) + "\"}");
-                    }
-                    else
-                    {
-                        //Set the body to be the status code and description with a plain content type response
-                        context.HttpContext.Response.ContentType = "text/plain";
-                        await context.HttpContext.Response.WriteAsync(_statusCodeResult.Body ?? $"{StatusCode} {_statusCodeResult.Description}");
-                    }
+                        true => (JsonSerializer.Serialize(new { code = StatusCode, description = _statusCodeResult.Body ?? _statusCodeResult.Description }), "application/json"),
+                        false => (_statusCodeResult.Body ?? $"{StatusCode} {_statusCodeResult.Description}", "text/plain")
+                    };
+
+                    context.HttpContext.Response.ContentType = contentType;
+                    context.HttpContext.Response.ContentLength = body.Length;
+                    await context.HttpContext.Response.WriteAsync(body);
                 }
             }
         }
