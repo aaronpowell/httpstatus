@@ -14,7 +14,7 @@ namespace Teapot.Web.Controllers
             _statusCodes = statusCodes;
         }
 
-        [HttpGet("")]
+        [Route("")]
         public IActionResult Index() => View(_statusCodes);
 
         [HttpGet("504", Name = "Noop-Bypass")]
