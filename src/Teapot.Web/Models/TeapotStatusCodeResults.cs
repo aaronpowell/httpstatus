@@ -106,7 +106,7 @@ namespace Teapot.Web.Models
                 Description = "Moved Permanently",
                 IncludeHeaders = new Dictionary<string, string>
                 {
-                    {"Location", "https://httpstat.us"}
+                    {"Location", "https://httpstat.us/200"}
                 }
             });
             Add(302, new TeapotStatusCodeResult
@@ -114,7 +114,7 @@ namespace Teapot.Web.Models
                 Description = "Found",
                 IncludeHeaders = new Dictionary<string, string>
                 {
-                    {"Location", "https://httpstat.us"}
+                    {"Location", "https://httpstat.us/200"}
                 }
             });
             Add(303, new TeapotStatusCodeResult
@@ -135,7 +135,7 @@ namespace Teapot.Web.Models
                 Description = "Use Proxy",
                 IncludeHeaders = new Dictionary<string, string>
                 {
-                    {"Location", "https://httpstat.us"}
+                    {"Location", "https://httpstat.us/200"}
                 }
             });
             Add(306, new TeapotStatusCodeResult
@@ -147,7 +147,7 @@ namespace Teapot.Web.Models
                 Description = "Temporary Redirect",
                 IncludeHeaders = new Dictionary<string, string>
                 {
-                    {"Location", "https://httpstat.us"}
+                    {"Location", "https://httpstat.us/200"}
                 }
             });
             Add(308, new TeapotStatusCodeResult
@@ -155,7 +155,7 @@ namespace Teapot.Web.Models
                 Description = "Permanent Redirect",
                 IncludeHeaders = new Dictionary<string, string>
                 {
-                    {"Location", "https://httpstat.us"}
+                    {"Location", "https://httpstat.us/200"}
                 }
             });
 
