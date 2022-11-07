@@ -5,9 +5,9 @@ namespace Teapot.Web.Models;
 
 public class TeapotStatusCodeResult
 {
-    public string Description { get; set; } = "";
+    public required string Description { get; set; }
     public Dictionary<string, string> IncludeHeaders { get; set; } = new();
-    public bool ExcludeBody { get; set; } = true;
-    public Uri Link { get; set; } = new Uri("https://httpstat.us");
-    public string Body { get; set; } = "";
+    public bool ExcludeBody { get; set; } = false;
+    public Uri? Link { get; set; }
+    public string? Body { get; set; }
 }
