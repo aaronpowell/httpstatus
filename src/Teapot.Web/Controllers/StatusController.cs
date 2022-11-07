@@ -17,9 +17,6 @@ public class StatusController : Controller
     [Route("")]
     public IActionResult Index() => View(_statusCodes);
 
-    [HttpGet("504", Name = "Noop-Bypass")]
-    public IActionResult Noop() => new EmptyResult();
-
     [Route("{statusCode:int}", Name = "StatusCode")]
     [Route("{statusCode:int}/{*wildcard}", Name = "StatusCodeWildcard")]
     public async Task<IActionResult> StatusCode(int statusCode, int? sleep)
