@@ -5,7 +5,7 @@ namespace Teapot.Web.Models;
 
 public class TeapotStatusCodeResult
 {
-    public required string Description { get; set; }
+    public string Description { get; set; } = "";
     public Dictionary<string, string> IncludeHeaders { get; set; } = new();
     public bool ExcludeBody { get; set; } = false;
     public Uri? Link { get; set; }
