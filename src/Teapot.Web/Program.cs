@@ -5,57 +5,48 @@ using Microsoft.Extensions.Hosting;
 using Teapot.Web.Models;
 using Teapot.Web.Models.Unofficial;
 
-namespace Teapot.Web
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<CloudflareStatusCodeResults>();
+builder.Services.AddSingleton<TeapotStatusCodeResults>();
+builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.AddControllersWithViews();
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
-
-            builder.Services.AddSingleton<CloudflareStatusCodeResults>();
-            builder.Services.AddSingleton<TeapotStatusCodeResults>();
-            builder.Services.AddApplicationInsightsTelemetry();
-            builder.Services.AddControllersWithViews();
-
-            var app = builder.Build();
-
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseRouting();
-
-            app.UseCors(builder =>
-            {
-                builder
-                    .AllowAnyHeader()
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .WithExposedHeaders(new[]
-                    {
-                        "Link", // 103
-                        "Content-Range", // 206
-                        "Location", // 301, 302, 303, 305, 307, 308
-                        "WWW-Authenticate", // 401
-                        "Proxy-Authenticate", // 407
-                        "Retry-After" // 429
-                    });
-            });
-
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            app.Run();
-        }
-    }
+    app.UseDeveloperExceptionPage();
 }
+else
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
+app.UseCors(builder =>
+{
+    builder
+        .AllowAnyHeader()
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .WithExposedHeaders(new[]
+        {
+                    "Link", // 103
+                    "Content-Range", // 206
+                    "Location", // 301, 302, 303, 305, 307, 308
+                    "WWW-Authenticate", // 401
+                    "Proxy-Authenticate", // 407
+                    "Retry-After" // 429
+        });
+});
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Teapot}/{action=teapot}");
+
+app.Run();
