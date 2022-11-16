@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 
-namespace Teapot.Web.Models.Unofficial
+namespace Teapot.Web.Models.Unofficial;
+
+public class LaravelStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
 {
-    public class LaravelStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
+    public LaravelStatusCodeResults()
     {
-        public LaravelStatusCodeResults()
+        Add(419, new TeapotStatusCodeResult
         {
-            Add(419, new TeapotStatusCodeResult
-            {
-                Description = "CSRF Token Missong or Expired"
-            });
-        }
+            Description = "CSRF Token Missong or Expired",
+            IsNonStandard = true,
+        });
     }
 }

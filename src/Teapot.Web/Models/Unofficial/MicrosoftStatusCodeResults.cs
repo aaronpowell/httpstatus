@@ -1,30 +1,27 @@
 ﻿using System.Collections.Generic;
 
-namespace Teapot.Web.Models.Unofficial
+namespace Teapot.Web.Models.Unofficial;
+
+public class MicrosoftStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
 {
-    public class MicrosoftStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
+    public MicrosoftStatusCodeResults()
     {
-        public MicrosoftStatusCodeResults()
+        Add(440, new TeapotStatusCodeResult
         {
-            Add(440, new TeapotStatusCodeResult
-            {
-                Description = "Login Time-out"
-            });
+            Description = "Login Time-out",
+            IsNonStandard = true,
+        });
 
-            Add(449, new TeapotStatusCodeResult
-            {
-                Description = "Retry With"
-            });
+        Add(449, new TeapotStatusCodeResult
+        {
+            Description = "Retry With",
+            IsNonStandard = true,
+        });
 
-            Add(450, new TeapotStatusCodeResult
-            {
-                Description = "Blocked by Windows Parental Controls"
-            });
-
-            Add(451, new TeapotStatusCodeResult
-            {
-                Description = "Redirect"
-            });
-        }
+        Add(450, new TeapotStatusCodeResult
+        {
+            Description = "Blocked by Windows Parental Controls",
+            IsNonStandard = true,
+        });
     }
 }

@@ -30,17 +30,17 @@
 
 <p>Here are all the codes we support (and any special notes):</p>
 <dl>
-    @foreach (var item in Model)
+    @foreach ((int statusCode, TeapotStatusCodeResult result) in Model)
     {
-        <dt>@Html.RouteLink(item.Key.ToString(), "StatusCode", new {statusCode = item.Key})</dt>
+        <dt>@Html.RouteLink(statusCode.ToString(), "StatusCode", new { statusCode })</dt>
         <dd>
-            @if (item.Value.Link != null)
+            @if (result.Link is not null)
             {
-                <a href="@item.Value.Link" target="_blank" title="@item.Value.Description">@item.Value.Description</a>
+                <a href="@result.Link" target="_blank" title="@result.Description">@result.Description@(result.IsNonStandard ? " (non-standard status code)" : "")</a>
             }
             else
             {
-                @item.Value.Description
+                @result.Description@(result.IsNonStandard ? " (non-standard status code)" : "")
             }
         </dd>
     }

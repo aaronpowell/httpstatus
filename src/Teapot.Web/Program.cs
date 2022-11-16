@@ -7,7 +7,14 @@ using Teapot.Web.Models.Unofficial;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<AmazonStatusCodeResults>();
 builder.Services.AddSingleton<CloudflareStatusCodeResults>();
+builder.Services.AddSingleton<EsriStatusCodeResults>();
+builder.Services.AddSingleton<LaravelStatusCodeResults>();
+builder.Services.AddSingleton<MicrosoftStatusCodeResults>();
+builder.Services.AddSingleton<NginxStatusCodeResults>();
+builder.Services.AddSingleton<TwitterStatusCodeResults>();
+
 builder.Services.AddSingleton<TeapotStatusCodeResults>();
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddControllersWithViews();

@@ -6,7 +6,14 @@ namespace Teapot.Web.Models;
 
 public class TeapotStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
 {
-    public TeapotStatusCodeResults(CloudflareStatusCodeResults cloudflareStatusCodes)
+    public TeapotStatusCodeResults(
+        AmazonStatusCodeResults amazon,
+        CloudflareStatusCodeResults cloudflare,
+        EsriStatusCodeResults esri,
+        LaravelStatusCodeResults laravel,
+        MicrosoftStatusCodeResults microsoft,
+        NginxStatusCodeResults nginx,
+        TwitterStatusCodeResults twitter)
     {
         // 1xx range
         Add(100, new TeapotStatusCodeResult
@@ -334,7 +341,18 @@ public class TeapotStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
             Description = "Network Authentication Required"
         });
 
-        foreach (var item in cloudflareStatusCodes)
+        AddNonStandardStatusCodes(amazon);
+        AddNonStandardStatusCodes(cloudflare);
+        AddNonStandardStatusCodes(esri);
+        AddNonStandardStatusCodes(laravel);
+        AddNonStandardStatusCodes(microsoft);
+        AddNonStandardStatusCodes(nginx);
+        AddNonStandardStatusCodes(twitter);
+    }
+
+    private void AddNonStandardStatusCodes(IDictionary<int, TeapotStatusCodeResult> codes)
+    {
+        foreach (var item in codes)
         {
             Add(item.Key, item.Value);
         }

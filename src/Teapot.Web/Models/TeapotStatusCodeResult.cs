@@ -10,4 +10,5 @@ public class TeapotStatusCodeResult
     public bool ExcludeBody { get; set; } = false;
     public Uri? Link { get; set; }
     public string? Body { get; set; }
+    public bool IsNonStandard { get; init; }
 }

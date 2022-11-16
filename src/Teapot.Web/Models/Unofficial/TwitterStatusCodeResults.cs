@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 
-namespace Teapot.Web.Models.Unofficial
+namespace Teapot.Web.Models.Unofficial;
+
+public class TwitterStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
 {
-    public class TwitterStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
+    public TwitterStatusCodeResults()
     {
-        public TwitterStatusCodeResults()
+        Add(420, new TeapotStatusCodeResult
         {
-            Add(420, new TeapotStatusCodeResult
-            {
-                Description = "Enhance Your Calm"
-            });
-        }
+            Description = "Enhance Your Calm",
+            IsNonStandard = true,
+        });
     }
 }
