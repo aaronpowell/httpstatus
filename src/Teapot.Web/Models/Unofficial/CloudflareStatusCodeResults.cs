@@ -48,6 +48,7 @@ public class CloudflareStatusCodeResults : Dictionary<int, TeapotStatusCodeResul
         });
         Add(530, new TeapotStatusCodeResult
         {
+            Description = "Origin DNS Error",
             IsNonStandard = true,
         });
     }
