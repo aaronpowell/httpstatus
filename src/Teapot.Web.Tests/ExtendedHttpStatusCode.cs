@@ -4,10 +4,11 @@ namespace Teapot.Web.Tests;
 
 public readonly struct ExtendedHttpStatusCode
 {
-    public ExtendedHttpStatusCode(int code, string description)
+    public ExtendedHttpStatusCode(int code, string description, string? body)
     {
         Code = code;
         Description = description;
+        Body = body ?? $"{Code} {Description}";
     }
 
     [JsonPropertyName("code")]
@@ -15,6 +16,9 @@ public readonly struct ExtendedHttpStatusCode
 
     [JsonPropertyName("description")]
     public string Description { get; }
+
+    [JsonIgnore]
+    public string? Body { get; }
 
     public override bool Equals(object? obj) => obj is ExtendedHttpStatusCode code && Code == code.Code;
 

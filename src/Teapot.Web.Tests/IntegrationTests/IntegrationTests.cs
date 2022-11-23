@@ -10,7 +10,7 @@ public class IntegrationTests
     public void Setup()
     {
         var appName = Environment.GetEnvironmentVariable("AZURE_WEBAPP_NAME");
-        Assert.That(appName, Is.Not.Empty);
+        Assert.That(appName, Is.Not.Null.And.Not.Empty);
         _uri = new Uri($"https://{appName}.azurewebsites.net");
     }
 
@@ -21,7 +21,7 @@ public class IntegrationTests
         using var response = await _httpClient.GetAsync(uri);
         Assert.That((int)response.StatusCode, Is.EqualTo(httpStatusCode.Code));
         var body = await response.Content.ReadAsStringAsync();
-        Assert.That(body, Is.EqualTo(httpStatusCode.ToString()).OnlyAlphanumericIgnoreCase());
+        Assert.That(body.ReplaceLineEndings(), Is.EqualTo(httpStatusCode.Body));
     }
 
     [TestCaseSource(typeof(ExtendedHttpStatusCodes), nameof(ExtendedHttpStatusCodes.StatusCodesNoContent))]
@@ -42,15 +42,5 @@ public class IntegrationTests
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadGateway));
         var body = await response.Content.ReadAsStringAsync();
         Assert.That(body, Is.Not.Empty);
-    }
-
-    [Test]
-    public async Task ResponseMultiStatus_Is_Correct()
-    {
-        var uri = new Uri(_uri, $"/{(int)HttpStatusCode.MultiStatus}");
-        using var response = await _httpClient.GetAsync(uri);
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.MultiStatus));
-        var body = await response.Content.ReadAsStringAsync();
-        Assert.That(body.StartsWith("<?xml"), Is.True);
     }
 }
