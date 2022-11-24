@@ -18,12 +18,7 @@ public class ExtendedHttpStatusCodes
 
     private static readonly HttpStatusCode[] NoContentStatusCodes = new[]
     {
-        SwitchingProtocols, NoContent, ResetContent, NotModified
-    };
-
-    private static readonly HttpStatusCode[] ServerErrorStatusCodes = new[]
-    {
-        Continue, Processing, EarlyHints
+        Continue, SwitchingProtocols, Processing, EarlyHints, NoContent, ResetContent, NotModified
     };
 
     public static IEnumerable<ExtendedHttpStatusCode> StatusCodesAll =>
@@ -36,9 +31,6 @@ public class ExtendedHttpStatusCodes
 
     public static IEnumerable<ExtendedHttpStatusCode> StatusCodesNoContent =>
         NoContentStatusCodes.Select(Map);
-
-    public static IEnumerable<ExtendedHttpStatusCode> StatusCodesServerError =>
-        ServerErrorStatusCodes.Select(Map);
 
     private static ExtendedHttpStatusCode Map(HttpStatusCode code)
     {
