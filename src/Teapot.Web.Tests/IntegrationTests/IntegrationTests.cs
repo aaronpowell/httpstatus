@@ -6,8 +6,8 @@ public class IntegrationTests
 {
     private static readonly HttpClient _httpClient = new WebApplicationFactory<Program>().CreateDefaultClient();
 
-    [TestCaseSource(typeof(ExtendedHttpStatusCodes), nameof(ExtendedHttpStatusCodes.StatusCodesWithContent))]
-    public async Task ResponseWithContent([Values] ExtendedHttpStatusCode httpStatusCode)
+    [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesWithContent))]
+    public async Task ResponseWithContent([Values] TestCaseCodes httpStatusCode)
     {
         var uri = $"/{httpStatusCode.Code}";
         using var response = await _httpClient.GetAsync(uri);
@@ -16,8 +16,8 @@ public class IntegrationTests
         Assert.That(body.ReplaceLineEndings(), Is.EqualTo(httpStatusCode.Body));
     }
 
-    [TestCaseSource(typeof(ExtendedHttpStatusCodes), nameof(ExtendedHttpStatusCodes.StatusCodesNoContent))]
-    public async Task ResponseNoContent([Values] ExtendedHttpStatusCode httpStatusCode)
+    [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesNoContent))]
+    public async Task ResponseNoContent([Values] TestCaseCodes httpStatusCode)
     {
         var uri = $"/{httpStatusCode.Code}";
         using var response = await _httpClient.GetAsync(uri);

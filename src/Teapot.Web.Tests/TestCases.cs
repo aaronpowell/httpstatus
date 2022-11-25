@@ -4,7 +4,7 @@ using static System.Net.HttpStatusCode;
 
 namespace Teapot.Web.Tests;
 
-public class ExtendedHttpStatusCodes
+public class TestCases
 {
     private static readonly TeapotStatusCodeResults All = new(
             new AmazonStatusCodeResults(),
@@ -21,25 +21,25 @@ public class ExtendedHttpStatusCodes
         Continue, SwitchingProtocols, Processing, EarlyHints, NoContent, ResetContent, NotModified
     };
 
-    public static IEnumerable<ExtendedHttpStatusCode> StatusCodesAll =>
+    public static IEnumerable<TestCaseCodes> StatusCodesAll =>
         All.Select(Map);
 
-    public static IEnumerable<ExtendedHttpStatusCode> StatusCodesWithContent =>
+    public static IEnumerable<TestCaseCodes> StatusCodesWithContent =>
         All
         .Where(x => !x.Value.ExcludeBody)
         .Select(Map);
 
-    public static IEnumerable<ExtendedHttpStatusCode> StatusCodesNoContent =>
+    public static IEnumerable<TestCaseCodes> StatusCodesNoContent =>
         NoContentStatusCodes.Select(Map);
 
-    private static ExtendedHttpStatusCode Map(HttpStatusCode code)
+    private static TestCaseCodes Map(HttpStatusCode code)
     {
         var key = (int)code;
         return new(key, All[key].Description, All[key].Body);
     }
 
-    private static ExtendedHttpStatusCode Map(KeyValuePair<int, TeapotStatusCodeResult> code)
+    private static TestCaseCodes Map(KeyValuePair<int, TeapotStatusCodeResult> code)
     {
-        return new ExtendedHttpStatusCode(code.Key, code.Value.Description, code.Value.Body);
+        return new TestCaseCodes(code.Key, code.Value.Description, code.Value.Body);
     }
 }

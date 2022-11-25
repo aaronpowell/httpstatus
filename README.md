@@ -21,7 +21,7 @@ Learn more at [httpstat.us](https://httpstat.us).
 
 ## Tech
 
-The site is .NET 6 and it is hosted as a [containerised Azure AppService](https://azure.microsoft.com/services/app-service/containers/?WT.mc_id=dotnet-00000-aapowell#overview).
+The site is .NET 7 and it is hosted as a [containerised Azure AppService](https://azure.microsoft.com/services/app-service/containers/?WT.mc_id=dotnet-00000-aapowell#overview).
 
 ## Self hosting
 

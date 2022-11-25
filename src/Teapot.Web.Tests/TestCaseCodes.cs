@@ -2,9 +2,9 @@
 
 namespace Teapot.Web.Tests;
 
-public readonly struct ExtendedHttpStatusCode
+public class TestCaseCodes
 {
-    public ExtendedHttpStatusCode(int code, string description, string? body)
+    public TestCaseCodes(int code, string description, string? body)
     {
         Code = code;
         Description = description;
@@ -20,7 +20,7 @@ public readonly struct ExtendedHttpStatusCode
     [JsonIgnore]
     public string? Body { get; }
 
-    public override bool Equals(object? obj) => obj is ExtendedHttpStatusCode code && Code == code.Code;
+    public override bool Equals(object? obj) => obj is TestCaseCodes code && Code == code.Code;
 
     public override int GetHashCode() => Code.GetHashCode();
 
