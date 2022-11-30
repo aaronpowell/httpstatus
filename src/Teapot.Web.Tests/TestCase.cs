@@ -2,9 +2,9 @@
 
 namespace Teapot.Web.Tests;
 
-public class TestCaseCodes
+public class TestCase
 {
-    public TestCaseCodes(int code, string description, string? body)
+    public TestCase(int code, string description, string? body)
     {
         Code = code;
         Description = description;
@@ -20,7 +20,7 @@ public class TestCaseCodes
     [JsonIgnore]
     public string? Body { get; }
 
-    public override bool Equals(object? obj) => obj is TestCaseCodes code && Code == code.Code;
+    public override bool Equals(object? obj) => obj is TestCase code && Code == code.Code;
 
     public override int GetHashCode() => Code.GetHashCode();
 

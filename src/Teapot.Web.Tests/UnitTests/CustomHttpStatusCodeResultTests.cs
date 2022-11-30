@@ -44,49 +44,49 @@ public class CustomHttpStatusCodeResultTests
     }
 
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesAll))]
-    public async Task Response_Is_Correct(TestCaseCodes httpStatusCode)
+    public async Task Response_Is_Correct(TestCase testCase)
     {
         var statusCodeResult = new TeapotStatusCodeResult
         {
-            Description = httpStatusCode.Description
+            Description = testCase.Description
         };
 
-        var target = new CustomHttpStatusCodeResult(httpStatusCode.Code, statusCodeResult);
+        var target = new CustomHttpStatusCodeResult(testCase.Code, statusCodeResult);
 
         await target.ExecuteResultAsync(_mockActionContext.Object);
 
-        Assert.That(_httpContext.Response.StatusCode, Is.EqualTo(httpStatusCode.Code));
+        Assert.That(_httpContext.Response.StatusCode, Is.EqualTo(testCase.Code));
         Assert.That(_httpContext.Response.ContentType, Is.EqualTo("text/plain"));
-        Assert.That(_httpResponseFeature.ReasonPhrase, Is.EqualTo(httpStatusCode.Description));
+        Assert.That(_httpResponseFeature.ReasonPhrase, Is.EqualTo(testCase.Description));
 
         _body.Position = 0;
         var sr = new StreamReader(_body);
         var body = sr.ReadToEnd();
-        Assert.That(body, Is.EqualTo(httpStatusCode.ToString()));
+        Assert.That(body, Is.EqualTo(testCase.ToString()));
     }
 
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesAll))]
-    public async Task Response_Json_Is_Correct(TestCaseCodes httpStatusCode)
+    public async Task Response_Json_Is_Correct(TestCase testCase)
     {
         var statusCodeResult = new TeapotStatusCodeResult
         {
-            Description = httpStatusCode.Description
+            Description = testCase.Description
         };
 
-        var target = new CustomHttpStatusCodeResult(httpStatusCode.Code, statusCodeResult);
+        var target = new CustomHttpStatusCodeResult(testCase.Code, statusCodeResult);
 
         _httpContext.Request.Headers.Accept = "application/json";
 
         await target.ExecuteResultAsync(_mockActionContext.Object);
 
-        Assert.That(_httpContext.Response.StatusCode, Is.EqualTo(httpStatusCode.Code));
+        Assert.That(_httpContext.Response.StatusCode, Is.EqualTo(testCase.Code));
         Assert.That(_httpContext.Response.ContentType, Is.EqualTo("application/json"));
-        Assert.That(_httpResponseFeature.ReasonPhrase, Is.EqualTo(httpStatusCode.Description));
+        Assert.That(_httpResponseFeature.ReasonPhrase, Is.EqualTo(testCase.Description));
 
         _body.Position = 0;
         var sr = new StreamReader(_body);
         var body = sr.ReadToEnd();
-        var expectedBody = JsonSerializer.Serialize(httpStatusCode);
+        var expectedBody = JsonSerializer.Serialize(testCase);
         Assert.That(body, Is.EqualTo(expectedBody));
     }
 }
