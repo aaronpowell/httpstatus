@@ -63,6 +63,7 @@ public class CustomHttpStatusCodeResultTests
         var sr = new StreamReader(_body);
         var body = sr.ReadToEnd();
         Assert.That(body, Is.EqualTo(testCase.ToString()));
+        Assert.That(_httpContext.Response.ContentLength, Is.EqualTo(body.Length));
     }
 
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesAll))]
@@ -88,5 +89,33 @@ public class CustomHttpStatusCodeResultTests
         var body = sr.ReadToEnd();
         var expectedBody = JsonSerializer.Serialize(testCase);
         Assert.That(body, Is.EqualTo(expectedBody));
+        Assert.That(_httpContext.Response.ContentLength, Is.EqualTo(body.Length));
+    }
+
+    [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesNoContent))]
+    public async Task Response_No_Content(TestCase testCase)
+    {
+        var statusCodeResult = new TeapotStatusCodeResult
+        {
+            Description = testCase.Description,
+            ExcludeBody = true
+        };
+
+        _httpContext.Response.Headers["Content-Type"] = "text/plain";
+        _httpContext.Response.Headers["Content-Length"] = "42";
+
+        var target = new CustomHttpStatusCodeResult(testCase.Code, statusCodeResult);
+
+        await target.ExecuteResultAsync(_mockActionContext.Object);
+
+        Assert.That(_httpContext.Response.StatusCode, Is.EqualTo(testCase.Code));
+        Assert.That(_httpContext.Response.ContentType, Is.Null);
+        Assert.That(_httpResponseFeature.ReasonPhrase, Is.EqualTo(testCase.Description));
+
+        _body.Position = 0;
+        var sr = new StreamReader(_body);
+        var body = sr.ReadToEnd();
+        Assert.That(body, Is.Empty);
+        Assert.That(_httpContext.Response.ContentLength, Is.Null);
     }
 }

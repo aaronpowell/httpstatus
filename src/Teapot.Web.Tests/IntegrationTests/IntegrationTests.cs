@@ -23,6 +23,9 @@ public class IntegrationTests
         Assert.That((int)response.StatusCode, Is.EqualTo(testCase.Code));
         var body = await response.Content.ReadAsStringAsync();
         Assert.That(body.ReplaceLineEndings(), Is.EqualTo(testCase.Body));
+        Assert.That(response.Content?.Headers?.ContentType, Is.Not.Null);
+        Assert.That(response.Content.Headers.ContentType.MediaType, Is.EqualTo("text/plain"));
+        Assert.That(response.Content.Headers.ContentLength, Is.EqualTo(body.Length));
     }
 
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesNoContent))]
@@ -34,5 +37,7 @@ public class IntegrationTests
         Assert.That((int)response.StatusCode, Is.EqualTo(testCase.Code));
         var body = await response.Content.ReadAsStringAsync();
         Assert.That(body, Is.Empty);
+        Assert.That(response.Content.Headers.ContentType, Is.Null);
+        Assert.That(response.Content.Headers.ContentLength, Is.EqualTo(0));
     }
 }
