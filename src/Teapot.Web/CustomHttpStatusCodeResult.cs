@@ -43,15 +43,8 @@ public class CustomHttpStatusCodeResult : StatusCodeResult
         if (_statusCodeResult.ExcludeBody)
         {
             //remove Content-Length and Content-Type when there isn't any body
-            if (context.HttpContext.Response.Headers.ContainsKey("Content-Length"))
-            {
-                context.HttpContext.Response.Headers.Remove("Content-Length");
-            }
-
-            if (context.HttpContext.Response.Headers.ContainsKey("Content-Type"))
-            {
-                context.HttpContext.Response.Headers.Remove("Content-Type");
-            }
+            context.HttpContext.Response.Headers.Remove("Content-Length");
+            context.HttpContext.Response.Headers.Remove("Content-Type");
         }
         else
         {

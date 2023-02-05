@@ -1,0 +1,45 @@
+﻿using Teapot.Web.Models;
+using Teapot.Web.Models.Unofficial;
+using static System.Net.HttpStatusCode;
+
+namespace Teapot.Web.Tests;
+
+public class TestCases
+{
+    private static readonly TeapotStatusCodeResults All = new(
+            new AmazonStatusCodeResults(),
+            new CloudflareStatusCodeResults(),
+            new EsriStatusCodeResults(),
+            new LaravelStatusCodeResults(),
+            new MicrosoftStatusCodeResults(),
+            new NginxStatusCodeResults(),
+            new TwitterStatusCodeResults()
+            );
+
+    private static readonly HttpStatusCode[] NoContentStatusCodes = new[]
+    {
+        Continue, SwitchingProtocols, Processing, EarlyHints, NoContent, ResetContent, NotModified
+    };
+
+    public static IEnumerable<TestCase> StatusCodesAll =>
+        All.Select(Map);
+
+    public static IEnumerable<TestCase> StatusCodesWithContent =>
+        All
+        .Where(x => !x.Value.ExcludeBody)
+        .Select(Map);
+
+    public static IEnumerable<TestCase> StatusCodesNoContent =>
+        NoContentStatusCodes.Select(Map);
+
+    private static TestCase Map(HttpStatusCode code)
+    {
+        var key = (int)code;
+        return new(key, All[key].Description, All[key].Body);
+    }
+
+    private static TestCase Map(KeyValuePair<int, TeapotStatusCodeResult> code)
+    {
+        return new TestCase(code.Key, code.Value.Description, code.Value.Body);
+    }
+}

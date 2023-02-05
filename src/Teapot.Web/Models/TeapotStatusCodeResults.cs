@@ -264,6 +264,10 @@ public class TeapotStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
         {
             Description = "Locked"
         });
+        Add(424, new TeapotStatusCodeResult
+        {
+            Description = "Failed Dependency"
+        });
         Add(425, new TeapotStatusCodeResult
         {
             Description = "Too Early"
