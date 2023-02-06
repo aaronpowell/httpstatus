@@ -4,43 +4,84 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  AZURE_WEBAPP_NAME: httpstatus-staging
+  IMAGE_NAME: ${{ github.repository }}-staging
+
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
-  build:
-    name: Build
+  build-images:
     runs-on: ubuntu-latest
-    env:
-      DOTNET_CLI_TELEMETRY_OPTOUT: 1
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-      DOTNET_NOLOGO: true
-      DOTNET_GENERATE_ASPNET_CERTIFICATE: false
-      DOTNET_ADD_GLOBAL_TOOLS_TO_PATH: false
-      DOTNET_MULTILEVEL_LOOKUP: 0
-      AZURE_WEBAPP_NAME: httpstatus-staging
-      DOTNET_OUTPUT: .output
+    name: Build Docker images for Azure Container Registry and GitHub Container Registry
+    environment:
+      name: build
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v3
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
         with:
-          dotnet-version: 7.x
+          images: ${{ secrets.GH_REGISTRY_URL }}/${{ env.IMAGE_NAME }},${{ secrets.AZURE_REGISTRY_URL }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,format=long,prefix=
 
-      - name: Restore
-        run: dotnet restore
-        working-directory: src
+      - name: ACR authentication
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.AZURE_REGISTRY_URL }}
+          username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+          password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
 
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-        working-directory: src
+      - name: GPR authentication
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.GH_REGISTRY_URL }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish
-        run: dotnet publish --configuration Release --no-build --output ${{ env.DOTNET_OUTPUT }}
-        working-directory: src
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: src
+          file: src/Teapot.Web/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
+
+  deploy-azure:
+    runs-on: ubuntu-latest
+    name: Deploy to Azure
+    environment:
+      name: production
+    needs: [build-images]
+
+    steps:
+      - name: Azure authentication
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Deploy to Azure WebApp
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING }}
-          package: src/${{ env.DOTNET_OUTPUT }}
+          images: ${{ secrets.AZURE_REGISTRY_URL }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
