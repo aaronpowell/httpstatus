@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 env:
-  AZURE_WEBAPP_NAME: httpstatus-staging
+  AZURE_WEBAPP_NAME: httpstatus-preview
   IMAGE_NAME: ${{ github.repository }}
 
 permissions:
