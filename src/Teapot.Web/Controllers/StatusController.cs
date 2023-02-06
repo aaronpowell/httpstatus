@@ -6,7 +6,7 @@ using Teapot.Web.Models;
 namespace Teapot.Web.Controllers;
 
 public class StatusController : Controller {
-    private const string SLEEP_HEADER = "X-Sleep";
+    public const string SLEEP_HEADER = "X-HttpStatus-Sleep";
 
     private readonly TeapotStatusCodeResults _statusCodes;
 

@@ -44,7 +44,7 @@ internal class SleepTests {
                 HttpContext = new DefaultHttpContext()
             }
         };
-        controller.ControllerContext.HttpContext.Request.Headers.Add("X-Sleep", Sleep.ToString());
+        controller.ControllerContext.HttpContext.Request.Headers.Add(StatusController.SLEEP_HEADER, Sleep.ToString());
 
         IActionResult result = controller.StatusCode(200, null);
 
@@ -63,7 +63,7 @@ internal class SleepTests {
                 HttpContext = new DefaultHttpContext()
             }
         };
-        controller.ControllerContext.HttpContext.Request.Headers.Add("X-Sleep", Sleep.ToString());
+        controller.ControllerContext.HttpContext.Request.Headers.Add(StatusController.SLEEP_HEADER, Sleep.ToString());
 
         IActionResult result = controller.StatusCode(200, Sleep * 2);
 
@@ -82,7 +82,7 @@ internal class SleepTests {
                 HttpContext = new DefaultHttpContext()
             }
         };
-        controller.ControllerContext.HttpContext.Request.Headers.Add("X-Sleep", "invalid");
+        controller.ControllerContext.HttpContext.Request.Headers.Add(StatusController.SLEEP_HEADER, "invalid");
 
         IActionResult result = controller.StatusCode(200, null);
 
