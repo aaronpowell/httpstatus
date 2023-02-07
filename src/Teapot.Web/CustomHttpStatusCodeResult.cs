@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Teapot.Web.Models;
 
@@ -15,14 +17,16 @@ public class CustomHttpStatusCodeResult : StatusCodeResult {
     private const int SLEEP_MAX = 5 * 60 * 1000; // 5 mins in milliseconds
 
     private readonly TeapotStatusCodeResult _statusCodeResult;
-    private readonly int? sleep;
+    private readonly int? _sleep;
+    private readonly Dictionary<string, StringValues> _customResponseHeaders;
 
-    public int? Sleep => sleep;
+    public int? Sleep => _sleep;
 
-    public CustomHttpStatusCodeResult([ActionResultStatusCode] int statusCode, TeapotStatusCodeResult statusCodeResult, int? sleep)
+    public CustomHttpStatusCodeResult([ActionResultStatusCode] int statusCode, TeapotStatusCodeResult statusCodeResult, int? sleep, Dictionary<string, StringValues> customResponseHeaders)
         : base(statusCode) {
         _statusCodeResult = statusCodeResult;
-        this.sleep = sleep;
+        _sleep = sleep;
+        _customResponseHeaders = customResponseHeaders;
     }
 
     public override async Task ExecuteResultAsync(ActionContext context) {
@@ -38,17 +42,20 @@ public class CustomHttpStatusCodeResult : StatusCodeResult {
         }
 
         if (_statusCodeResult.IncludeHeaders is not null) {
-            foreach (var header in _statusCodeResult.IncludeHeaders) {
-                context.HttpContext.Response.Headers.Add(header.Key, header.Value);
+            foreach ((string header, StringValues values) in _statusCodeResult.IncludeHeaders) {
+                context.HttpContext.Response.Headers.Add(header, values);
             }
+        }
+
+        foreach ((string header, StringValues values) in _customResponseHeaders) {
+            context.HttpContext.Response.Headers.Add(header, values);
         }
 
         if (_statusCodeResult.ExcludeBody) {
             //remove Content-Length and Content-Type when there isn't any body
             context.HttpContext.Response.Headers.Remove("Content-Length");
             context.HttpContext.Response.Headers.Remove("Content-Type");
-        }
-        else {
+        } else {
             var acceptTypes = context.HttpContext.Request.GetTypedHeaders().Accept;
 
             if (acceptTypes is not null) {

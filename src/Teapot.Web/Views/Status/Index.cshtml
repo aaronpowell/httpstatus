@@ -29,19 +29,22 @@
     <em>*When using the hosted instance the timeout is actually 230 seconds, which is the max timeout allowed by an Azure App Service (see <a href="https://social.msdn.microsoft.com/Forums/en-US/05f254a6-9b34-4eb2-a5f7-2a82fb40135f/time-out-after-230-seconds?forum=windowsazurewebsitespreview" target="_blank">this thread post</a>). If you host it yourself expect the limits to be different.</em>
 </p>
 
+<p>
+    If you want to return additional headers to the client, you can send them in the request with the <code>@StatusController.CUSTOM_RESPONSE_HEADER_PREFIX</code> prefix. A header of <code>@(StatusController.CUSTOM_RESPONSE_HEADER_PREFIX)Foo: Bar</code> will append the <code>Foo: Bar</code> header in the response.
+</p>
+
 <p>Here are all the codes we support (and any special notes):</p>
 <dl>
-    @foreach ((int statusCode, TeapotStatusCodeResult result) in Model.OrderBy(x => x.Value.IsNonStandard).ThenBy(x => x.Key))
-    {
+    @foreach ((int statusCode, TeapotStatusCodeResult result) in Model.OrderBy(x => x.Value.IsNonStandard).ThenBy(x => x.Key)) {
         <dt>@Html.RouteLink(statusCode.ToString(), "StatusCode", new { statusCode })</dt>
         <dd>
-            @if (result.Link is not null)
-            {
+            @if (result.Link is not null) {
                 <a href="@result.Link" target="_blank" title="@result.Description">@result.Description@(result.IsNonStandard ? " (non-standard status code)" : "")</a>
             }
-            else
-            {
-                @result.Description@(result.IsNonStandard ? " (non-standard status code)" : "")
+            else {
+                @result.Description
+
+                @(result.IsNonStandard ? " (non-standard status code)" : "")
             }
         </dd>
     }

@@ -50,7 +50,7 @@ public class CustomHttpStatusCodeResultTests
             Description = testCase.Description
         };
 
-        var target = new CustomHttpStatusCodeResult(testCase.Code, statusCodeResult, null);
+        var target = new CustomHttpStatusCodeResult(testCase.Code, statusCodeResult, null, new());
 
         await target.ExecuteResultAsync(_mockActionContext.Object);
         Assert.Multiple(() => {
@@ -74,7 +74,7 @@ public class CustomHttpStatusCodeResultTests
             Description = testCase.Description
         };
 
-        var target = new CustomHttpStatusCodeResult(testCase.Code, statusCodeResult, null);
+        var target = new CustomHttpStatusCodeResult(testCase.Code, statusCodeResult, null, new());
 
         _httpContext.Request.Headers.Accept = "application/json";
 
@@ -105,7 +105,7 @@ public class CustomHttpStatusCodeResultTests
         _httpContext.Response.Headers["Content-Type"] = "text/plain";
         _httpContext.Response.Headers["Content-Length"] = "42";
 
-        var target = new CustomHttpStatusCodeResult(testCase.Code, statusCodeResult, null);
+        var target = new CustomHttpStatusCodeResult(testCase.Code, statusCodeResult, null, new());
 
         await target.ExecuteResultAsync(_mockActionContext.Object);
         Assert.Multiple(() => {

@@ -5,7 +5,7 @@ using Teapot.Web.Models;
 using Teapot.Web.Models.Unofficial;
 
 namespace Teapot.Web.Tests.UnitTests;
-internal class SleepTests {
+public class SleepTests {
     private const int Sleep = 500;
 
     private TeapotStatusCodeResults _statusCodes;
@@ -25,7 +25,11 @@ internal class SleepTests {
 
     [Test]
     public void SleepReadFromQuery() {
-        StatusController controller = new(_statusCodes);
+        StatusController controller = new(_statusCodes) {
+            ControllerContext = new ControllerContext {
+                HttpContext = new DefaultHttpContext()
+            }
+        };
 
         IActionResult result = controller.StatusCode(200, Sleep);
 
