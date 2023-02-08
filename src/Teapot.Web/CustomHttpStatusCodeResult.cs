@@ -42,7 +42,7 @@ public class CustomHttpStatusCodeResult : StatusCodeResult {
         }
 
         if (_statusCodeResult.IncludeHeaders is not null) {
-            foreach ((string header, StringValues values) in _statusCodeResult.IncludeHeaders) {
+            foreach ((var header, var values) in _statusCodeResult.IncludeHeaders) {
                 context.HttpContext.Response.Headers.Add(header, values);
             }
         }
