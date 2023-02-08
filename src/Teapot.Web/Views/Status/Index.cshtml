@@ -23,6 +23,13 @@
 </p>
 
 <p>
+    To get a random response back, use the <code class="inline">random/{range}</code> endpoint,
+    for example
+    @Html.RouteLink("httpstat.us/random/200,201,500-504", "Random", new {range = "200,201,500-504"}).
+    You can duplicate ranges in order to increase their probability.
+</p>
+
+<p>
     If you want a delay on the response add a query string or provide a header of <code>@StatusController.SLEEP_HEADER</code> for the sleep duration (the time in ms, max 5 minutes*), like this:
     @Html.RouteLink("httpstat.us/200?sleep=5000", "StatusCode", new {statusCode = 200, sleep = 5000})
     <br />

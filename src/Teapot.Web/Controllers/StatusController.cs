@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Net;
 using Teapot.Web.Models;
 
 namespace Teapot.Web.Controllers;
@@ -9,9 +10,12 @@ public class StatusController : Controller {
     public const string CUSTOM_RESPONSE_HEADER_PREFIX = "X-HttpStatus-Response-";
 
     private readonly TeapotStatusCodeResults _statusCodes;
+    private readonly IRandomSequenceGenerator _randomSequenceGenerator;
 
-    public StatusController(TeapotStatusCodeResults statusCodes) {
+    public StatusController(TeapotStatusCodeResults statusCodes, IRandomSequenceGenerator randomSequenceGenerator)
+    {
         _statusCodes = statusCodes;
+        _randomSequenceGenerator = randomSequenceGenerator;
     }
 
     [Route("")]
@@ -31,6 +35,18 @@ public class StatusController : Controller {
             .ToDictionary(header => header.Key.Replace(CUSTOM_RESPONSE_HEADER_PREFIX, string.Empty), header => header.Value);
 
         return new CustomHttpStatusCodeResult(statusCode, statusData, sleep, customResponseHeaders);
+    }
+
+    [Route("Random/{range?}", Name = "Random")]
+    [Route("Random/{range?}/{*wildcard}", Name = "RandomWildcard")]
+    public IActionResult Random(string range = "100-599", int? sleep = null)
+    {
+        if (_randomSequenceGenerator.TryParse(range, out var random))
+        {
+            var statusCode = random.Next;
+            return StatusCode(statusCode, sleep);
+        }
+        return new StatusCodeResult((int)HttpStatusCode.BadRequest);
     }
 
     private int? FindSleepInHeader() {

@@ -117,6 +117,10 @@ code {
     margin-left: 30px;
 }
 
+code.inline {
+    display: initial;
+    margin-left: initial;
+}
 
 footer {
     margin: 50px 0 30px;

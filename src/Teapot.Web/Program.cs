@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Teapot.Web;
 using Teapot.Web.Models;
 using Teapot.Web.Models.Unofficial;
 
@@ -15,6 +16,7 @@ builder.Services.AddSingleton<MicrosoftStatusCodeResults>();
 builder.Services.AddSingleton<NginxStatusCodeResults>();
 builder.Services.AddSingleton<TwitterStatusCodeResults>();
 
+builder.Services.AddSingleton<IRandomSequenceGenerator, RandomSequenceGenerator>();
 builder.Services.AddSingleton<TeapotStatusCodeResults>();
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddControllersWithViews();
