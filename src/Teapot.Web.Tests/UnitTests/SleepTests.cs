@@ -9,7 +9,6 @@ public class SleepTests {
     private const int Sleep = 500;
 
     private TeapotStatusCodeResults _statusCodes;
-    private Mock<IRandomSequenceGenerator> _randomSequenceGenerator;
 
     [SetUp]
     public void Setup() {
@@ -22,12 +21,11 @@ public class SleepTests {
             new NginxStatusCodeResults(),
             new TwitterStatusCodeResults()
         );
-        _randomSequenceGenerator = new Mock<IRandomSequenceGenerator>();
     }
 
     [Test]
     public void SleepReadFromQuery() {
-        StatusController controller = new(_statusCodes, _randomSequenceGenerator.Object) {
+        StatusController controller = new(_statusCodes) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext()
             }
@@ -45,7 +43,7 @@ public class SleepTests {
 
     [Test]
     public void SleepReadFromHeader() {
-        StatusController controller = new(_statusCodes, _randomSequenceGenerator.Object) {
+        StatusController controller = new(_statusCodes) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext()
             }
@@ -64,7 +62,7 @@ public class SleepTests {
 
     [Test]
     public void SleepReadFromQSTakesPriorityHeader() {
-        StatusController controller = new(_statusCodes, _randomSequenceGenerator.Object) {
+        StatusController controller = new(_statusCodes) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext()
             }
@@ -83,7 +81,7 @@ public class SleepTests {
 
     [Test]
     public void BadSleepHeaderIgnored() {
-        StatusController controller = new(_statusCodes, _randomSequenceGenerator.Object) {
+        StatusController controller = new(_statusCodes) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext()
             }

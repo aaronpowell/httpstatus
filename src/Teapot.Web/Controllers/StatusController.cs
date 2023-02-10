@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Net;
 using Teapot.Web.Models;
@@ -10,12 +12,10 @@ public class StatusController : Controller {
     public const string CUSTOM_RESPONSE_HEADER_PREFIX = "X-HttpStatus-Response-";
 
     private readonly TeapotStatusCodeResults _statusCodes;
-    private readonly IRandomSequenceGenerator _randomSequenceGenerator;
 
-    public StatusController(TeapotStatusCodeResults statusCodes, IRandomSequenceGenerator randomSequenceGenerator)
+    public StatusController(TeapotStatusCodeResults statusCodes)
     {
         _statusCodes = statusCodes;
-        _randomSequenceGenerator = randomSequenceGenerator;
     }
 
     [Route("")]
@@ -41,12 +41,15 @@ public class StatusController : Controller {
     [Route("Random/{range?}/{*wildcard}", Name = "RandomWildcard")]
     public IActionResult Random(string range = "100-599", int? sleep = null)
     {
-        if (_randomSequenceGenerator.TryParse(range, out var random))
+        try
         {
-            var statusCode = random.Next;
+            var statusCode = GetRandomStatus(range);
             return StatusCode(statusCode, sleep);
         }
-        return new StatusCodeResult((int)HttpStatusCode.BadRequest);
+        catch
+        {
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
+        }
     }
 
     private int? FindSleepInHeader() {
@@ -58,5 +61,17 @@ public class StatusController : Controller {
         }
 
         return null;
+    }
+
+    private int GetRandomStatus(string range)
+    {
+        // copied from https://stackoverflow.com/a/37213725/260221
+        var options = range.Split(',')
+                           .Select(x => x.Split('-'))
+                           .Select(p => new { First = int.Parse(p.First()), Last = int.Parse(p.Last()) })
+                           .SelectMany(x => Enumerable.Range(x.First, x.Last - x.First + 1))
+                           .ToArray();
+
+        return options[new Random().Next(options.Length)];
     }
 }

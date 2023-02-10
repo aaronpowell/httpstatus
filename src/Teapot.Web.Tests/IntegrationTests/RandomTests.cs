@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace Teapot.Web.Tests.IntegrationTests;
 
