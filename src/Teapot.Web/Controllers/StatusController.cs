@@ -9,6 +9,7 @@ namespace Teapot.Web.Controllers;
 
 public class StatusController : Controller {
     public const string SLEEP_HEADER = "X-HttpStatus-Sleep";
+    public const string SUPPRESS_BODY_HEADER = "X-HttpStatus-SuppressBody";
     public const string CUSTOM_RESPONSE_HEADER_PREFIX = "X-HttpStatus-Response-";
 
     private readonly TeapotStatusCodeResults _statusCodes;
@@ -23,28 +24,29 @@ public class StatusController : Controller {
 
     [Route("{statusCode:int}", Name = "StatusCode")]
     [Route("{statusCode:int}/{*wildcard}", Name = "StatusCodeWildcard")]
-    public IActionResult StatusCode(int statusCode, int? sleep) {
+    public IActionResult StatusCode(int statusCode, int? sleep, bool? suppressBody) {
         var statusData = _statusCodes.ContainsKey(statusCode)
             ? _statusCodes[statusCode]
             : new TeapotStatusCodeResult { Description = $"{statusCode} Unknown Code" };
 
         sleep ??= FindSleepInHeader();
+        suppressBody ??= FindSuppressBodyInHeader();
 
         var customResponseHeaders = HttpContext.Request.Headers
             .Where(header => header.Key.StartsWith(CUSTOM_RESPONSE_HEADER_PREFIX))
             .ToDictionary(header => header.Key.Replace(CUSTOM_RESPONSE_HEADER_PREFIX, string.Empty), header => header.Value);
 
-        return new CustomHttpStatusCodeResult(statusCode, statusData, sleep, customResponseHeaders);
+        return new CustomHttpStatusCodeResult(statusCode, statusData, sleep, suppressBody, customResponseHeaders);
     }
 
     [Route("Random/{range?}", Name = "Random")]
     [Route("Random/{range?}/{*wildcard}", Name = "RandomWildcard")]
-    public IActionResult Random(string range = "100-599", int? sleep = null)
+    public IActionResult Random(string range = "100-599", int? sleep = null, bool? suppressBody = null)
     {
         try
         {
             var statusCode = GetRandomStatus(range);
-            return StatusCode(statusCode, sleep);
+            return StatusCode(statusCode, sleep, suppressBody);
         }
         catch
         {
@@ -57,6 +59,20 @@ public class StatusController : Controller {
             var val = sleepHeader[0];
             if (int.TryParse(val, out var sleepFromHeader)) {
                 return sleepFromHeader;
+            }
+        }
+
+        return null;
+    }
+    
+    private bool? FindSuppressBodyInHeader()
+    {
+        if (HttpContext.Request.Headers.TryGetValue(SUPPRESS_BODY_HEADER, out var suppressBodyHeader) && suppressBodyHeader.Count == 1 && suppressBodyHeader[0] is not null)
+        {
+            var val = suppressBodyHeader[0];
+            if (bool.TryParse(val, out var suppressBodyFromHeader))
+            {
+                return suppressBodyFromHeader;
             }
         }
 
