@@ -26,8 +26,10 @@ public class SuppressBodyTests {
     [TestCase(false)]
     [TestCase(null)]
     public void SuppressBodyReadFromQuery(bool? suppressBody) {
-        StatusController controller = new(_statusCodes) {
-            ControllerContext = new ControllerContext {
+        StatusController controller = new(_statusCodes)
+        {
+            ControllerContext = new ControllerContext
+            {
                 HttpContext = new DefaultHttpContext()
             }
         };
