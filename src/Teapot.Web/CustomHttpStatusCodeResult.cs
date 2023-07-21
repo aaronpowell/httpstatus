@@ -18,14 +18,18 @@ public class CustomHttpStatusCodeResult : StatusCodeResult {
 
     private readonly TeapotStatusCodeResult _statusCodeResult;
     private readonly int? _sleep;
+    private readonly bool? _suppressBody;
     private readonly Dictionary<string, StringValues> _customResponseHeaders;
 
     public int? Sleep => _sleep;
 
-    public CustomHttpStatusCodeResult([ActionResultStatusCode] int statusCode, TeapotStatusCodeResult statusCodeResult, int? sleep, Dictionary<string, StringValues> customResponseHeaders)
+    public bool? SuppressBody => _suppressBody;
+
+    public CustomHttpStatusCodeResult([ActionResultStatusCode] int statusCode, TeapotStatusCodeResult statusCodeResult, int? sleep, bool? suppressBody, Dictionary<string, StringValues> customResponseHeaders)
         : base(statusCode) {
         _statusCodeResult = statusCodeResult;
         _sleep = sleep;
+        _suppressBody = suppressBody;
         _customResponseHeaders = customResponseHeaders;
     }
 
@@ -51,7 +55,7 @@ public class CustomHttpStatusCodeResult : StatusCodeResult {
             context.HttpContext.Response.Headers.Add(header, values);
         }
 
-        if (_statusCodeResult.ExcludeBody) {
+        if (_statusCodeResult.ExcludeBody || _suppressBody == true) {
             //remove Content-Length and Content-Type when there isn't any body
             context.HttpContext.Response.Headers.Remove("Content-Length");
             context.HttpContext.Response.Headers.Remove("Content-Type");

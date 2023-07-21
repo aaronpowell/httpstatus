@@ -31,7 +31,7 @@ public class SleepTests {
             }
         };
 
-        IActionResult result = controller.StatusCode(200, Sleep);
+        IActionResult result = controller.StatusCode(200, Sleep, null);
 
         Assert.Multiple(() => {
             Assert.That(result, Is.InstanceOf<CustomHttpStatusCodeResult>());
@@ -50,7 +50,7 @@ public class SleepTests {
         };
         controller.ControllerContext.HttpContext.Request.Headers.Add(StatusController.SLEEP_HEADER, Sleep.ToString());
 
-        IActionResult result = controller.StatusCode(200, null);
+        IActionResult result = controller.StatusCode(200, null, null);
 
         Assert.Multiple(() => {
             Assert.That(result, Is.InstanceOf<CustomHttpStatusCodeResult>());
@@ -69,7 +69,7 @@ public class SleepTests {
         };
         controller.ControllerContext.HttpContext.Request.Headers.Add(StatusController.SLEEP_HEADER, Sleep.ToString());
 
-        IActionResult result = controller.StatusCode(200, Sleep * 2);
+        IActionResult result = controller.StatusCode(200, Sleep * 2, null);
 
         Assert.Multiple(() => {
             Assert.That(result, Is.InstanceOf<CustomHttpStatusCodeResult>());
@@ -88,7 +88,7 @@ public class SleepTests {
         };
         controller.ControllerContext.HttpContext.Request.Headers.Add(StatusController.SLEEP_HEADER, "invalid");
 
-        IActionResult result = controller.StatusCode(200, null);
+        IActionResult result = controller.StatusCode(200, null, null);
 
         Assert.Multiple(() => {
             Assert.That(result, Is.InstanceOf<CustomHttpStatusCodeResult>());
