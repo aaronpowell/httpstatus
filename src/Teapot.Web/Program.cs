@@ -2,24 +2,30 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Teapot.Web;
 using Teapot.Web.Models;
 using Teapot.Web.Models.Unofficial;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<AmazonStatusCodeResults>();
-builder.Services.AddSingleton<CloudflareStatusCodeResults>();
-builder.Services.AddSingleton<EsriStatusCodeResults>();
-builder.Services.AddSingleton<LaravelStatusCodeResults>();
-builder.Services.AddSingleton<MicrosoftStatusCodeResults>();
-builder.Services.AddSingleton<NginxStatusCodeResults>();
-builder.Services.AddSingleton<TwitterStatusCodeResults>();
+builder.Services.AddRazorPages();
 
-builder.Services.AddSingleton<TeapotStatusCodeResults>();
+builder.Services.AddSingleton<AmazonStatusCodeMetadata>();
+builder.Services.AddSingleton<CloudflareStatusCodeMetadata>();
+builder.Services.AddSingleton<EsriStatusCodeMetadata>();
+builder.Services.AddSingleton<LaravelStatusCodeMetadata>();
+builder.Services.AddSingleton<MicrosoftStatusCodeMetadata>();
+builder.Services.AddSingleton<NginxStatusCodeMetadata>();
+builder.Services.AddSingleton<TwitterStatusCodeMetadata>();
+
+builder.Services.AddSingleton<TeapotStatusCodeMetadataCollection>();
 builder.Services.AddApplicationInsightsTelemetry();
-builder.Services.AddControllersWithViews();
 
-var app = builder.Build();
+builder.Services.AddFairUseRateLimiter();
+
+builder.Services.AddCors();
+
+WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
@@ -43,17 +49,19 @@ app.UseCors(builder =>
         .AllowAnyMethod()
         .WithExposedHeaders(new[]
         {
-                    "Link", // 103
-                    "Content-Range", // 206
-                    "Location", // 301, 302, 303, 305, 307, 308
-                    "WWW-Authenticate", // 401
-                    "Proxy-Authenticate", // 407
-                    "Retry-After" // 429
+            "Link", // 103
+            "Content-Range", // 206
+            "Location", // 301, 302, 303, 305, 307, 308
+            "WWW-Authenticate", // 401
+            "Proxy-Authenticate", // 407
+            "Retry-After" // 429
         });
 });
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Teapot}/{action=teapot}");
+app.UseFairUseRateLimiter();
+
+app.MapStatusEndpoints(FairUseRateLimiterExtensions.PolicyName);
+
+app.MapRazorPages();
 
 app.Run();

@@ -2,11 +2,11 @@
 
 namespace Teapot.Web.Models.Unofficial;
 
-public class TwitterStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
+public class TwitterStatusCodeMetadata : Dictionary<int, TeapotStatusCodeMetadata>
 {
-    public TwitterStatusCodeResults()
+    public TwitterStatusCodeMetadata()
     {
-        Add(420, new TeapotStatusCodeResult
+        Add(420, new TeapotStatusCodeMetadata
         {
             Description = "Enhance Your Calm",
             IsNonStandard = true,

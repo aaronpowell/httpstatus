@@ -2,51 +2,51 @@
 
 namespace Teapot.Web.Models.Unofficial;
 
-public class CloudflareStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
+public class CloudflareStatusCodeMetadata : Dictionary<int, TeapotStatusCodeMetadata>
 {
-    public CloudflareStatusCodeResults()
+    public CloudflareStatusCodeMetadata()
     {
-        Add(520, new TeapotStatusCodeResult
+        Add(520, new TeapotStatusCodeMetadata
         {
             Description = "Web Server Returned an Unknown Error",
             IsNonStandard = true,
         });
-        Add(521, new TeapotStatusCodeResult
+        Add(521, new TeapotStatusCodeMetadata
         {
             Description = "Web Server Is Down",
             IsNonStandard = true,
         });
-        Add(522, new TeapotStatusCodeResult
+        Add(522, new TeapotStatusCodeMetadata
         {
             Description = "Connection Timed out",
             IsNonStandard = true,
         });
-        Add(523, new TeapotStatusCodeResult
+        Add(523, new TeapotStatusCodeMetadata
         {
             Description = "Origin Is Unreachable",
             IsNonStandard = true,
         });
-        Add(524, new TeapotStatusCodeResult
+        Add(524, new TeapotStatusCodeMetadata
         {
             Description = "A Timeout Occurred",
             IsNonStandard = true,
         });
-        Add(525, new TeapotStatusCodeResult
+        Add(525, new TeapotStatusCodeMetadata
         {
             Description = "SSL Handshake Failed",
             IsNonStandard = true,
         });
-        Add(526, new TeapotStatusCodeResult
+        Add(526, new TeapotStatusCodeMetadata
         {
             Description = "Invalid SSL Certificate",
             IsNonStandard = true,
         });
-        Add(527, new TeapotStatusCodeResult
+        Add(527, new TeapotStatusCodeMetadata
         {
             Description = "Railgun Error",
             IsNonStandard = true,
         });
-        Add(530, new TeapotStatusCodeResult
+        Add(530, new TeapotStatusCodeMetadata
         {
             Description = "Origin DNS Error",
             IsNonStandard = true,

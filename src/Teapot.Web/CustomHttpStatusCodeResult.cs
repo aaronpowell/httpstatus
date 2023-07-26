@@ -1,85 +1,88 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.Extensions.Primitives;
-using Microsoft.Net.Http.Headers;
 using Teapot.Web.Models;
 
 namespace Teapot.Web;
 
-public class CustomHttpStatusCodeResult : StatusCodeResult {
+public class CustomHttpStatusCodeResult(
+    int statusCode,
+    TeapotStatusCodeMetadata metadata,
+    int? sleep,
+    bool? suppressBody,
+    Dictionary<string, StringValues> customResponseHeaders) : IResult
+{
     private const int SLEEP_MIN = 0;
     private const int SLEEP_MAX = 5 * 60 * 1000; // 5 mins in milliseconds
 
-    private readonly TeapotStatusCodeResult _statusCodeResult;
-    private readonly int? _sleep;
-    private readonly bool? _suppressBody;
-    private readonly Dictionary<string, StringValues> _customResponseHeaders;
+    private static readonly MediaTypeHeaderValue jsonMimeType = new("application/json");
 
-    public int? Sleep => _sleep;
+    public int? Sleep => sleep;
 
-    public bool? SuppressBody => _suppressBody;
+    public bool? SuppressBody => suppressBody;
 
-    public CustomHttpStatusCodeResult([ActionResultStatusCode] int statusCode, TeapotStatusCodeResult statusCodeResult, int? sleep, bool? suppressBody, Dictionary<string, StringValues> customResponseHeaders)
-        : base(statusCode) {
-        _statusCodeResult = statusCodeResult;
-        _sleep = sleep;
-        _suppressBody = suppressBody;
-        _customResponseHeaders = customResponseHeaders;
-    }
-
-    public override async Task ExecuteResultAsync(ActionContext context) {
+    public async Task ExecuteAsync(HttpContext context)
+    {
         await DoSleep(Sleep);
 
-        await base.ExecuteResultAsync(context);
+        context.Response.StatusCode = statusCode;
 
-        if (!string.IsNullOrEmpty(_statusCodeResult.Description)) {
-            var httpResponseFeature = context.HttpContext.Features.Get<IHttpResponseFeature>();
-            if (httpResponseFeature is not null) {
-                httpResponseFeature.ReasonPhrase = _statusCodeResult.Description;
+        if (!string.IsNullOrEmpty(metadata.Description))
+        {
+            IHttpResponseFeature? httpResponseFeature = context.Features.Get<IHttpResponseFeature>();
+            if (httpResponseFeature is not null)
+            {
+                httpResponseFeature.ReasonPhrase = metadata.Description;
             }
         }
 
-        if (_statusCodeResult.IncludeHeaders is not null) {
-            foreach ((var header, var values) in _statusCodeResult.IncludeHeaders) {
-                context.HttpContext.Response.Headers.Add(header, values);
+        if (metadata.IncludeHeaders is not null)
+        {
+            foreach ((string header, string values) in metadata.IncludeHeaders)
+            {
+                context.Response.Headers.Add(header, values);
             }
         }
 
-        foreach ((string header, StringValues values) in _customResponseHeaders) {
-            context.HttpContext.Response.Headers.Add(header, values);
+        foreach ((string header, StringValues values) in customResponseHeaders)
+        {
+            context.Response.Headers.Add(header, values);
         }
 
-        if (_statusCodeResult.ExcludeBody || _suppressBody == true) {
+        if (metadata.ExcludeBody || suppressBody == true)
+        {
             //remove Content-Length and Content-Type when there isn't any body
-            context.HttpContext.Response.Headers.Remove("Content-Length");
-            context.HttpContext.Response.Headers.Remove("Content-Type");
-        } else {
-            var acceptTypes = context.HttpContext.Request.GetTypedHeaders().Accept;
+            context.Response.Headers.Remove("Content-Length");
+            context.Response.Headers.Remove("Content-Type");
+        }
+        else
+        {
+            IList<MediaTypeHeaderValue> acceptTypes = context.Request.GetTypedHeaders().Accept;
 
-            if (acceptTypes is not null) {
-                var (body, contentType) = acceptTypes.Contains(new MediaTypeHeaderValue("application/json")) switch {
-                    true => (JsonSerializer.Serialize(new { code = StatusCode, description = _statusCodeResult.Body ?? _statusCodeResult.Description }), "application/json"),
-                    false => (_statusCodeResult.Body ?? $"{StatusCode} {_statusCodeResult.Description}", "text/plain")
-                };
+            (string body, string contentType) = acceptTypes.Contains(jsonMimeType) switch
+            {
+                true => (JsonSerializer.Serialize(new { code = statusCode, description = metadata.Body ?? metadata.Description }), "application/json"),
+                false => (metadata.Body ?? $"{statusCode} {metadata.Description}", "text/plain")
+            };
 
-                context.HttpContext.Response.ContentType = contentType;
-                context.HttpContext.Response.ContentLength = body.Length;
-                await context.HttpContext.Response.WriteAsync(body);
-            }
+            context.Response.ContentType = contentType;
+            context.Response.ContentLength = body.Length;
+            await context.Response.WriteAsync(body);
+
         }
     }
 
-    private static async Task DoSleep(int? sleep) {
-        var sleepData = Math.Clamp(sleep ?? 0, SLEEP_MIN, SLEEP_MAX);
-        if (sleepData > 0) {
+    private static async Task DoSleep(int? sleep)
+    {
+        int sleepData = Math.Clamp(sleep ?? 0, SLEEP_MIN, SLEEP_MAX);
+        if (sleepData > 0)
+        {
             await Task.Delay(sleepData);
         }
     }
-
 }

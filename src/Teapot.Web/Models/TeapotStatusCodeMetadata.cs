@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Teapot.Web.Models;
 
-public class TeapotStatusCodeResult
+public class TeapotStatusCodeMetadata
 {
     public string Description { get; set; } = "";
     public Dictionary<string, string> IncludeHeaders { get; set; } = new();
