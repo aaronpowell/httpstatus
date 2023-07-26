@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Teapot.Web.Controllers;
 
 namespace Teapot.Web.Tests.IntegrationTests;
 
@@ -18,11 +17,11 @@ public class StatusCodeTests
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesWithContent))]
     public async Task ResponseWithContent([Values] TestCase testCase)
     {
-        var uri = $"/{testCase.Code}";
-        using var httpRequest = new HttpRequestMessage(_httpMethod, uri);
-        using var response = await _httpClient.SendAsync(httpRequest);
+        string uri = $"/{testCase.Code}";
+        using HttpRequestMessage httpRequest = new HttpRequestMessage(_httpMethod, uri);
+        using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest);
         Assert.That((int)response.StatusCode, Is.EqualTo(testCase.Code));
-        var body = await response.Content.ReadAsStringAsync();
+        string body = await response.Content.ReadAsStringAsync();
         Assert.Multiple(() =>
         {
             Assert.That(body.ReplaceLineEndings(), Is.EqualTo(testCase.Body));
@@ -35,11 +34,11 @@ public class StatusCodeTests
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesWithContent))]
     public async Task ResponseWithContentSuppressedViaQs([Values] TestCase testCase)
     {
-        var uri = $"/{testCase.Code}?{nameof(CustomHttpStatusCodeResult.SuppressBody)}=true";
-        using var httpRequest = new HttpRequestMessage(_httpMethod, uri);
-        using var response = await _httpClient.SendAsync(httpRequest);
+        string uri = $"/{testCase.Code}?{nameof(CustomHttpStatusCodeResult.SuppressBody)}=true";
+        using HttpRequestMessage httpRequest = new HttpRequestMessage(_httpMethod, uri);
+        using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest);
         Assert.That((int)response.StatusCode, Is.EqualTo(testCase.Code));
-        var body = await response.Content.ReadAsStringAsync();
+        string body = await response.Content.ReadAsStringAsync();
         Assert.Multiple(() =>
         {
             Assert.That(body, Is.Empty);
@@ -52,12 +51,12 @@ public class StatusCodeTests
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesWithContent))]
     public async Task ResponseWithContentSuppressedViaHeader([Values] TestCase testCase)
     {
-        var uri = $"/{testCase.Code}";
-        using var httpRequest = new HttpRequestMessage(_httpMethod, uri);
-        httpRequest.Headers.Add(StatusController.SUPPRESS_BODY_HEADER, "true");
-        using var response = await _httpClient.SendAsync(httpRequest);
+        string uri = $"/{testCase.Code}";
+        using HttpRequestMessage httpRequest = new HttpRequestMessage(_httpMethod, uri);
+        httpRequest.Headers.Add(StatusExtensions.SUPPRESS_BODY_HEADER, "true");
+        using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest);
         Assert.That((int)response.StatusCode, Is.EqualTo(testCase.Code));
-        var body = await response.Content.ReadAsStringAsync();
+        string body = await response.Content.ReadAsStringAsync();
         Assert.Multiple(() =>
         {
             Assert.That(body, Is.Empty);
@@ -70,11 +69,11 @@ public class StatusCodeTests
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesNoContent))]
     public async Task ResponseNoContent([Values] TestCase testCase)
     {
-        var uri = $"/{testCase.Code}";
-        using var httpRequest = new HttpRequestMessage(_httpMethod, uri);
-        using var response = await _httpClient.SendAsync(httpRequest);
+        string uri = $"/{testCase.Code}";
+        using HttpRequestMessage httpRequest = new HttpRequestMessage(_httpMethod, uri);
+        using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest);
         Assert.That((int)response.StatusCode, Is.EqualTo(testCase.Code));
-        var body = await response.Content.ReadAsStringAsync();
+        string body = await response.Content.ReadAsStringAsync();
         Assert.Multiple(() =>
         {
             Assert.That(body, Is.Empty);

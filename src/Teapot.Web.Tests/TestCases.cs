@@ -6,14 +6,14 @@ namespace Teapot.Web.Tests;
 
 public class TestCases
 {
-    private static readonly TeapotStatusCodeResults All = new(
-            new AmazonStatusCodeResults(),
-            new CloudflareStatusCodeResults(),
-            new EsriStatusCodeResults(),
-            new LaravelStatusCodeResults(),
-            new MicrosoftStatusCodeResults(),
-            new NginxStatusCodeResults(),
-            new TwitterStatusCodeResults()
+    private static readonly TeapotStatusCodeMetadataCollection All = new(
+            new AmazonStatusCodeMetadata(),
+            new CloudflareStatusCodeMetadata(),
+            new EsriStatusCodeMetadata(),
+            new LaravelStatusCodeMetadata(),
+            new MicrosoftStatusCodeMetadata(),
+            new NginxStatusCodeMetadata(),
+            new TwitterStatusCodeMetadata()
             );
 
     private static readonly HttpStatusCode[] NoContentStatusCodes = new[]
@@ -34,12 +34,12 @@ public class TestCases
 
     private static TestCase Map(HttpStatusCode code)
     {
-        var key = (int)code;
+        int key = (int)code;
         return new(key, All[key].Description, All[key].Body);
     }
 
-    private static TestCase Map(KeyValuePair<int, TeapotStatusCodeResult> code)
+    private static TestCase Map(KeyValuePair<int, TeapotStatusCodeMetadata> code)
     {
-        return new TestCase(code.Key, code.Value.Description, code.Value.Body);
+        return new(code.Key, code.Value.Description, code.Value.Body);
     }
 }

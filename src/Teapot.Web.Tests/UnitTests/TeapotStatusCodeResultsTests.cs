@@ -5,19 +5,19 @@ namespace Teapot.Web.Tests.UnitTests;
 
 public class TeapotStatusCodeResultsTests
 {
-    private TeapotStatusCodeResults _target;
+    private TeapotStatusCodeMetadataCollection _target;
 
     [SetUp]
     public void Setup()
     {
-        _target = new TeapotStatusCodeResults(
-            new AmazonStatusCodeResults(),
-            new CloudflareStatusCodeResults(),
-            new EsriStatusCodeResults(),
-            new LaravelStatusCodeResults(),
-            new MicrosoftStatusCodeResults(),
-            new NginxStatusCodeResults(),
-            new TwitterStatusCodeResults()
+        _target = new TeapotStatusCodeMetadataCollection(
+            new AmazonStatusCodeMetadata(),
+            new CloudflareStatusCodeMetadata(),
+            new EsriStatusCodeMetadata(),
+            new LaravelStatusCodeMetadata(),
+            new MicrosoftStatusCodeMetadata(),
+            new NginxStatusCodeMetadata(),
+            new TwitterStatusCodeMetadata()
             );
     }
 

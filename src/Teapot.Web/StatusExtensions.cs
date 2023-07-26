@@ -2,9 +2,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Teapot.Web.Models;
 
@@ -16,50 +19,18 @@ internal static class StatusExtensions
     public const string SUPPRESS_BODY_HEADER = "X-HttpStatus-SuppressBody";
     public const string CUSTOM_RESPONSE_HEADER_PREFIX = "X-HttpStatus-Response-";
 
+    private static readonly string[] httpMethods = new[] { "Get", "Put", "Post", "Delete", "Head", "Options", "Trace", "Patch" };
+
     internal static WebApplication MapStatusEndpoints(this WebApplication app, string policyName)
     {
-        app.MapGet("/{status:int}", HandleStatusRequestAsync)
+        app.MapMethods("/{status:int}", httpMethods, HandleStatusRequestAsync)
             .RequireRateLimiting(policyName);
-        app.MapPost("/{status:int}", HandleStatusRequestAsync)
-            .RequireRateLimiting(policyName);
-        app.MapPatch("/{status:int}", HandleStatusRequestAsync)
-            .RequireRateLimiting(policyName);
-        app.MapPut("/{status:int}", HandleStatusRequestAsync)
-            .RequireRateLimiting(policyName);
-        app.MapDelete("/{status:int}", HandleStatusRequestAsync)
+        app.MapMethods("/{status:int}/{*wildcard}", httpMethods, HandleStatusRequestAsync)
             .RequireRateLimiting(policyName);
 
-        app.MapGet("/{status:int}/{*wildcard}", HandleStatusRequestAsync)
+        app.MapMethods("/random/{range}", httpMethods, HandleRandomRequest)
             .RequireRateLimiting(policyName);
-        app.MapPost("/{status:int}/{*wildcard}", HandleStatusRequestAsync)
-            .RequireRateLimiting(policyName);
-        app.MapPatch("/{status:int}/{*wildcard}", HandleStatusRequestAsync)
-            .RequireRateLimiting(policyName);
-        app.MapPut("/{status:int}/{*wildcard}", HandleStatusRequestAsync)
-            .RequireRateLimiting(policyName);
-        app.MapDelete("/{status:int}/{*wildcard}", HandleStatusRequestAsync)
-            .RequireRateLimiting(policyName);
-
-        app.MapGet("/random/range", HandleRandomRequest)
-            .RequireRateLimiting(policyName);
-        app.MapPost("/random/range", HandleRandomRequest)
-            .RequireRateLimiting(policyName);
-        app.MapPatch("/random/range", HandleRandomRequest)
-            .RequireRateLimiting(policyName);
-        app.MapPut("/random/range", HandleRandomRequest)
-            .RequireRateLimiting(policyName);
-        app.MapDelete("/random/range", HandleRandomRequest)
-            .RequireRateLimiting(policyName);
-
-        app.MapGet("/random/range/{*wildcard}", HandleRandomRequest)
-            .RequireRateLimiting(policyName);
-        app.MapPost("/random/range/{*wildcard}", HandleRandomRequest)
-            .RequireRateLimiting(policyName);
-        app.MapPatch("/random/range/{*wildcard}", HandleRandomRequest)
-            .RequireRateLimiting(policyName);
-        app.MapPut("/random/range/{*wildcard}", HandleRandomRequest)
-            .RequireRateLimiting(policyName);
-        app.MapDelete("/random/range/{*wildcard}", HandleRandomRequest)
+        app.MapMethods("/random/{range}/{*wildcard}", httpMethods, HandleRandomRequest)
             .RequireRateLimiting(policyName);
 
         app.MapGet("im-a-teapot", () => TypedResults.Redirect("https://www.ietf.org/rfc/rfc2324.txt"));
@@ -67,7 +38,7 @@ internal static class StatusExtensions
         return app;
     }
 
-    private static IResult HandleStatusRequestAsync(
+    internal static IResult HandleStatusRequestAsync(
         int status,
         int? sleep,
         bool? suppressBody,
@@ -89,7 +60,7 @@ internal static class StatusExtensions
         return new CustomHttpStatusCodeResult(status, statusData, sleep, suppressBody, customResponseHeaders);
     }
 
-    private static IResult HandleRandomRequest(
+    internal static IResult HandleRandomRequest(
         HttpRequest req,
         [FromServices] TeapotStatusCodeMetadataCollection statusCodes,
         int? sleep,
