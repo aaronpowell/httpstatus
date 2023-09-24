@@ -308,7 +308,7 @@ public class TeapotStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
 
                 string retryAfter;
 
-                if("date".Equals(format, StringComparison.InvariantCultureIgnoreCase)) //Date format: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Date
+                if ("date".Equals(format, StringComparison.InvariantCultureIgnoreCase)) //Date format: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Date
                     retryAfter = DateTime.UtcNow.AddSeconds(retryAfterSeconds).ToString(@"ddd, dd MMM yyyy HH:mm:ss \G\M\T", System.Globalization.CultureInfo.GetCultureInfo("en-GB"));
                 else
                     retryAfter = retryAfterSeconds.ToString();
@@ -316,6 +316,14 @@ public class TeapotStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
                 responseHeaders.Add("Retry-After", retryAfter);
 
                 return responseHeaders;
+            },
+            RequestParameters = new Dictionary<string, string> {
+                { "seconds", "The number of seconds to be specified in the Retry-After reponse header. Default 5." },
+                { "format", "The format of the Retry-After response header. Accepted values are \"seconds\" and \"date\". Default \"seconds\"." }
+            },
+            RequestHeaders = new Dictionary<string, string> {
+                { "X-Retry-After-Seconds", "The number of seconds to be specified in the Retry-After reponse header. Default 5." },
+                { "X-Retry-After-Format", "The format of the Retry-After response header. Accepted values are \"seconds\" and \"date\". Default \"seconds\"." }
             }
         });
         Add(431, new TeapotStatusCodeResult

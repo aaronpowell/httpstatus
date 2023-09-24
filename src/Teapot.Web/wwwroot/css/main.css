@@ -89,20 +89,23 @@ strong {
 }
 
 #view dl {
-    width: 100%;
+    display: grid;
+    grid-template-columns: max-content;
     overflow: hidden;
     margin-left: 30px;
 }
 
     #view dl dt {
-        float: left;
-        clear: left;
+        grid-column-start: 1;
     }
 
     #view dl dd {
-        float: left;
+        grid-column-start: 2;
         margin-left: 10px;
     }
+        #view dl dd code {
+            margin-left: 0;
+        }
 
         #view dl dd.note {
             clear: left;

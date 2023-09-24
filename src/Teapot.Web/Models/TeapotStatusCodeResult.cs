@@ -14,6 +14,8 @@ public class TeapotStatusCodeResult
     public string? Body { get; set; }
     public bool IsNonStandard { get; init; }
     public GetRequestSpecificHeaders? GetRequestSpecificHeaders { get; init; }
+    public Dictionary<string, string>? RequestParameters { get; init; }
+    public Dictionary<string, string>? RequestHeaders { get; init; }
 }
 
 public delegate IDictionary<string, string> GetRequestSpecificHeaders(IQueryCollection query, IHeaderDictionary requestHeaders);
