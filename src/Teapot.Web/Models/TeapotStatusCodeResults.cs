@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+
 using Teapot.Web.Models.Unofficial;
 
 namespace Teapot.Web.Models;
@@ -283,9 +285,37 @@ public class TeapotStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
         Add(429, new TeapotStatusCodeResult
         {
             Description = "Too Many Requests",
-            IncludeHeaders = new Dictionary<string, string>
+            GetRequestSpecificHeaders = (query, headers) =>
             {
-                {"Retry-After", "5"}
+                var responseHeaders = new Dictionary<string, string>();
+
+                int retryAfterSeconds;
+
+                if (query.ContainsKey("seconds") && int.TryParse(query["seconds"], out int seconds))
+                    retryAfterSeconds = seconds;
+                else if (headers.TryGetValue("X-Retry-After-Seconds", out var retryAfterHeader) && int.TryParse(retryAfterHeader.First(), out seconds))
+                    retryAfterSeconds = seconds;
+                else
+                    retryAfterSeconds = 5;
+
+                string? format;
+                if (query.ContainsKey("format"))
+                    format = query["format"].First();
+                else if (headers.TryGetValue("X-Retry-After-Format", out var formatValues))
+                    format = formatValues.First();
+                else
+                    format = "seconds";
+
+                string retryAfter;
+
+                if("date".Equals(format, StringComparison.InvariantCultureIgnoreCase)) //Date format: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Date
+                    retryAfter = DateTime.UtcNow.AddSeconds(retryAfterSeconds).ToString(@"ddd, dd MMM yyyy HH:mm:ss \G\M\T", System.Globalization.CultureInfo.GetCultureInfo("en-GB"));
+                else
+                    retryAfter = retryAfterSeconds.ToString();
+
+                responseHeaders.Add("Retry-After", retryAfter);
+
+                return responseHeaders;
             }
         });
         Add(431, new TeapotStatusCodeResult

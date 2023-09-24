@@ -12,7 +12,8 @@ using Teapot.Web.Models;
 
 namespace Teapot.Web;
 
-public class CustomHttpStatusCodeResult : StatusCodeResult {
+public class CustomHttpStatusCodeResult : StatusCodeResult
+{
     private const int SLEEP_MIN = 0;
     private const int SLEEP_MAX = 5 * 60 * 1000; // 5 mins in milliseconds
 
@@ -26,44 +27,64 @@ public class CustomHttpStatusCodeResult : StatusCodeResult {
     public bool? SuppressBody => _suppressBody;
 
     public CustomHttpStatusCodeResult([ActionResultStatusCode] int statusCode, TeapotStatusCodeResult statusCodeResult, int? sleep, bool? suppressBody, Dictionary<string, StringValues> customResponseHeaders)
-        : base(statusCode) {
+        : base(statusCode)
+    {
         _statusCodeResult = statusCodeResult;
         _sleep = sleep;
         _suppressBody = suppressBody;
         _customResponseHeaders = customResponseHeaders;
     }
 
-    public override async Task ExecuteResultAsync(ActionContext context) {
+    public override async Task ExecuteResultAsync(ActionContext context)
+    {
         await DoSleep(Sleep);
 
         await base.ExecuteResultAsync(context);
 
-        if (!string.IsNullOrEmpty(_statusCodeResult.Description)) {
+        if (!string.IsNullOrEmpty(_statusCodeResult.Description))
+        {
             var httpResponseFeature = context.HttpContext.Features.Get<IHttpResponseFeature>();
-            if (httpResponseFeature is not null) {
+            if (httpResponseFeature is not null)
+            {
                 httpResponseFeature.ReasonPhrase = _statusCodeResult.Description;
             }
         }
 
-        if (_statusCodeResult.IncludeHeaders is not null) {
-            foreach ((var header, var values) in _statusCodeResult.IncludeHeaders) {
+        if (_statusCodeResult.IncludeHeaders is not null)
+        {
+            foreach ((var header, var values) in _statusCodeResult.IncludeHeaders)
+            {
                 context.HttpContext.Response.Headers.Add(header, values);
             }
         }
 
-        foreach ((string header, StringValues values) in _customResponseHeaders) {
+        if (_statusCodeResult.GetRequestSpecificHeaders is not null)
+        {
+            foreach ((var header, var values) in _statusCodeResult.GetRequestSpecificHeaders(context.HttpContext.Request.Query, context.HttpContext.Request.Headers))
+            {
+                context.HttpContext.Response.Headers.Add(header, values);
+            }
+        }
+
+        foreach ((string header, StringValues values) in _customResponseHeaders)
+        {
             context.HttpContext.Response.Headers.Add(header, values);
         }
 
-        if (_statusCodeResult.ExcludeBody || _suppressBody == true) {
+        if (_statusCodeResult.ExcludeBody || _suppressBody == true)
+        {
             //remove Content-Length and Content-Type when there isn't any body
             context.HttpContext.Response.Headers.Remove("Content-Length");
             context.HttpContext.Response.Headers.Remove("Content-Type");
-        } else {
+        }
+        else
+        {
             var acceptTypes = context.HttpContext.Request.GetTypedHeaders().Accept;
 
-            if (acceptTypes is not null) {
-                var (body, contentType) = acceptTypes.Contains(new MediaTypeHeaderValue("application/json")) switch {
+            if (acceptTypes is not null)
+            {
+                var (body, contentType) = acceptTypes.Contains(new MediaTypeHeaderValue("application/json")) switch
+                {
                     true => (JsonSerializer.Serialize(new { code = StatusCode, description = _statusCodeResult.Body ?? _statusCodeResult.Description }), "application/json"),
                     false => (_statusCodeResult.Body ?? $"{StatusCode} {_statusCodeResult.Description}", "text/plain")
                 };
@@ -75,9 +96,11 @@ public class CustomHttpStatusCodeResult : StatusCodeResult {
         }
     }
 
-    private static async Task DoSleep(int? sleep) {
+    private static async Task DoSleep(int? sleep)
+    {
         var sleepData = Math.Clamp(sleep ?? 0, SLEEP_MIN, SLEEP_MAX);
-        if (sleepData > 0) {
+        if (sleepData > 0)
+        {
             await Task.Delay(sleepData);
         }
     }
