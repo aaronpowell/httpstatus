@@ -51,8 +51,19 @@ public class CustomHttpStatusCodeResult : StatusCodeResult {
             }
         }
 
-        foreach ((string header, StringValues values) in _customResponseHeaders) {
-            context.HttpContext.Response.Headers.Add(header, values);
+        foreach ((string header, StringValues values) in _customResponseHeaders)
+        {
+            if (string.Equals(header, "Set-Cookie", StringComparison.OrdinalIgnoreCase))
+            {
+                foreach (var value in values)
+                {
+                    context.HttpContext.Response.Headers.Append("Set-Cookie", value);
+                }
+            }
+            else
+            {
+                context.HttpContext.Response.Headers[header] = values;
+            }
         }
 
         if (_statusCodeResult.ExcludeBody || _suppressBody == true) {
