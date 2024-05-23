@@ -4,6 +4,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Teapot.Web.Models;
@@ -19,6 +20,7 @@ public class CustomHttpStatusCodeResult(
 {
     private const int SLEEP_MIN = 0;
     private const int SLEEP_MAX = 5 * 60 * 1000; // 5 mins in milliseconds
+    private static readonly string[] onlySingleHeader = ["Location"];
 
     private static readonly MediaTypeHeaderValue jsonMimeType = new("application/json");
 
@@ -51,7 +53,14 @@ public class CustomHttpStatusCodeResult(
 
         foreach ((string header, StringValues values) in customResponseHeaders)
         {
-            context.Response.Headers.Append(header, values);
+            if (onlySingleHeader.Contains(header))
+            {
+                context.Response.Headers[header] = values;
+            }
+            else
+            {
+                context.Response.Headers.Append(header, values);
+            }
         }
 
         if (metadata.ExcludeBody || suppressBody == true)
