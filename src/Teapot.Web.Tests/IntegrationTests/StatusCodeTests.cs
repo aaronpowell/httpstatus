@@ -3,22 +3,27 @@
 namespace Teapot.Web.Tests.IntegrationTests;
 
 [TestFixtureSource(typeof(HttpMethods), nameof(HttpMethods.All))]
-public class StatusCodeTests
+public class StatusCodeTests(HttpMethod httpMethod)
 {
-    private readonly HttpMethod _httpMethod;
-
-    private static readonly HttpClient _httpClient = new WebApplicationFactory<Program>().CreateDefaultClient();
-
-    public StatusCodeTests(HttpMethod httpMethod)
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
     {
-        _httpMethod = httpMethod;
+        _httpClient = new WebApplicationFactory<Program>().CreateDefaultClient();
     }
+
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        _httpClient.Dispose();
+    }
+
+    private HttpClient _httpClient = null!;
 
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesWithContent))]
     public async Task ResponseWithContent([Values] TestCase testCase)
     {
         string uri = $"/{testCase.Code}";
-        using HttpRequestMessage httpRequest = new HttpRequestMessage(_httpMethod, uri);
+        using HttpRequestMessage httpRequest = new(httpMethod, uri);
         using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest);
         Assert.That((int)response.StatusCode, Is.EqualTo(testCase.Code));
         string body = await response.Content.ReadAsStringAsync();
@@ -35,7 +40,7 @@ public class StatusCodeTests
     public async Task ResponseWithContentSuppressedViaQs([Values] TestCase testCase)
     {
         string uri = $"/{testCase.Code}?{nameof(CustomHttpStatusCodeResult.SuppressBody)}=true";
-        using HttpRequestMessage httpRequest = new HttpRequestMessage(_httpMethod, uri);
+        using HttpRequestMessage httpRequest = new(httpMethod, uri);
         using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest);
         Assert.That((int)response.StatusCode, Is.EqualTo(testCase.Code));
         string body = await response.Content.ReadAsStringAsync();
@@ -52,7 +57,7 @@ public class StatusCodeTests
     public async Task ResponseWithContentSuppressedViaHeader([Values] TestCase testCase)
     {
         string uri = $"/{testCase.Code}";
-        using HttpRequestMessage httpRequest = new HttpRequestMessage(_httpMethod, uri);
+        using HttpRequestMessage httpRequest = new(httpMethod, uri);
         httpRequest.Headers.Add(StatusExtensions.SUPPRESS_BODY_HEADER, "true");
         using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest);
         Assert.That((int)response.StatusCode, Is.EqualTo(testCase.Code));
@@ -70,7 +75,7 @@ public class StatusCodeTests
     public async Task ResponseNoContent([Values] TestCase testCase)
     {
         string uri = $"/{testCase.Code}";
-        using HttpRequestMessage httpRequest = new HttpRequestMessage(_httpMethod, uri);
+        using HttpRequestMessage httpRequest = new(httpMethod, uri);
         using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest);
         Assert.That((int)response.StatusCode, Is.EqualTo(testCase.Code));
         string body = await response.Content.ReadAsStringAsync();

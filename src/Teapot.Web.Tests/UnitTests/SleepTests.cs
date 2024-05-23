@@ -38,7 +38,7 @@ public class SleepTests {
     public void SleepReadFromHeader()
     {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
-        request.Object.Headers.Add(StatusExtensions.SLEEP_HEADER, Sleep.ToString());
+        request.Object.Headers.Append(StatusExtensions.SLEEP_HEADER, Sleep.ToString());
 
         IResult result = StatusExtensions.HandleStatusRequestAsync(200, null, null, request.Object, _statusCodes);
 
@@ -53,7 +53,7 @@ public class SleepTests {
     [Test]
     public void SleepReadFromQSTakesPriorityHeader() {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
-        request.Object.Headers.Add(StatusExtensions.SLEEP_HEADER, Sleep.ToString());
+        request.Object.Headers.Append(StatusExtensions.SLEEP_HEADER, Sleep.ToString());
 
         IResult result = StatusExtensions.HandleStatusRequestAsync(200, Sleep * 2, null, request.Object, _statusCodes);
 
@@ -69,7 +69,7 @@ public class SleepTests {
     public void BadSleepHeaderIgnored()
     {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
-        request.Object.Headers.Add(StatusExtensions.SLEEP_HEADER, "invalid");
+        request.Object.Headers.Append(StatusExtensions.SLEEP_HEADER, "invalid");
 
         IResult result = StatusExtensions.HandleStatusRequestAsync(200, null, null, request.Object, _statusCodes);
 

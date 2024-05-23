@@ -46,7 +46,7 @@ public class SuppressBodyTests
     public void SuppressBodyReadFromHeader(string? suppressBody)
     {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
-        request.Object.Headers.Add(StatusExtensions.SUPPRESS_BODY_HEADER, suppressBody);
+        request.Object.Headers.Append(StatusExtensions.SUPPRESS_BODY_HEADER, suppressBody);
 
         IResult result = StatusExtensions.HandleStatusRequestAsync(200, null, null, request.Object, _statusCodes);
 
@@ -74,7 +74,7 @@ public class SuppressBodyTests
     public void SuppressBodyReadFromQSTakesPriorityHeader(string? headerValue, bool? queryStringValue)
     {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
-        request.Object.Headers.Add(StatusExtensions.SUPPRESS_BODY_HEADER, headerValue);
+        request.Object.Headers.Append(StatusExtensions.SUPPRESS_BODY_HEADER, headerValue);
 
         IResult result = StatusExtensions.HandleStatusRequestAsync(200, null, queryStringValue, request.Object, _statusCodes);
 
@@ -96,7 +96,7 @@ public class SuppressBodyTests
     public void BadSuppressBodyHeaderIgnored()
     {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
-        request.Object.Headers.Add(StatusExtensions.SUPPRESS_BODY_HEADER, "invalid");
+        request.Object.Headers.Append(StatusExtensions.SUPPRESS_BODY_HEADER, "invalid");
 
         IResult result = StatusExtensions.HandleStatusRequestAsync(200, null, null, request.Object, _statusCodes);
 

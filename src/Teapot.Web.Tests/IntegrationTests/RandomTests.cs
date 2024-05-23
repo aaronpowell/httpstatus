@@ -3,16 +3,21 @@
 namespace Teapot.Web.Tests.IntegrationTests;
 
 [TestFixtureSource(typeof(HttpMethods), nameof(HttpMethods.All))]
-public class RandomTests
+public class RandomTests(HttpMethod httpMethod)
 {
-    private readonly HttpMethod _httpMethod;
-
-    private static readonly HttpClient _httpClient = new WebApplicationFactory<Program>().CreateDefaultClient();
-
-    public RandomTests(HttpMethod httpMethod)
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
     {
-        _httpMethod = httpMethod;
+        _httpClient = new WebApplicationFactory<Program>().CreateDefaultClient();
     }
+
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        _httpClient.Dispose();
+    }
+
+    private HttpClient _httpClient = null!;
 
     [TestCase("foo")]
     [TestCase("200,x")]
@@ -22,7 +27,7 @@ public class RandomTests
     public async Task ParseError(string input)
     {
         string uri = $"/random/{input}";
-        using HttpRequestMessage httpRequest = new HttpRequestMessage(_httpMethod, uri);
+        using HttpRequestMessage httpRequest = new(httpMethod, uri);
         using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest);
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
     }
@@ -35,7 +40,7 @@ public class RandomTests
     public async Task ParsedAsExpected(string input)
     {
         string uri = $"/random/{input}";
-        using HttpRequestMessage httpRequest = new HttpRequestMessage(_httpMethod, uri);
+        using HttpRequestMessage httpRequest = new(httpMethod, uri);
         using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest);
         Assert.That((int)response.StatusCode, Is.InRange(100, 599));
         string body = await response.Content.ReadAsStringAsync();

@@ -84,14 +84,16 @@ public class TeapotStatusCodeMetadataCollection : Dictionary<int, TeapotStatusCo
                 { "Content-Type", "application/xml; charset=\"utf-8\"" }
             },
             Link = new Uri("https://tools.ietf.org/html/rfc4918"),
-            Body = @"<?xml version=""1.0"" encoding=""utf-8"" ?>
-<d:multistatus xmlns:d=""DAV:"">
-<d:response>
-    <d:href>http://www.example.com/container/resource3</d:href>
-    <d:status>HTTP/1.1 423 Locked</d:status>
-    <d:error><d:lock-token-submitted/></d:error>
-</d:response>
-</d:multistatus>"
+            Body = """
+            <?xml version="1.0" encoding="utf-8"?>
+            <d:multistatus xmlns:d="DAV:">
+            <d:response>
+                <d:href>http://www.example.com/container/resource3</d:href>
+                <d:status>HTTP/1.1 423 Locked</d:status>
+                <d:error><d:lock-token-submitted/></d:error>
+            </d:response>
+            </d:multistatus>
+            """
         });
         Add(208, new TeapotStatusCodeMetadata
         {

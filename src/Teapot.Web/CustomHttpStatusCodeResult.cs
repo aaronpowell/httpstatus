@@ -45,13 +45,13 @@ public class CustomHttpStatusCodeResult(
         {
             foreach ((string header, string values) in metadata.IncludeHeaders)
             {
-                context.Response.Headers.Add(header, values);
+                context.Response.Headers.Append(header, values);
             }
         }
 
         foreach ((string header, StringValues values) in customResponseHeaders)
         {
-            context.Response.Headers.Add(header, values);
+            context.Response.Headers.Append(header, values);
         }
 
         if (metadata.ExcludeBody || suppressBody == true)
