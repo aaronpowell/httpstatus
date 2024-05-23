@@ -3,16 +3,21 @@
 namespace Teapot.Web.Tests.IntegrationTests;
 
 [TestFixtureSource(typeof(HttpMethods), nameof(HttpMethods.All))]
-public class RandomTests
+public class RandomTests(HttpMethod httpMethod)
 {
-    private readonly HttpMethod _httpMethod;
-
-    private static readonly HttpClient _httpClient = new WebApplicationFactory<Program>().CreateDefaultClient();
-
-    public RandomTests(HttpMethod httpMethod)
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
     {
-        _httpMethod = httpMethod;
+        _httpClient = new WebApplicationFactory<Program>().CreateDefaultClient();
     }
+
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        _httpClient.Dispose();
+    }
+
+    private HttpClient _httpClient = null!;
 
     [TestCase("foo")]
     [TestCase("200,x")]
@@ -21,9 +26,9 @@ public class RandomTests
     [TestCase("-1-1")]
     public async Task ParseError(string input)
     {
-        var uri = $"/random/{input}";
-        using var httpRequest = new HttpRequestMessage(_httpMethod, uri);
-        using var response = await _httpClient.SendAsync(httpRequest);
+        string uri = $"/random/{input}";
+        using HttpRequestMessage httpRequest = new(httpMethod, uri);
+        using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest);
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
     }
 
@@ -34,11 +39,11 @@ public class RandomTests
     [TestCase("190-199,570-590")]
     public async Task ParsedAsExpected(string input)
     {
-        var uri = $"/random/{input}";
-        using var httpRequest = new HttpRequestMessage(_httpMethod, uri);
-        using var response = await _httpClient.SendAsync(httpRequest);
+        string uri = $"/random/{input}";
+        using HttpRequestMessage httpRequest = new(httpMethod, uri);
+        using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest);
         Assert.That((int)response.StatusCode, Is.InRange(100, 599));
-        var body = await response.Content.ReadAsStringAsync();
+        string body = await response.Content.ReadAsStringAsync();
         Assert.Multiple(() =>
         {
             Assert.That(body.ReplaceLineEndings(), Does.EndWith("Unknown Code"));

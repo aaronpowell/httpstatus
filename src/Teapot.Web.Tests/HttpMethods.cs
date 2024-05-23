@@ -4,5 +4,5 @@ namespace Teapot.Web.Tests;
 
 public class HttpMethods
 {
-    public static HttpMethod[] All => new[] { Get, Put, Post, Delete, Head, Options, Trace, Patch };
+    public static HttpMethod[] All => [Get, Put, Post, Delete, Head, Options, Trace, Patch];
 }

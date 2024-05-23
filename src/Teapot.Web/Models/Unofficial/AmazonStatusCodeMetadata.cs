@@ -2,23 +2,23 @@
 
 namespace Teapot.Web.Models.Unofficial;
 
-public class AmazonStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
+public class AmazonStatusCodeMetadata : Dictionary<int, TeapotStatusCodeMetadata>
 {
-    public AmazonStatusCodeResults()
+    public AmazonStatusCodeMetadata()
     {
-        Add(460, new TeapotStatusCodeResult
+        Add(460, new TeapotStatusCodeMetadata
         {
             Description = "Client closed the connection with AWS Elastic Load Balancer",
             IsNonStandard = true,
         });
 
-        Add(463, new TeapotStatusCodeResult
+        Add(463, new TeapotStatusCodeMetadata
         {
             Description = "The load balancer received an X-Forwarded-For request header with more than 30 IP addresses",
             IsNonStandard = true,
         });
 
-        Add(561, new TeapotStatusCodeResult
+        Add(561, new TeapotStatusCodeMetadata
         {
             Description = "Unauthorized (AWS Elastic Load Balancer)",
             IsNonStandard = true,

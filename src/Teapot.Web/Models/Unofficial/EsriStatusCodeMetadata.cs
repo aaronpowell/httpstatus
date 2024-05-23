@@ -2,11 +2,11 @@
 
 namespace Teapot.Web.Models.Unofficial;
 
-public class EsriStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
+public class EsriStatusCodeMetadata : Dictionary<int, TeapotStatusCodeMetadata>
 {
-    public EsriStatusCodeResults()
+    public EsriStatusCodeMetadata()
     {
-        Add(498, new TeapotStatusCodeResult
+        Add(498, new TeapotStatusCodeMetadata
         {
             Description = "Invalid Token (Esri)",
             IsNonStandard = true,

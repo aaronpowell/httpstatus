@@ -2,23 +2,23 @@
 
 namespace Teapot.Web.Models.Unofficial;
 
-public class MicrosoftStatusCodeResults : Dictionary<int, TeapotStatusCodeResult>
+public class MicrosoftStatusCodeMetadata : Dictionary<int, TeapotStatusCodeMetadata>
 {
-    public MicrosoftStatusCodeResults()
+    public MicrosoftStatusCodeMetadata()
     {
-        Add(440, new TeapotStatusCodeResult
+        Add(440, new TeapotStatusCodeMetadata
         {
             Description = "Login Time-out",
             IsNonStandard = true,
         });
 
-        Add(449, new TeapotStatusCodeResult
+        Add(449, new TeapotStatusCodeMetadata
         {
             Description = "Retry With",
             IsNonStandard = true,
         });
 
-        Add(450, new TeapotStatusCodeResult
+        Add(450, new TeapotStatusCodeMetadata
         {
             Description = "Blocked by Windows Parental Controls",
             IsNonStandard = true,
