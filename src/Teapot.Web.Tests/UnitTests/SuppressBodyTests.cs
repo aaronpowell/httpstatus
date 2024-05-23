@@ -28,7 +28,7 @@ public class SuppressBodyTests
     public void SuppressBodyReadFromQuery(bool? suppressBody)
     {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
-        IResult result = StatusExtensions.HandleStatusRequestAsync(200, null, suppressBody, request.Object, _statusCodes);
+        IResult result = StatusExtensions.HandleStatusRequestAsync(200, null, suppressBody, null, request.Object, _statusCodes);
 
         Assert.Multiple(() =>
         {
@@ -48,7 +48,7 @@ public class SuppressBodyTests
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
         request.Object.Headers.Append(StatusExtensions.SUPPRESS_BODY_HEADER, suppressBody);
 
-        IResult result = StatusExtensions.HandleStatusRequestAsync(200, null, null, request.Object, _statusCodes);
+        IResult result = StatusExtensions.HandleStatusRequestAsync(200, null, null, null, request.Object, _statusCodes);
 
         Assert.Multiple(() =>
         {
@@ -76,7 +76,7 @@ public class SuppressBodyTests
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
         request.Object.Headers.Append(StatusExtensions.SUPPRESS_BODY_HEADER, headerValue);
 
-        IResult result = StatusExtensions.HandleStatusRequestAsync(200, null, queryStringValue, request.Object, _statusCodes);
+        IResult result = StatusExtensions.HandleStatusRequestAsync(200, null, queryStringValue, null, request.Object, _statusCodes);
 
         Assert.Multiple(() =>
         {
@@ -98,7 +98,7 @@ public class SuppressBodyTests
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
         request.Object.Headers.Append(StatusExtensions.SUPPRESS_BODY_HEADER, "invalid");
 
-        IResult result = StatusExtensions.HandleStatusRequestAsync(200, null, null, request.Object, _statusCodes);
+        IResult result = StatusExtensions.HandleStatusRequestAsync(200, null, null, null, request.Object, _statusCodes);
 
         Assert.Multiple(() =>
         {
