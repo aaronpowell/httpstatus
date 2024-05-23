@@ -19,7 +19,7 @@ internal static class StatusExtensions
     public const string SUPPRESS_BODY_HEADER = "X-HttpStatus-SuppressBody";
     public const string CUSTOM_RESPONSE_HEADER_PREFIX = "X-HttpStatus-Response-";
 
-    private static readonly string[] httpMethods = new[] { "Get", "Put", "Post", "Delete", "Head", "Options", "Trace", "Patch" };
+    private static readonly string[] httpMethods = ["Get", "Put", "Post", "Delete", "Head", "Options", "Trace", "Patch"];
 
     internal static WebApplication MapStatusEndpoints(this WebApplication app, string policyName)
     {
@@ -42,6 +42,7 @@ internal static class StatusExtensions
         int status,
         int? sleep,
         bool? suppressBody,
+        string? wildcard,
         HttpRequest req,
         [FromServices] TeapotStatusCodeMetadataCollection statusCodes)
     {
@@ -65,12 +66,13 @@ internal static class StatusExtensions
         [FromServices] TeapotStatusCodeMetadataCollection statusCodes,
         int? sleep,
         bool? suppressBody,
+        string? wildcard,
         string range = "100-599")
     {
         try
         {
             int statusCode = GetRandomStatus(range);
-            return HandleStatusRequestAsync(statusCode, sleep, suppressBody, req, statusCodes);
+            return HandleStatusRequestAsync(statusCode, sleep, suppressBody, wildcard, req, statusCodes);
         }
         catch
         {

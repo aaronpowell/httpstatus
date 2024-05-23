@@ -47,15 +47,15 @@ app.UseCors(builder =>
         .AllowAnyHeader()
         .AllowAnyOrigin()
         .AllowAnyMethod()
-        .WithExposedHeaders(new[]
-        {
+        .WithExposedHeaders(
+        [
             "Link", // 103
             "Content-Range", // 206
             "Location", // 301, 302, 303, 305, 307, 308
             "WWW-Authenticate", // 401
             "Proxy-Authenticate", // 407
             "Retry-After" // 429
-        });
+        ]);
 });
 
 app.UseFairUseRateLimiter();
