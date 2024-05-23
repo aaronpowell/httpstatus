@@ -8,7 +8,7 @@ public class LaravelStatusCodeMetadata : Dictionary<int, TeapotStatusCodeMetadat
     {
         Add(419, new TeapotStatusCodeMetadata
         {
-            Description = "CSRF Token Missong or Expired",
+            Description = "CSRF Token Missing or Expired",
             IsNonStandard = true,
         });
     }
