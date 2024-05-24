@@ -58,7 +58,7 @@ app.UseCors(builder =>
         ]);
 });
 
-app.UseFairUseRateLimiter();
+//app.UseFairUseRateLimiter();
 
 app.MapStatusEndpoints(FairUseRateLimiterExtensions.PolicyName);
 
