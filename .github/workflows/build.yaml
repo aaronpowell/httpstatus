@@ -4,9 +4,9 @@ on:
   workflow_call:
     inputs:
       image_name:
-      required: true
-      type: string
-      default: ${{ github.repository }}
+        required: true
+        type: string
+        default: ${{ github.repository }}
 
 permissions:
   id-token: write
