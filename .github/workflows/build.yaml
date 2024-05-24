@@ -8,9 +8,9 @@ on:
         type: string
         default: ${{ github.repository }}
 
-permissions:
-  id-token: write
-  contents: read
+# permissions:
+#   id-token: write
+#   contents: read
 
 jobs:
   build-images:
