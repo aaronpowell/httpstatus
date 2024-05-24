@@ -6,7 +6,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: httpstatus-preview
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ github.repository }}-staging
 
 permissions:
   id-token: write
@@ -35,7 +35,9 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=sha,format=long,suffix=-preview
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,format=long,suffix=,prefix=
 
       - name: ACR authentication
         uses: azure/docker-login@v2
@@ -84,4 +86,4 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          images: ${{ secrets.AZURE_REGISTRY_URL }}/${{ env.IMAGE_NAME }}:${{ github.sha }}-preview
+          images: ${{ secrets.AZURE_REGISTRY_URL }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
