@@ -14,13 +14,13 @@ permissions:
 
 jobs:
   build:
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/build.yaml
     secrets: inherit
     with:
       image_name: ${{ env.IMAGE_NAME }}
 
   deploy:
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/deploy.yaml
     secrets: inherit
     with:
       image_name: ${{ env.IMAGE_NAME }}
