@@ -25,6 +25,8 @@ builder.Services.AddApplicationInsightsTelemetry();
 
 builder.Services.AddCors();
 
+builder.AddAppInfo();
+
 WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
