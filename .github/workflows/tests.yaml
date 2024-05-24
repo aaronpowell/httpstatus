@@ -9,6 +9,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
 
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v4

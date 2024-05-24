@@ -20,15 +20,15 @@ internal static class StatusExtensions
 
     internal static WebApplication MapStatusEndpoints(this WebApplication app, string policyName)
     {
-        app.MapMethods("/{status:int}", httpMethods, HandleStatusRequestAsync)
-            .RequireRateLimiting(policyName);
-        app.MapMethods("/{status:int}/{*wildcard}", httpMethods, HandleStatusRequestAsync)
-            .RequireRateLimiting(policyName);
+        app.MapMethods("/{status:int}", httpMethods, HandleStatusRequestAsync);
+        //.RequireRateLimiting(policyName);
+        app.MapMethods("/{status:int}/{*wildcard}", httpMethods, HandleStatusRequestAsync);
+        //.RequireRateLimiting(policyName);
 
-        app.MapMethods("/random/{range}", httpMethods, HandleRandomRequest)
-            .RequireRateLimiting(policyName);
-        app.MapMethods("/random/{range}/{*wildcard}", httpMethods, HandleRandomRequest)
-            .RequireRateLimiting(policyName);
+        app.MapMethods("/random/{range}", httpMethods, HandleRandomRequest);
+        //.RequireRateLimiting(policyName);
+        app.MapMethods("/random/{range}/{*wildcard}", httpMethods, HandleRandomRequest);
+            //.RequireRateLimiting(policyName);
 
         app.MapGet("im-a-teapot", () => TypedResults.Redirect("https://www.ietf.org/rfc/rfc2324.txt"));
 

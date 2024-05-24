@@ -7,9 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["Teapot.Web/Teapot.Web.csproj", "Teapot.Web/"]
+COPY ["src/Teapot.Web/Teapot.Web.csproj", "Teapot.Web/"]
+COPY [".git", ".git"]
 RUN dotnet restore "Teapot.Web/Teapot.Web.csproj"
-COPY . .
+COPY src/Teapot.Web Teapot.Web
 WORKDIR "/src/Teapot.Web"
 RUN dotnet build "Teapot.Web.csproj" -c Release -o /app/build
 

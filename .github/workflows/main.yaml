@@ -26,6 +26,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
 
       - name: Docker meta
         id: meta
@@ -59,7 +61,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: src
+          context: .
           file: src/Teapot.Web/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
