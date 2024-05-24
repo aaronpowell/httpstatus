@@ -17,11 +17,11 @@ jobs:
     uses: ./.github/workflows/build.yaml
     secrets: inherit
     with:
-      image_name: ${{ env.IMAGE_NAME }}
+      image_name: ${{ github.repository }}-staging
 
   deploy:
     uses: ./.github/workflows/deploy.yaml
     secrets: inherit
     with:
-      image_name: ${{ env.IMAGE_NAME }}
-      azure_webapp_name: ${{ env.AZURE_WEBAPP_NAME }}
+      image_name: ${{ github.repository }}-staging
+      azure_webapp_name: httpstatus-preview
