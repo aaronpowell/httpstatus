@@ -13,77 +13,15 @@ permissions:
   contents: read
 
 jobs:
-  build-images:
-    runs-on: ubuntu-latest
-    name: Build Docker images for Azure Container Registry and GitHub Container Registry
-    environment:
-      name: build
-    permissions:
-      contents: read
-      packages: write
+  build:
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+    with:
+      image_name: ${{ env.IMAGE_NAME }}
 
-    steps:
-      - uses: actions/checkout@v4
-        with:
-            fetch-depth: 0
-
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ secrets.GH_REGISTRY_URL }}/${{ env.IMAGE_NAME }},${{ secrets.AZURE_REGISTRY_URL }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha,format=long,suffix=,prefix=
-
-      - name: ACR authentication
-        uses: azure/docker-login@v2
-        with:
-          login-server: ${{ secrets.AZURE_REGISTRY_URL }}
-          username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
-          password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
-
-      - name: GPR authentication
-        uses: azure/docker-login@v2
-        with:
-          login-server: ${{ secrets.GH_REGISTRY_URL }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: src/Teapot.Web/Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          # platforms: linux/amd64,linux/arm64
-          platforms: linux/amd64
-
-  deploy-azure:
-    runs-on: ubuntu-latest
-    name: Deploy to Azure
-    environment:
-      name: production
-    needs: [build-images]
-
-    steps:
-      - name: Azure authentication
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Deploy to Azure WebApp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          images: ${{ secrets.AZURE_REGISTRY_URL }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+  deploy:
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      image_name: ${{ env.IMAGE_NAME }}
+      azure_webapp_name: ${{ env.AZURE_WEBAPP_NAME }}
