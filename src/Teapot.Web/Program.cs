@@ -21,7 +21,7 @@ builder.Services.AddSingleton<TwitterStatusCodeMetadata>();
 builder.Services.AddSingleton<TeapotStatusCodeMetadataCollection>();
 builder.Services.AddApplicationInsightsTelemetry();
 
-builder.Services.AddFairUseRateLimiter();
+//builder.Services.AddFairUseRateLimiter();
 
 builder.Services.AddCors();
 
