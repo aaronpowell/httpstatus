@@ -16,10 +16,10 @@ public class TestCases
             new TwitterStatusCodeMetadata()
             );
 
-    private static readonly HttpStatusCode[] NoContentStatusCodes = new[]
-    {
+    private static readonly HttpStatusCode[] NoContentStatusCodes =
+    [
         Continue, SwitchingProtocols, Processing, EarlyHints, NoContent, ResetContent, NotModified
-    };
+    ];
 
     public static IEnumerable<TestCase> StatusCodesAll =>
         All.Select(Map);
