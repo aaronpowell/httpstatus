@@ -6,8 +6,7 @@
 <p>This is a super simple service for generating different HTTP codes.</p>
 <p>It's useful for testing how your own scripts deal with varying responses.</p>
 <p>
-    Just add the status code you want to the URL, like this:
-    @Html.RouteLink("httpstat.us/200", "StatusCode", new {statusCode = 200})
+    Just add the status code you want to the URL, like this: <a href="/200" target="_blank">httpstat.us/200</a>.
 </p>
 <p>We'll return a response like this:</p>
 <code>
@@ -27,13 +26,13 @@
 <p>
     To get a random response back, use the <code class="inline">random/{range}</code> endpoint,
     for example
-    @Html.RouteLink("httpstat.us/random/200,201,500-504", "Random", new {range = "200,201,500-504"}).
+    <a href="/random/200,201,500-504" target="_blank">httpstat.us/random/200,201,500-504</a>.
     You can duplicate ranges in order to increase their probability.
 </p>
 
 <p>
     If you want a delay on the response add a query string or provide a header of <code>@StatusExtensions.SLEEP_HEADER</code> for the sleep duration (the time in ms, max 5 minutes*), like this:
-    @Html.RouteLink("httpstat.us/200?sleep=5000", "StatusCode", new {statusCode = 200, sleep = 5000})
+    <a href="/200?sleep=5000" target="_blank">httpstat.us/200?sleep=5000</a>.
     <br />
     <em>*When using the hosted instance the timeout is actually 230 seconds, which is the max timeout allowed by an Azure App Service (see <a href="https://social.msdn.microsoft.com/Forums/en-US/05f254a6-9b34-4eb2-a5f7-2a82fb40135f/time-out-after-230-seconds?forum=windowsazurewebsitespreview" target="_blank">this thread post</a>). If you host it yourself expect the limits to be different.</em>
 </p>
