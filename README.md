@@ -21,15 +21,11 @@ Learn more at [httpstat.us](https://httpstat.us).
 
 ## Tech
 
-The site is .NET 7 and it is hosted as a [containerised Azure AppService](https://azure.microsoft.com/services/app-service/containers/?WT.mc_id=dotnet-00000-aapowell#overview).
+The site is .NET 9 and it is hosted as a [containerised Azure AppService](https://azure.microsoft.com/services/app-service/containers/?WT.mc_id=dotnet-00000-aapowell#overview).
 
 ## Self hosting
 
 If you want, you are able to self-host the service using the provided image, which can be found [on GitHub packages](https://github.com/aaronpowell/httpstatus/pkgs/container/httpstatus). This may be useful for testing HTTP status codes which are not available in Azure, or time outs longer than we support in the hosted version.
-
-### Docker on ARM
-
-Presently, Docker on ARM (such as Mac M1) is not supported due to a bug in the .NET 7 build engine: https://github.com/NuGet/Home/issues/12227. Legacy versions on the .NET 6 runtime are available but not supported.
 
 ## LICENSE
 
