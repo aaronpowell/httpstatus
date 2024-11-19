@@ -50,9 +50,9 @@ internal static class StatusExtensions
         suppressBody ??= FindSuppressBodyInHeader(req);
 
         Dictionary<string, StringValues> customResponseHeaders = req.Headers
-            .Where(header => header.Key.StartsWith(CUSTOM_RESPONSE_HEADER_PREFIX))
+            .Where(header => header.Key.StartsWith(CUSTOM_RESPONSE_HEADER_PREFIX, StringComparison.InvariantCultureIgnoreCase))
             .ToDictionary(
-                header => header.Key.Replace(CUSTOM_RESPONSE_HEADER_PREFIX, string.Empty),
+                header => header.Key.Replace(CUSTOM_RESPONSE_HEADER_PREFIX, string.Empty, StringComparison.InvariantCultureIgnoreCase),
                 header => header.Value);
 
         return new CustomHttpStatusCodeResult(status, statusData, sleep, suppressBody, customResponseHeaders);
