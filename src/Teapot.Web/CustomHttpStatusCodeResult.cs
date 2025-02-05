@@ -20,7 +20,7 @@ public class CustomHttpStatusCodeResult(
 {
     private const int SLEEP_MIN = 0;
     private const int SLEEP_MAX = 5 * 60 * 1000; // 5 mins in milliseconds
-    private static readonly string[] onlySingleHeader = ["Location"];
+    internal static readonly string[] onlySingleHeader = ["Location", "Retry-After"];
 
     private static readonly MediaTypeHeaderValue jsonMimeType = new("application/json");
 

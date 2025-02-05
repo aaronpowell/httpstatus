@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using System.Text.Json;
-using Teapot.Web.Models;
 
 namespace Teapot.Web.Tests.UnitTests;
 
@@ -36,71 +36,78 @@ public class CustomHttpStatusCodeResultTests
     }
 
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesAll))]
-    public async Task Response_Is_Correct(TestCase testCase) {
-        TeapotStatusCodeMetadata statusCodeResult = new()
-        {
-            Description = testCase.Description
-        };
-
-        CustomHttpStatusCodeResult target = new(testCase.Code, statusCodeResult, null, null, new());
+    public async Task Response_Is_Correct(TestCase testCase)
+    {
+        CustomHttpStatusCodeResult target = new(testCase.Code, testCase.TeapotStatusCodeMetadata, null, null, []);
 
         await target.ExecuteAsync(_httpContext);
-        Assert.Multiple(() => {
+        Assert.Multiple(() =>
+        {
             Assert.That(_httpContext.Response.StatusCode, Is.EqualTo(testCase.Code));
-            Assert.That(_httpContext.Response.ContentType, Is.EqualTo("text/plain"));
+            Assert.That(_httpContext.Response.ContentType, Is.EqualTo(testCase.TeapotStatusCodeMetadata.ExcludeBody ? null : "text/plain"));
             Assert.That(_httpResponseFeature.ReasonPhrase, Is.EqualTo(testCase.Description));
         });
-        _body.Position = 0;
-        StreamReader sr = new(_body);
-        string body = sr.ReadToEnd();
-        Assert.Multiple(() => {
-            Assert.That(body, Is.EqualTo(testCase.ToString()));
-            Assert.That(_httpContext.Response.ContentLength, Is.EqualTo(body.Length));
-        });
+
+        if (testCase.TeapotStatusCodeMetadata.ExcludeBody)
+        {
+            Assert.That(_httpContext.Response.ContentLength, Is.Null);
+        }
+        else
+        {
+            _body.Position = 0;
+            StreamReader sr = new(_body);
+            string body = sr.ReadToEnd();
+            Assert.Multiple(() =>
+            {
+                Assert.That(body, Is.EqualTo(testCase.Body));
+                Assert.That(_httpContext.Response.ContentLength, Is.EqualTo(body?.Length));
+            });
+        }
     }
 
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesAll))]
-    public async Task Response_Json_Is_Correct(TestCase testCase) {
-        TeapotStatusCodeMetadata statusCodeResult = new()
-        {
-            Description = testCase.Description
-        };
-
-        CustomHttpStatusCodeResult target = new(testCase.Code, statusCodeResult, null, null, new());
+    public async Task Response_Json_Is_Correct(TestCase testCase)
+    {
+        CustomHttpStatusCodeResult target = new(testCase.Code, testCase.TeapotStatusCodeMetadata, null, null, []);
 
         _httpContext.Request.Headers.Accept = "application/json";
 
         await target.ExecuteAsync(_httpContext);
-        Assert.Multiple(() => {
+        Assert.Multiple(() =>
+        {
             Assert.That(_httpContext.Response.StatusCode, Is.EqualTo(testCase.Code));
-            Assert.That(_httpContext.Response.ContentType, Is.EqualTo("application/json"));
+            Assert.That(_httpContext.Response.ContentType, Is.EqualTo(testCase.TeapotStatusCodeMetadata.ExcludeBody ? null : "application/json"));
             Assert.That(_httpResponseFeature.ReasonPhrase, Is.EqualTo(testCase.Description));
         });
-        _body.Position = 0;
-        StreamReader sr = new(_body);
-        string body = sr.ReadToEnd();
-        string expectedBody = JsonSerializer.Serialize(testCase);
-        Assert.Multiple(() => {
-            Assert.That(body, Is.EqualTo(expectedBody));
-            Assert.That(_httpContext.Response.ContentLength, Is.EqualTo(body.Length));
-        });
+        if (testCase.TeapotStatusCodeMetadata.ExcludeBody)
+        {
+            Assert.That(_httpContext.Response.ContentLength, Is.Null);
+        }
+        else
+        {
+            _body.Position = 0;
+            StreamReader sr = new(_body);
+            string body = sr.ReadToEnd();
+            string expectedBody = JsonSerializer.Serialize(new { code = testCase.Code, description = testCase.TeapotStatusCodeMetadata.Body ?? testCase.TeapotStatusCodeMetadata.Description });
+            Assert.Multiple(() =>
+            {
+                Assert.That(body, Is.EqualTo(expectedBody));
+                Assert.That(_httpContext.Response.ContentLength, Is.EqualTo(body.Length));
+            });
+        }
     }
 
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesNoContent))]
-    public async Task Response_No_Content(TestCase testCase) {
-        TeapotStatusCodeMetadata statusCodeResult = new()
-        {
-            Description = testCase.Description,
-            ExcludeBody = true
-        };
-
-        _httpContext.Response.Headers["Content-Type"] = "text/plain";
+    public async Task Response_No_Content(TestCase testCase)
+    {
+        _httpContext.Response.Headers.ContentType = "text/plain";
         _httpContext.Response.Headers["Content-Length"] = "42";
 
-        CustomHttpStatusCodeResult target = new(testCase.Code, statusCodeResult, null, null, new());
+        CustomHttpStatusCodeResult target = new(testCase.Code, testCase.TeapotStatusCodeMetadata, null, null, []);
 
         await target.ExecuteAsync(_httpContext);
-        Assert.Multiple(() => {
+        Assert.Multiple(() =>
+        {
             Assert.That(_httpContext.Response.StatusCode, Is.EqualTo(testCase.Code));
             Assert.That(_httpContext.Response.ContentType, Is.Null);
             Assert.That(_httpResponseFeature.ReasonPhrase, Is.EqualTo(testCase.Description));
@@ -108,9 +115,22 @@ public class CustomHttpStatusCodeResultTests
         _body.Position = 0;
         StreamReader sr = new(_body);
         string body = sr.ReadToEnd();
-        Assert.Multiple(() => {
+        Assert.Multiple(() =>
+        {
             Assert.That(body, Is.Empty);
             Assert.That(_httpContext.Response.ContentLength, Is.Null);
         });
+    }
+
+    [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesWithRetryAfter))]
+    public async Task Response_Retry_After_Single_Header(TestCase testCase)
+    {
+        Dictionary<string, StringValues> customHeaders = new() {
+            { "Retry-After", new StringValues("42") }
+        };
+
+        CustomHttpStatusCodeResult target = new(testCase.Code, testCase.TeapotStatusCodeMetadata, sleep: null, suppressBody: null, customHeaders);
+        await target.ExecuteAsync(_httpContext);
+        Assert.That(_httpContext.Response.Headers.RetryAfter, Has.Count.EqualTo(1));
     }
 }

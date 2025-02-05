@@ -1,24 +1,21 @@
 ﻿using System.Text.Json.Serialization;
+using Teapot.Web.Models;
 
 namespace Teapot.Web.Tests;
 
-public class TestCase
+public class TestCase(int code, string description, string? body, TeapotStatusCodeMetadata teapotStatusCodeMetadata)
 {
-    public TestCase(int code, string description, string? body)
-    {
-        Code = code;
-        Description = description;
-        Body = body ?? $"{Code} {Description}";
-    }
-
     [JsonPropertyName("code")]
-    public int Code { get; }
+    public int Code => code;
 
     [JsonPropertyName("description")]
-    public string Description { get; }
+    public string Description => description;
 
     [JsonIgnore]
-    public string? Body { get; }
+    public string? Body => body ?? $"{Code} {Description}";
+
+    [JsonIgnore]
+    public TeapotStatusCodeMetadata TeapotStatusCodeMetadata { get; } = teapotStatusCodeMetadata;
 
     public override bool Equals(object? obj) => obj is TestCase code && Code == code.Code;
 
