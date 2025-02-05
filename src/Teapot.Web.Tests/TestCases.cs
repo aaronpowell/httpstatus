@@ -35,11 +35,19 @@ public class TestCases
     private static TestCase Map(HttpStatusCode code)
     {
         int key = (int)code;
-        return new(key, All[key].Description, All[key].Body);
+        return new(key, All[key].Description, All[key].Body, All[key]);
     }
 
     private static TestCase Map(KeyValuePair<int, TeapotStatusCodeMetadata> code)
     {
-        return new(code.Key, code.Value.Description, code.Value.Body);
+        return new(code.Key, code.Value.Description, code.Value.Body, code.Value);
     }
+
+
+    private static readonly HttpStatusCode[] RetryAfterStatusCodes = [MovedPermanently, TooManyRequests, ServiceUnavailable];
+
+    public static IEnumerable<TestCase> StatusCodesWithRetryAfter =>
+        All
+        .Where(x => RetryAfterStatusCodes.Contains((HttpStatusCode)x.Key))
+        .Select(Map);
 }

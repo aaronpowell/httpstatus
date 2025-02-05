@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using System.Text.Json;
-using Teapot.Web.Models;
 
 namespace Teapot.Web.Tests.UnitTests;
 
@@ -37,12 +37,7 @@ public class CustomHttpStatusCodeResultTests
 
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesAll))]
     public async Task Response_Is_Correct(TestCase testCase) {
-        TeapotStatusCodeMetadata statusCodeResult = new()
-        {
-            Description = testCase.Description
-        };
-
-        CustomHttpStatusCodeResult target = new(testCase.Code, statusCodeResult, null, null, new());
+        CustomHttpStatusCodeResult target = new(testCase.Code, testCase.TeapotStatusCodeMetadata, null, null, []);
 
         await target.ExecuteAsync(_httpContext);
         Assert.Multiple(() => {
@@ -61,12 +56,7 @@ public class CustomHttpStatusCodeResultTests
 
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesAll))]
     public async Task Response_Json_Is_Correct(TestCase testCase) {
-        TeapotStatusCodeMetadata statusCodeResult = new()
-        {
-            Description = testCase.Description
-        };
-
-        CustomHttpStatusCodeResult target = new(testCase.Code, statusCodeResult, null, null, new());
+        CustomHttpStatusCodeResult target = new(testCase.Code, testCase.TeapotStatusCodeMetadata, null, null, []);
 
         _httpContext.Request.Headers.Accept = "application/json";
 
@@ -88,16 +78,10 @@ public class CustomHttpStatusCodeResultTests
 
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesNoContent))]
     public async Task Response_No_Content(TestCase testCase) {
-        TeapotStatusCodeMetadata statusCodeResult = new()
-        {
-            Description = testCase.Description,
-            ExcludeBody = true
-        };
-
-        _httpContext.Response.Headers["Content-Type"] = "text/plain";
+        _httpContext.Response.Headers.ContentType = "text/plain";
         _httpContext.Response.Headers["Content-Length"] = "42";
 
-        CustomHttpStatusCodeResult target = new(testCase.Code, statusCodeResult, null, null, new());
+        CustomHttpStatusCodeResult target = new(testCase.Code, testCase.TeapotStatusCodeMetadata, null, null, []);
 
         await target.ExecuteAsync(_httpContext);
         Assert.Multiple(() => {
@@ -112,5 +96,17 @@ public class CustomHttpStatusCodeResultTests
             Assert.That(body, Is.Empty);
             Assert.That(_httpContext.Response.ContentLength, Is.Null);
         });
+    }
+
+    [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesWithRetryAfter))]
+    public async Task Response_Retry_After_Single_Header(TestCase testCase)
+    {
+        Dictionary<string, StringValues> customHeaders = new() {
+            { "Retry-After", new StringValues("42") }
+        };
+
+        CustomHttpStatusCodeResult target = new(testCase.Code, testCase.TeapotStatusCodeMetadata, sleep: null, suppressBody: null, customHeaders);
+        await target.ExecuteAsync(_httpContext);
+        Assert.That(_httpContext.Response.Headers.RetryAfter, Has.Count.EqualTo(1));
     }
 }

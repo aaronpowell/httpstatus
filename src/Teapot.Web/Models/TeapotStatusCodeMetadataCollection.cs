@@ -115,7 +115,8 @@ public class TeapotStatusCodeMetadataCollection : Dictionary<int, TeapotStatusCo
             Description = "Moved Permanently",
             IncludeHeaders = new Dictionary<string, string>
             {
-                {"Location", "https://httpstat.us"}
+                {"Location", "https://httpstat.us"},
+                {"Retry-After", "5"}
             }
         });
         Add(302, new TeapotStatusCodeMetadata
@@ -314,7 +315,11 @@ public class TeapotStatusCodeMetadataCollection : Dictionary<int, TeapotStatusCo
         });
         Add(503, new TeapotStatusCodeMetadata
         {
-            Description = "Service Unavailable"
+            Description = "Service Unavailable",
+            IncludeHeaders = new Dictionary<string, string>
+            {
+                {"Retry-After", "5"}
+            }
         });
         Add(504, new TeapotStatusCodeMetadata
         {
