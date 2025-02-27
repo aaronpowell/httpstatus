@@ -14,6 +14,10 @@ internal static class StatusExtensions
 {
     public const string SLEEP_HEADER = "X-HttpStatus-Sleep";
     public const string SUPPRESS_BODY_HEADER = "X-HttpStatus-SuppressBody";
+    public const string SLEEP_AFTER_HEADERS = "X-HttpStatus-SleepAfterHeaders";
+    public const string ABORT_BEFORE_HEADERS = "X-HttpStatus-AbortBeforeHeaders";
+    public const string ABORT_AFTER_HEADERS = "X-HttpStatus-AbortAfterHeaders";
+    public const string ABORT_DURING_BODY = "X-HttpStatus-AbortDuringBody";
     public const string CUSTOM_RESPONSE_HEADER_PREFIX = "X-HttpStatus-Response-";
 
     private static readonly string[] httpMethods = ["Get", "Put", "Post", "Delete", "Head", "Options", "Trace", "Patch"];
@@ -43,19 +47,38 @@ internal static class StatusExtensions
         HttpRequest req,
         [FromServices] TeapotStatusCodeMetadataCollection statusCodes)
     {
-        TeapotStatusCodeMetadata statusData = statusCodes.TryGetValue(status, out TeapotStatusCodeMetadata? value) ?
-            value :
-            new TeapotStatusCodeMetadata { Description = $"{status} Unknown Code" };
-        sleep ??= FindSleepInHeader(req);
-        suppressBody ??= FindSuppressBodyInHeader(req);
+        ResponseOptions options = new(status)
+        {
+            Sleep = sleep,
+            SuppressBody = suppressBody
+        };
+        return CommonHandleStatusRequestAsync(options, wildcard, req, statusCodes);
+    }
 
-        Dictionary<string, StringValues> customResponseHeaders = req.Headers
+    internal static IResult CommonHandleStatusRequestAsync(
+        ResponseOptions options,
+        string? wildcard,
+        HttpRequest req,
+        [FromServices] TeapotStatusCodeMetadataCollection statusCodes)
+    {
+        TeapotStatusCodeMetadata statusData = statusCodes.TryGetValue(options.StatusCode, out TeapotStatusCodeMetadata? value) ?
+            value :
+            new TeapotStatusCodeMetadata { Description = $"{options.StatusCode} Unknown Code" };
+        options.Sleep ??= ParseHeaderInt(req, SLEEP_HEADER);
+        options.SleepAfterHeaders ??= ParseHeaderInt(req, SLEEP_AFTER_HEADERS);
+        options.SuppressBody ??= ParseHeaderBool(req, SUPPRESS_BODY_HEADER);
+        options.AbortAfterHeaders ??= ParseHeaderBool(req, ABORT_AFTER_HEADERS);
+        options.AbortBeforeHeaders ??= ParseHeaderBool(req, ABORT_BEFORE_HEADERS);
+        options.AbortDuringBody??= ParseHeaderBool(req, ABORT_DURING_BODY);
+
+
+        Dictionary< string, StringValues> customResponseHeaders = req.Headers
             .Where(header => header.Key.StartsWith(CUSTOM_RESPONSE_HEADER_PREFIX, StringComparison.InvariantCultureIgnoreCase))
             .ToDictionary(
                 header => header.Key.Replace(CUSTOM_RESPONSE_HEADER_PREFIX, string.Empty, StringComparison.InvariantCultureIgnoreCase),
                 header => header.Value);
 
-        return new CustomHttpStatusCodeResult(status, statusData, sleep, suppressBody, customResponseHeaders);
+        return new CustomHttpStatusCodeResult(options);
     }
 
     internal static IResult HandleRandomRequest(
@@ -68,8 +91,8 @@ internal static class StatusExtensions
     {
         try
         {
-            int statusCode = GetRandomStatus(range);
-            return HandleStatusRequestAsync(statusCode, sleep, suppressBody, wildcard, req, statusCodes);
+            var options = new ResponseOptions(GetRandomStatus(range));
+            return CommonHandleStatusRequestAsync(options, wildcard, req, statusCodes);
         }
         catch
         {
@@ -77,28 +100,28 @@ internal static class StatusExtensions
         }
     }
 
-    private static int? FindSleepInHeader(HttpRequest req)
+    private static int? ParseHeaderInt(HttpRequest req, string headerName)
     {
-        if (req.Headers.TryGetValue(SLEEP_HEADER, out StringValues sleepHeader) && sleepHeader.Count == 1 && sleepHeader[0] is not null)
+        if (req.Headers.TryGetValue(headerName, out StringValues values) && values.Count == 1 && values[0] is not null)
         {
-            string? val = sleepHeader[0];
-            if (int.TryParse(val, out int sleepFromHeader))
+            string? val = values[0];
+            if (int.TryParse(val, out int value))
             {
-                return sleepFromHeader;
+                return value;
             }
         }
 
         return null;
     }
 
-    private static bool? FindSuppressBodyInHeader(HttpRequest req)
+    private static bool? ParseHeaderBool(HttpRequest req, string headerName)
     {
-        if (req.Headers.TryGetValue(SUPPRESS_BODY_HEADER, out StringValues suppressBodyHeader) && suppressBodyHeader.Count == 1 && suppressBodyHeader[0] is not null)
+        if (req.Headers.TryGetValue(headerName, out StringValues values) && values.Count == 1 && values[0] is not null)
         {
-            string? val = suppressBodyHeader[0];
-            if (bool.TryParse(val, out bool suppressBodyFromHeader))
+            string? val = values[0];
+            if (bool.TryParse(val, out bool value))
             {
-                return suppressBodyFromHeader;
+                return value;
             }
         }
 

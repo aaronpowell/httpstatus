@@ -7,16 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Teapot.Web.Models;
 
 namespace Teapot.Web;
 
-public class CustomHttpStatusCodeResult(
-    int statusCode,
-    TeapotStatusCodeMetadata metadata,
-    int? sleep,
-    bool? suppressBody,
-    Dictionary<string, StringValues> customResponseHeaders) : IResult
+public class CustomHttpStatusCodeResult(ResponseOptions options) : IResult
 {
     private const int SLEEP_MIN = 0;
     private const int SLEEP_MAX = 5 * 60 * 1000; // 5 mins in milliseconds
@@ -24,34 +18,38 @@ public class CustomHttpStatusCodeResult(
 
     private static readonly MediaTypeHeaderValue jsonMimeType = new("application/json");
 
-    public int? Sleep => sleep;
-
-    public bool? SuppressBody => suppressBody;
+    public ResponseOptions Options => options;
 
     public async Task ExecuteAsync(HttpContext context)
     {
-        await DoSleep(Sleep);
+        await DoSleep(Options.Sleep);
 
-        context.Response.StatusCode = statusCode;
+        if (Options.AbortBeforeHeaders == true)
+        {
+            context.Abort();
+            return;
+        }
 
-        if (!string.IsNullOrEmpty(metadata.Description))
+        context.Response.StatusCode = Options.StatusCode;
+
+        if (!string.IsNullOrEmpty(Options.Metadata.Description))
         {
             IHttpResponseFeature? httpResponseFeature = context.Features.Get<IHttpResponseFeature>();
             if (httpResponseFeature is not null)
             {
-                httpResponseFeature.ReasonPhrase = metadata.Description;
+                httpResponseFeature.ReasonPhrase = Options.Metadata.Description;
             }
         }
 
-        if (metadata.IncludeHeaders is not null)
+        if (Options.Metadata.IncludeHeaders is not null)
         {
-            foreach ((string header, string values) in metadata.IncludeHeaders)
+            foreach ((string header, string values) in Options.Metadata.IncludeHeaders)
             {
                 context.Response.Headers.Append(header, values);
             }
         }
 
-        foreach ((string header, StringValues values) in customResponseHeaders)
+        foreach ((string header, StringValues values) in Options.CustomHeaders)
         {
             if (onlySingleHeader.Contains(header))
             {
@@ -63,7 +61,7 @@ public class CustomHttpStatusCodeResult(
             }
         }
 
-        if (metadata.ExcludeBody || suppressBody == true)
+        if (Options.Metadata.ExcludeBody || Options.SuppressBody == true)
         {
             //remove Content-Length and Content-Type when there isn't any body
             context.Response.Headers.Remove("Content-Length");
@@ -75,14 +73,35 @@ public class CustomHttpStatusCodeResult(
 
             (string body, string contentType) = acceptTypes.Contains(jsonMimeType) switch
             {
-                true => (JsonSerializer.Serialize(new { code = statusCode, description = metadata.Body ?? metadata.Description }), "application/json"),
-                false => (metadata.Body ?? $"{statusCode} {metadata.Description}", "text/plain")
+                true => (JsonSerializer.Serialize(new { code = Options.StatusCode, description = Options.Metadata.Body ?? Options.Metadata.Description }), "application/json"),
+                false => (Options.Metadata.Body ?? $"{Options.StatusCode} {Options.Metadata.Description}", "text/plain")
             };
 
             context.Response.ContentType = contentType;
             context.Response.ContentLength = body.Length;
-            await context.Response.WriteAsync(body);
 
+            await context.Response.StartAsync();
+
+            await DoSleep(Options.SleepAfterHeaders);
+
+            if (Options.AbortAfterHeaders == true)
+            {
+                context.Response.Body.Flush();
+                await DoSleep(100);
+                context.Abort();
+                return;
+            }
+
+            if (Options.AbortDuringBody == true)
+            {
+                await context.Response.WriteAsync(body.Substring(0, 1));
+                context.Response.Body.Flush();
+                await DoSleep(100);
+                context.Abort();
+                return;
+            }
+
+            await context.Response.WriteAsync(body);
         }
     }
 
