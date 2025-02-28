@@ -86,7 +86,7 @@ public class CustomHttpStatusCodeResult(ResponseOptions options) : IResult
 
             if (Options.AbortAfterHeaders == true)
             {
-                context.Response.Body.Flush();
+                await context.Response.Body.FlushAsync();
                 await DoSleep(100);
                 context.Abort();
                 return;
@@ -95,7 +95,7 @@ public class CustomHttpStatusCodeResult(ResponseOptions options) : IResult
             if (Options.AbortDuringBody == true)
             {
                 await context.Response.WriteAsync(body.Substring(0, 1));
-                context.Response.Body.Flush();
+                await context.Response.Body.FlushAsync();
                 await DoSleep(100);
                 context.Abort();
                 return;
