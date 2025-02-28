@@ -6,14 +6,16 @@ namespace Teapot.Web;
 
 public record class ResponseOptions
 {
-    public ResponseOptions(int statusCode, 
-        int? sleep = null, 
-        int? sleepAfterHeaders = null, 
+    public ResponseOptions(int statusCode,
+        int? sleep = null,
+        int? sleepAfterHeaders = null,
         bool? abortBeforeHeaders = null,
         bool? abortAfterHeaders = null,
         bool? abortDuringBody = null,
         bool? suppressBody = null,
-        TeapotStatusCodeMetadata? metadata=null,
+        bool? dribbleBody = null,
+        bool? isProduction = null,
+        TeapotStatusCodeMetadata? metadata = null,
         Dictionary<string, StringValues>? customHeaders = null)
     {
         StatusCode = statusCode;
@@ -23,6 +25,8 @@ public record class ResponseOptions
         AbortAfterHeaders = abortAfterHeaders;
         AbortDuringBody = abortDuringBody;
         SuppressBody = suppressBody;
+        DribbleBody = dribbleBody;
+        IsProduction = isProduction;
         CustomHeaders = customHeaders ?? new Dictionary<string, StringValues>();
         Metadata = metadata ?? new();
     }
@@ -34,6 +38,8 @@ public record class ResponseOptions
     public bool? AbortBeforeHeaders { get; set; }
     public bool? AbortAfterHeaders { get; set; }
     public bool? AbortDuringBody { get; set; }
-    public Dictionary<string, StringValues> CustomHeaders { get; set; } 
+    public bool? DribbleBody { get; set; }
+    public bool? IsProduction { get; set; }
+    public Dictionary<string, StringValues> CustomHeaders { get; set; }
     public TeapotStatusCodeMetadata Metadata { get; set; }
 }

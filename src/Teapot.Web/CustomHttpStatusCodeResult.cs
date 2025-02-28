@@ -14,6 +14,7 @@ public class CustomHttpStatusCodeResult(ResponseOptions options) : IResult
 {
     private const int SLEEP_MIN = 0;
     private const int SLEEP_MAX = 5 * 60 * 1000; // 5 mins in milliseconds
+    private const int SLEEP_MAX_PROD = 500; // 500 in milliseconds
     internal static readonly string[] onlySingleHeader = ["Location", "Retry-After"];
 
     private static readonly MediaTypeHeaderValue jsonMimeType = new("application/json");
@@ -29,6 +30,7 @@ public class CustomHttpStatusCodeResult(ResponseOptions options) : IResult
             context.Abort();
             return;
         }
+
 
         context.Response.StatusCode = Options.StatusCode;
 
@@ -87,7 +89,7 @@ public class CustomHttpStatusCodeResult(ResponseOptions options) : IResult
             if (Options.AbortAfterHeaders == true)
             {
                 await context.Response.Body.FlushAsync();
-                await DoSleep(100);
+                await DoSleep(10);
                 context.Abort();
                 return;
             }
@@ -96,18 +98,33 @@ public class CustomHttpStatusCodeResult(ResponseOptions options) : IResult
             {
                 await context.Response.WriteAsync(body.Substring(0, 1));
                 await context.Response.Body.FlushAsync();
-                await DoSleep(100);
+                await DoSleep(10);
                 context.Abort();
                 return;
             }
 
-            await context.Response.WriteAsync(body);
+            if (Options.DribbleBody == true)
+            {
+                for (int i = 0; i < body.Length; i++)
+                {
+                    await context.Response.WriteAsync(body[i..(i + 1)]);
+                    if (i < 20)
+                    {
+                        await context.Response.Body.FlushAsync();
+                        await DoSleep(10);
+                    }
+                }
+            }
+            else
+            {
+                await context.Response.WriteAsync(body);
+            }
         }
     }
 
-    private static async Task DoSleep(int? sleep)
+    private async Task DoSleep(int? sleep)
     {
-        int sleepData = Math.Clamp(sleep ?? 0, SLEEP_MIN, SLEEP_MAX);
+        int sleepData = Math.Clamp(sleep ?? 0, SLEEP_MIN, options.IsProduction == true ? SLEEP_MAX_PROD : SLEEP_MAX);
         if (sleepData > 0)
         {
             await Task.Delay(sleepData);
