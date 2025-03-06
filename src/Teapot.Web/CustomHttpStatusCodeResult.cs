@@ -14,7 +14,6 @@ public class CustomHttpStatusCodeResult(ResponseOptions options) : IResult
 {
     private const int SLEEP_MIN = 0;
     private const int SLEEP_MAX = 5 * 60 * 1000; // 5 mins in milliseconds
-    private const int SLEEP_MAX_PROD = 500; // 500 in milliseconds
     internal static readonly string[] onlySingleHeader = ["Location", "Retry-After"];
 
     private static readonly MediaTypeHeaderValue jsonMimeType = new("application/json");
@@ -122,9 +121,9 @@ public class CustomHttpStatusCodeResult(ResponseOptions options) : IResult
         }
     }
 
-    private async Task DoSleep(int? sleep)
+    private static async Task DoSleep(int? sleep)
     {
-        int sleepData = Math.Clamp(sleep ?? 0, SLEEP_MIN, options.IsProduction == true ? SLEEP_MAX_PROD : SLEEP_MAX);
+        int sleepData = Math.Clamp(sleep ?? 0, SLEEP_MIN, SLEEP_MAX);
         if (sleepData > 0)
         {
             await Task.Delay(sleepData);

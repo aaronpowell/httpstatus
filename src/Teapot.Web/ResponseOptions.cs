@@ -14,7 +14,6 @@ public record class ResponseOptions
         bool? abortDuringBody = null,
         bool? suppressBody = null,
         bool? dribbleBody = null,
-        bool? isProduction = null,
         TeapotStatusCodeMetadata? metadata = null,
         Dictionary<string, StringValues>? customHeaders = null)
     {
@@ -26,7 +25,6 @@ public record class ResponseOptions
         AbortDuringBody = abortDuringBody;
         SuppressBody = suppressBody;
         DribbleBody = dribbleBody;
-        IsProduction = isProduction;
         CustomHeaders = customHeaders ?? new Dictionary<string, StringValues>();
         Metadata = metadata ?? new();
     }
@@ -39,7 +37,6 @@ public record class ResponseOptions
     public bool? AbortAfterHeaders { get; set; }
     public bool? AbortDuringBody { get; set; }
     public bool? DribbleBody { get; set; }
-    public bool? IsProduction { get; set; }
     public Dictionary<string, StringValues> CustomHeaders { get; set; }
     public TeapotStatusCodeMetadata Metadata { get; set; }
 }

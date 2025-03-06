@@ -49,8 +49,7 @@ internal static class StatusExtensions
         bool? suppressBody,
         string? wildcard,
         HttpRequest req,
-        [FromServices] TeapotStatusCodeMetadataCollection statusCodes,
-        [FromServices] IWebHostEnvironment env
+        [FromServices] TeapotStatusCodeMetadataCollection statusCodes
         )
     {
         ResponseOptions options = new(status)
@@ -58,15 +57,14 @@ internal static class StatusExtensions
             Sleep = sleep,
             SuppressBody = suppressBody
         };
-        return CommonHandleStatusRequestAsync(options, wildcard, req, statusCodes, env);
+        return CommonHandleStatusRequestAsync(options, wildcard, req, statusCodes);
     }
 
     internal static IResult CommonHandleStatusRequestAsync(
         ResponseOptions options,
         string? wildcard,
         HttpRequest req,
-        TeapotStatusCodeMetadataCollection statusCodes,
-        IWebHostEnvironment env
+        TeapotStatusCodeMetadataCollection statusCodes
         )
     {
         TeapotStatusCodeMetadata statusData = statusCodes.TryGetValue(options.StatusCode, out TeapotStatusCodeMetadata? value) ?
@@ -79,7 +77,6 @@ internal static class StatusExtensions
         options.AbortAfterHeaders ??= ParseHeaderBool(req, ABORT_AFTER_HEADERS);
         options.AbortBeforeHeaders ??= ParseHeaderBool(req, ABORT_BEFORE_HEADERS);
         options.AbortDuringBody ??= ParseHeaderBool(req, ABORT_DURING_BODY);
-        options.IsProduction = !env.IsDevelopment();
 
 
         Dictionary<string, StringValues> customResponseHeaders = req.Headers
@@ -94,7 +91,6 @@ internal static class StatusExtensions
     internal static IResult HandleRandomRequest(
         HttpRequest req,
         [FromServices] TeapotStatusCodeMetadataCollection statusCodes,
-        [FromServices] IWebHostEnvironment env,
         int? sleep,
         bool? suppressBody,
         string? wildcard,
@@ -103,7 +99,7 @@ internal static class StatusExtensions
         try
         {
             var options = new ResponseOptions(GetRandomStatus(range));
-            return CommonHandleStatusRequestAsync(options, wildcard, req, statusCodes, env);
+            return CommonHandleStatusRequestAsync(options, wildcard, req, statusCodes);
         }
         catch
         {
