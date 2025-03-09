@@ -22,15 +22,17 @@ public class SleepTests {
     }
 
     [Test]
-    public void SleepReadFromQuery() {
+    public void SleepReadFromQuery()
+    {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
-        IResult result = StatusExtensions.HandleStatusRequestAsync(200, Sleep, null, null, request.Object, _statusCodes);
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, sleep: Sleep), null, request.Object, _statusCodes);
 
-        Assert.Multiple(() => {
+        Assert.Multiple(() =>
+        {
             Assert.That(result, Is.InstanceOf<CustomHttpStatusCodeResult>());
 
             CustomHttpStatusCodeResult r = (CustomHttpStatusCodeResult)result;
-            Assert.That(r.Sleep, Is.EqualTo(Sleep));
+            Assert.That(r.Options.Sleep, Is.EqualTo(Sleep));
         });
     }
 
@@ -40,13 +42,13 @@ public class SleepTests {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
         request.Object.Headers.Append(StatusExtensions.SLEEP_HEADER, Sleep.ToString());
 
-        IResult result = StatusExtensions.HandleStatusRequestAsync(200, null, null, null, request.Object, _statusCodes);
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200), null, request.Object, _statusCodes);
 
         Assert.Multiple(() => {
             Assert.That(result, Is.InstanceOf<CustomHttpStatusCodeResult>());
 
             CustomHttpStatusCodeResult r = (CustomHttpStatusCodeResult)result;
-            Assert.That(r.Sleep, Is.EqualTo(Sleep));
+            Assert.That(r.Options.Sleep, Is.EqualTo(Sleep));
         });
     }
 
@@ -55,13 +57,13 @@ public class SleepTests {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
         request.Object.Headers.Append(StatusExtensions.SLEEP_HEADER, Sleep.ToString());
 
-        IResult result = StatusExtensions.HandleStatusRequestAsync(200, Sleep * 2, null, null, request.Object, _statusCodes);
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, sleep:Sleep * 2), null, request.Object, _statusCodes);
 
         Assert.Multiple(() => {
             Assert.That(result, Is.InstanceOf<CustomHttpStatusCodeResult>());
 
             CustomHttpStatusCodeResult r = (CustomHttpStatusCodeResult)result;
-            Assert.That(r.Sleep, Is.EqualTo(Sleep * 2));
+            Assert.That(r.Options.Sleep, Is.EqualTo(Sleep * 2));
         });
     }
 
@@ -71,14 +73,14 @@ public class SleepTests {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
         request.Object.Headers.Append(StatusExtensions.SLEEP_HEADER, "invalid");
 
-        IResult result = StatusExtensions.HandleStatusRequestAsync(200, null, null, null, request.Object, _statusCodes);
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200), null, request.Object, _statusCodes);
 
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.InstanceOf<CustomHttpStatusCodeResult>());
 
             CustomHttpStatusCodeResult r = (CustomHttpStatusCodeResult)result;
-            Assert.That(r.Sleep, Is.Null);
+            Assert.That(r.Options.Sleep, Is.Null);
         });
     }
 

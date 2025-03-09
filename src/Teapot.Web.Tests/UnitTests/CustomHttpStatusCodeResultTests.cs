@@ -38,7 +38,7 @@ public class CustomHttpStatusCodeResultTests
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesAll))]
     public async Task Response_Is_Correct(TestCase testCase)
     {
-        CustomHttpStatusCodeResult target = new(testCase.Code, testCase.TeapotStatusCodeMetadata, null, null, []);
+        CustomHttpStatusCodeResult target = new(new ResponseOptions(testCase.Code, metadata: testCase.TeapotStatusCodeMetadata));
 
         await target.ExecuteAsync(_httpContext);
         Assert.Multiple(() =>
@@ -68,7 +68,7 @@ public class CustomHttpStatusCodeResultTests
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesAll))]
     public async Task Response_Json_Is_Correct(TestCase testCase)
     {
-        CustomHttpStatusCodeResult target = new(testCase.Code, testCase.TeapotStatusCodeMetadata, null, null, []);
+        CustomHttpStatusCodeResult target = new(new ResponseOptions(testCase.Code, metadata: testCase.TeapotStatusCodeMetadata));
 
         _httpContext.Request.Headers.Accept = "application/json";
 
@@ -103,7 +103,7 @@ public class CustomHttpStatusCodeResultTests
         _httpContext.Response.Headers.ContentType = "text/plain";
         _httpContext.Response.Headers["Content-Length"] = "42";
 
-        CustomHttpStatusCodeResult target = new(testCase.Code, testCase.TeapotStatusCodeMetadata, null, null, []);
+        CustomHttpStatusCodeResult target = new(new ResponseOptions(testCase.Code, metadata: testCase.TeapotStatusCodeMetadata));
 
         await target.ExecuteAsync(_httpContext);
         Assert.Multiple(() =>
@@ -129,7 +129,7 @@ public class CustomHttpStatusCodeResultTests
             { "Retry-After", new StringValues("42") }
         };
 
-        CustomHttpStatusCodeResult target = new(testCase.Code, testCase.TeapotStatusCodeMetadata, sleep: null, suppressBody: null, customHeaders);
+        CustomHttpStatusCodeResult target = new(new ResponseOptions(testCase.Code, metadata: testCase.TeapotStatusCodeMetadata, customHeaders: customHeaders));
         await target.ExecuteAsync(_httpContext);
         Assert.That(_httpContext.Response.Headers.RetryAfter, Has.Count.EqualTo(1));
     }

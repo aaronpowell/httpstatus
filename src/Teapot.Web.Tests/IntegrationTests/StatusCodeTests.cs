@@ -39,7 +39,7 @@ public class StatusCodeTests(HttpMethod httpMethod)
     [TestCaseSource(typeof(TestCases), nameof(TestCases.StatusCodesWithContent))]
     public async Task ResponseWithContentSuppressedViaQs([Values] TestCase testCase)
     {
-        string uri = $"/{testCase.Code}?{nameof(CustomHttpStatusCodeResult.SuppressBody)}=true";
+        string uri = $"/{testCase.Code}?{nameof(ResponseOptions.SuppressBody)}=true";
         using HttpRequestMessage httpRequest = new(httpMethod, uri);
         using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest);
         Assert.That((int)response.StatusCode, Is.EqualTo(testCase.Code));
