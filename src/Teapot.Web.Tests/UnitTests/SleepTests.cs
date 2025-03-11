@@ -25,7 +25,7 @@ public class SleepTests {
     public void SleepReadFromQuery()
     {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
-        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, sleep: Sleep), null, request.Object, _statusCodes);
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, new(), sleep: Sleep), null, request.Object);
 
         Assert.Multiple(() =>
         {
@@ -42,7 +42,7 @@ public class SleepTests {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
         request.Object.Headers.Append(StatusExtensions.SLEEP_HEADER, Sleep.ToString());
 
-        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200), null, request.Object, _statusCodes);
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, new()), null, request.Object);
 
         Assert.Multiple(() => {
             Assert.That(result, Is.InstanceOf<CustomHttpStatusCodeResult>());
@@ -57,7 +57,7 @@ public class SleepTests {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
         request.Object.Headers.Append(StatusExtensions.SLEEP_HEADER, Sleep.ToString());
 
-        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, sleep:Sleep * 2), null, request.Object, _statusCodes);
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, new(), sleep: Sleep * 2), null, request.Object);
 
         Assert.Multiple(() => {
             Assert.That(result, Is.InstanceOf<CustomHttpStatusCodeResult>());
@@ -73,7 +73,7 @@ public class SleepTests {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
         request.Object.Headers.Append(StatusExtensions.SLEEP_HEADER, "invalid");
 
-        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200), null, request.Object, _statusCodes);
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, new()), null, request.Object);
 
         Assert.Multiple(() =>
         {

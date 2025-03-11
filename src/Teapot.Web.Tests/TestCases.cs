@@ -32,6 +32,11 @@ public class TestCases
     public static IEnumerable<TestCase> StatusCodesNoContent =>
         NoContentStatusCodes.Select(Map);
 
+    public static IEnumerable<TestCase> StatusCodesWithHeaders =>
+        All
+        .Where(x => x.Value.IncludeHeaders.Count != 0)
+        .Select(Map);
+
     private static TestCase Map(HttpStatusCode code)
     {
         int key = (int)code;

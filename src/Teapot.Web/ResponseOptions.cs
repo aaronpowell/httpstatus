@@ -7,6 +7,7 @@ namespace Teapot.Web;
 public record class ResponseOptions
 {
     public ResponseOptions(int statusCode,
+        TeapotStatusCodeMetadata metadata,
         int? sleep = null,
         int? sleepAfterHeaders = null,
         bool? abortBeforeHeaders = null,
@@ -14,7 +15,6 @@ public record class ResponseOptions
         bool? abortDuringBody = null,
         bool? suppressBody = null,
         bool? dribbleBody = null,
-        TeapotStatusCodeMetadata? metadata = null,
         Dictionary<string, StringValues>? customHeaders = null)
     {
         StatusCode = statusCode;
@@ -25,8 +25,8 @@ public record class ResponseOptions
         AbortDuringBody = abortDuringBody;
         SuppressBody = suppressBody;
         DribbleBody = dribbleBody;
-        CustomHeaders = customHeaders ?? new Dictionary<string, StringValues>();
-        Metadata = metadata ?? new();
+        CustomHeaders = customHeaders ?? [];
+        Metadata = metadata;
     }
 
     public int StatusCode { get; set; }
