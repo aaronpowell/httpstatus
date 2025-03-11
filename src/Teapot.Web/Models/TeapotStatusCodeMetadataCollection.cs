@@ -115,7 +115,7 @@ public class TeapotStatusCodeMetadataCollection : Dictionary<int, TeapotStatusCo
             Description = "Moved Permanently",
             IncludeHeaders = new Dictionary<string, string>
             {
-                {"Location", "https://httpstat.us"},
+                {"Location", "https://httpstat.us/"},
                 {"Retry-After", "5"}
             }
         });
@@ -124,7 +124,7 @@ public class TeapotStatusCodeMetadataCollection : Dictionary<int, TeapotStatusCo
             Description = "Found",
             IncludeHeaders = new Dictionary<string, string>
             {
-                {"Location", "https://httpstat.us"}
+                {"Location", "https://httpstat.us/"}
             }
         });
         Add(303, new TeapotStatusCodeMetadata
@@ -132,7 +132,7 @@ public class TeapotStatusCodeMetadataCollection : Dictionary<int, TeapotStatusCo
             Description = "See Other",
             IncludeHeaders = new Dictionary<string, string>
             {
-                {"Location", "https://httpstat.us"}
+                {"Location", "https://httpstat.us/"}
             }
         });
         Add(304, new TeapotStatusCodeMetadata
@@ -145,7 +145,7 @@ public class TeapotStatusCodeMetadataCollection : Dictionary<int, TeapotStatusCo
             Description = "Use Proxy",
             IncludeHeaders = new Dictionary<string, string>
             {
-                {"Location", "https://httpstat.us"}
+                {"Location", "https://httpstat.us/"}
             }
         });
         Add(306, new TeapotStatusCodeMetadata
@@ -157,7 +157,7 @@ public class TeapotStatusCodeMetadataCollection : Dictionary<int, TeapotStatusCo
             Description = "Temporary Redirect",
             IncludeHeaders = new Dictionary<string, string>
             {
-                {"Location", "https://httpstat.us"}
+                {"Location", "https://httpstat.us/"}
             }
         });
         Add(308, new TeapotStatusCodeMetadata
@@ -165,7 +165,7 @@ public class TeapotStatusCodeMetadataCollection : Dictionary<int, TeapotStatusCo
             Description = "Permanent Redirect",
             IncludeHeaders = new Dictionary<string, string>
             {
-                {"Location", "https://httpstat.us"}
+                {"Location", "https://httpstat.us/"}
             }
         });
 

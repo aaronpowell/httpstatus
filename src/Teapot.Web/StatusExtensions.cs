@@ -52,24 +52,23 @@ internal static class StatusExtensions
         [FromServices] TeapotStatusCodeMetadataCollection statusCodes
         )
     {
-        ResponseOptions options = new(status)
+        TeapotStatusCodeMetadata statusData = statusCodes.TryGetValue(status, out TeapotStatusCodeMetadata? value) ?
+            value :
+            new TeapotStatusCodeMetadata { Description = $"{status} Unknown Code" };
+
+        ResponseOptions options = new(status, statusData)
         {
             Sleep = sleep,
             SuppressBody = suppressBody
         };
-        return CommonHandleStatusRequestAsync(options, wildcard, req, statusCodes);
+        return CommonHandleStatusRequestAsync(options, wildcard, req);
     }
 
     internal static IResult CommonHandleStatusRequestAsync(
         ResponseOptions options,
         string? wildcard,
-        HttpRequest req,
-        TeapotStatusCodeMetadataCollection statusCodes
-        )
+        HttpRequest req)
     {
-        TeapotStatusCodeMetadata statusData = statusCodes.TryGetValue(options.StatusCode, out TeapotStatusCodeMetadata? value) ?
-            value :
-            new TeapotStatusCodeMetadata { Description = $"{options.StatusCode} Unknown Code" };
         options.Sleep ??= ParseHeaderInt(req, SLEEP_HEADER);
         options.SleepAfterHeaders ??= ParseHeaderInt(req, SLEEP_AFTER_HEADERS);
         options.SuppressBody ??= ParseHeaderBool(req, SUPPRESS_BODY_HEADER);
@@ -78,8 +77,7 @@ internal static class StatusExtensions
         options.AbortBeforeHeaders ??= ParseHeaderBool(req, ABORT_BEFORE_HEADERS);
         options.AbortDuringBody ??= ParseHeaderBool(req, ABORT_DURING_BODY);
 
-
-        Dictionary<string, StringValues> customResponseHeaders = req.Headers
+        options.CustomHeaders = req.Headers
             .Where(header => header.Key.StartsWith(CUSTOM_RESPONSE_HEADER_PREFIX, StringComparison.InvariantCultureIgnoreCase))
             .ToDictionary(
                 header => header.Key.Replace(CUSTOM_RESPONSE_HEADER_PREFIX, string.Empty, StringComparison.InvariantCultureIgnoreCase),
@@ -98,8 +96,13 @@ internal static class StatusExtensions
     {
         try
         {
-            var options = new ResponseOptions(GetRandomStatus(range));
-            return CommonHandleStatusRequestAsync(options, wildcard, req, statusCodes);
+            var status = GetRandomStatus(range);
+            TeapotStatusCodeMetadata statusData = statusCodes.TryGetValue(status, out TeapotStatusCodeMetadata? value) ?
+                value :
+                new TeapotStatusCodeMetadata { Description = $"{status} Unknown Code" };
+
+            ResponseOptions options = new(status, statusData);
+            return CommonHandleStatusRequestAsync(options, wildcard, req);
         }
         catch
         {
