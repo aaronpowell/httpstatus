@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Teapot.Web.Configuration;
 using Teapot.Web.Models;
 using Teapot.Web.Models.Unofficial;
@@ -117,14 +118,64 @@ public class SleepTests {
     }
 
     [Test]
-    public void SleepMaxTimeout_ClampsExcessiveValues()
+    public void SleepMaxTimeout_ExcessiveValuesReturnBadRequest()
     {
-        // Test that values exceeding the max are clamped
+        // Test that values exceeding the max now return BadRequest instead of being clamped
         var timeoutOptions = new TimeoutOptions { MaxSleepMilliseconds = 30 * 1000 }; // 30 seconds
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
         
         IResult result = StatusExtensions.CommonHandleStatusRequestAsync(
-            new ResponseOptions(200, new(), sleep: 60 * 1000), // 60 seconds - should be clamped to 30
+            new ResponseOptions(200, new(), sleep: 60 * 1000), // 60 seconds - exceeds 30 second max
+            null, 
+            request.Object, 
+            timeoutOptions);
+
+        // Should now return BadRequest instead of being clamped
+        Assert.That(result, Is.InstanceOf<BadRequest>());
+    }
+
+    [Test]
+    public void SleepExceedsMaxTimeout_ReturnsBadRequest()
+    {
+        // Test that sleep values exceeding the max timeout return BadRequest
+        var timeoutOptions = new TimeoutOptions { MaxSleepMilliseconds = 30 * 1000 }; // 30 seconds
+        Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
+        
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(
+            new ResponseOptions(200, new(), sleep: 60 * 1000), // 60 seconds - exceeds 30 second max
+            null, 
+            request.Object, 
+            timeoutOptions);
+
+        Assert.That(result, Is.InstanceOf<BadRequest>());
+    }
+
+    [Test]
+    public void SleepAfterHeadersExceedsMaxTimeout_ReturnsBadRequest()
+    {
+        // Test that sleepAfterHeaders values exceeding the max timeout return BadRequest
+        var timeoutOptions = new TimeoutOptions { MaxSleepMilliseconds = 30 * 1000 }; // 30 seconds
+        Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
+        request.Object.Headers.Append(StatusExtensions.SLEEP_AFTER_HEADERS, (60 * 1000).ToString()); // 60 seconds
+        
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(
+            new ResponseOptions(200, new()),
+            null, 
+            request.Object, 
+            timeoutOptions);
+
+        Assert.That(result, Is.InstanceOf<BadRequest>());
+    }
+
+    [Test]
+    public void SleepWithinMaxTimeout_Succeeds()
+    {
+        // Test that sleep values within the max timeout work normally
+        var timeoutOptions = new TimeoutOptions { MaxSleepMilliseconds = 30 * 1000 }; // 30 seconds
+        Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
+        
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(
+            new ResponseOptions(200, new(), sleep: 15 * 1000), // 15 seconds - within 30 second max
             null, 
             request.Object, 
             timeoutOptions);
@@ -133,9 +184,28 @@ public class SleepTests {
         {
             Assert.That(result, Is.InstanceOf<CustomHttpStatusCodeResult>());
             CustomHttpStatusCodeResult r = (CustomHttpStatusCodeResult)result;
-            // The sleep value in ResponseOptions should remain as requested, 
-            // but the actual clamping happens in DoSleep method
-            Assert.That(r.Options.Sleep, Is.EqualTo(60 * 1000));
+            Assert.That(r.Options.Sleep, Is.EqualTo(15 * 1000));
+        });
+    }
+
+    [Test]
+    public void SleepEqualToMaxTimeout_Succeeds()
+    {
+        // Test that sleep values equal to the max timeout work normally
+        var timeoutOptions = new TimeoutOptions { MaxSleepMilliseconds = 30 * 1000 }; // 30 seconds
+        Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
+        
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(
+            new ResponseOptions(200, new(), sleep: 30 * 1000), // 30 seconds - exactly at max
+            null, 
+            request.Object, 
+            timeoutOptions);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.InstanceOf<CustomHttpStatusCodeResult>());
+            CustomHttpStatusCodeResult r = (CustomHttpStatusCodeResult)result;
+            Assert.That(r.Options.Sleep, Is.EqualTo(30 * 1000));
         });
     }
 

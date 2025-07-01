@@ -86,6 +86,13 @@ internal static class StatusExtensions
                 header => header.Key.Replace(CUSTOM_RESPONSE_HEADER_PREFIX, string.Empty, StringComparison.InvariantCultureIgnoreCase),
                 header => header.Value);
 
+        // Check if any sleep values exceed the maximum timeout
+        if ((options.Sleep.HasValue && options.Sleep.Value > timeoutOptions.MaxSleepMilliseconds) ||
+            (options.SleepAfterHeaders.HasValue && options.SleepAfterHeaders.Value > timeoutOptions.MaxSleepMilliseconds))
+        {
+            return TypedResults.BadRequest();
+        }
+
         return new CustomHttpStatusCodeResult(options, timeoutOptions.MaxSleepMilliseconds);
     }
 
