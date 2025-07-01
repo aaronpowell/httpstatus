@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Teapot.Web;
 
-public class CustomHttpStatusCodeResult(ResponseOptions options) : IResult
+public class CustomHttpStatusCodeResult(ResponseOptions options, int maxSleepMilliseconds = 30 * 1000) : IResult
 {
     private const int SLEEP_MIN = 0;
-    private const int SLEEP_MAX = 5 * 60 * 1000; // 5 mins in milliseconds
+    private readonly int SLEEP_MAX = maxSleepMilliseconds;
     internal static readonly string[] onlySingleHeader = ["Location", "Retry-After"];
 
     private static readonly MediaTypeHeaderValue jsonMimeType = new("application/json");
@@ -120,7 +120,7 @@ public class CustomHttpStatusCodeResult(ResponseOptions options) : IResult
         }
     }
 
-    private static async Task DoSleep(int? sleep)
+    private async Task DoSleep(int? sleep)
     {
         int sleepData = Math.Clamp(sleep ?? 0, SLEEP_MIN, SLEEP_MAX);
         if (sleepData > 0)

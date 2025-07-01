@@ -9,6 +9,7 @@ using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Teapot.Web.Configuration;
 using Teapot.Web.Models;
 
 namespace Teapot.Web;
@@ -49,7 +50,8 @@ internal static class StatusExtensions
         bool? suppressBody,
         string? wildcard,
         HttpRequest req,
-        [FromServices] TeapotStatusCodeMetadataCollection statusCodes
+        [FromServices] TeapotStatusCodeMetadataCollection statusCodes,
+        [FromServices] TimeoutOptions timeoutOptions
         )
     {
         TeapotStatusCodeMetadata statusData = statusCodes.TryGetValue(status, out TeapotStatusCodeMetadata? value) ?
@@ -61,13 +63,14 @@ internal static class StatusExtensions
             Sleep = sleep,
             SuppressBody = suppressBody
         };
-        return CommonHandleStatusRequestAsync(options, wildcard, req);
+        return CommonHandleStatusRequestAsync(options, wildcard, req, timeoutOptions);
     }
 
     internal static IResult CommonHandleStatusRequestAsync(
         ResponseOptions options,
         string? wildcard,
-        HttpRequest req)
+        HttpRequest req,
+        TimeoutOptions timeoutOptions)
     {
         options.Sleep ??= ParseHeaderInt(req, SLEEP_HEADER);
         options.SleepAfterHeaders ??= ParseHeaderInt(req, SLEEP_AFTER_HEADERS);
@@ -83,12 +86,20 @@ internal static class StatusExtensions
                 header => header.Key.Replace(CUSTOM_RESPONSE_HEADER_PREFIX, string.Empty, StringComparison.InvariantCultureIgnoreCase),
                 header => header.Value);
 
-        return new CustomHttpStatusCodeResult(options);
+        // Check if any sleep values exceed the maximum timeout
+        if ((options.Sleep.HasValue && options.Sleep.Value > timeoutOptions.MaxSleepMilliseconds) ||
+            (options.SleepAfterHeaders.HasValue && options.SleepAfterHeaders.Value > timeoutOptions.MaxSleepMilliseconds))
+        {
+            return TypedResults.BadRequest();
+        }
+
+        return new CustomHttpStatusCodeResult(options, timeoutOptions.MaxSleepMilliseconds);
     }
 
     internal static IResult HandleRandomRequest(
         HttpRequest req,
         [FromServices] TeapotStatusCodeMetadataCollection statusCodes,
+        [FromServices] TimeoutOptions timeoutOptions,
         int? sleep,
         bool? suppressBody,
         string? wildcard,
@@ -102,7 +113,7 @@ internal static class StatusExtensions
                 new TeapotStatusCodeMetadata { Description = $"{status} Unknown Code" };
 
             ResponseOptions options = new(status, statusData);
-            return CommonHandleStatusRequestAsync(options, wildcard, req);
+            return CommonHandleStatusRequestAsync(options, wildcard, req, timeoutOptions);
         }
         catch
         {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Teapot.Web.Configuration;
 using Teapot.Web.Models;
 using Teapot.Web.Models.Unofficial;
 
@@ -6,6 +7,7 @@ namespace Teapot.Web.Tests.UnitTests;
 public class SuppressBodyTests
 {
     private TeapotStatusCodeMetadataCollection _statusCodes;
+    private TimeoutOptions _timeoutOptions;
 
     [SetUp]
     public void Setup()
@@ -19,6 +21,7 @@ public class SuppressBodyTests
             new NginxStatusCodeMetadata(),
             new TwitterStatusCodeMetadata()
         );
+        _timeoutOptions = new TimeoutOptions();
     }
 
     [Test]
@@ -28,7 +31,7 @@ public class SuppressBodyTests
     public void SuppressBodyReadFromQuery(bool? suppressBody)
     {
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
-        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, new(), suppressBody: suppressBody), null, request.Object);
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, new(), suppressBody: suppressBody), null, request.Object, _timeoutOptions);
 
         Assert.Multiple(() =>
         {
@@ -48,7 +51,7 @@ public class SuppressBodyTests
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
         request.Object.Headers.Append(StatusExtensions.SUPPRESS_BODY_HEADER, suppressBody);
 
-        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, new()), null, request.Object);
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, new()), null, request.Object, _timeoutOptions);
 
         Assert.Multiple(() =>
         {
@@ -76,7 +79,7 @@ public class SuppressBodyTests
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
         request.Object.Headers.Append(StatusExtensions.SUPPRESS_BODY_HEADER, headerValue);
 
-        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, new(), suppressBody: queryStringValue), null, request.Object);
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, new(), suppressBody: queryStringValue), null, request.Object, _timeoutOptions);
 
         Assert.Multiple(() =>
         {
@@ -98,7 +101,7 @@ public class SuppressBodyTests
         Mock<HttpRequest> request = HttpRequestHelper.GenerateMockRequest();
         request.Object.Headers.Append(StatusExtensions.SUPPRESS_BODY_HEADER, "invalid");
 
-        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, new()), null, request.Object);
+        IResult result = StatusExtensions.CommonHandleStatusRequestAsync(new ResponseOptions(200, new()), null, request.Object, _timeoutOptions);
 
         Assert.Multiple(() =>
         {
