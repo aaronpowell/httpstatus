@@ -31,10 +31,10 @@
 </p>
 
 <p>
-    If you want a delay on the response add a query string or provide a header of <code>@StatusExtensions.SLEEP_HEADER</code> for the sleep duration (the time in ms, max 5 minutes*), like this:
+    If you want a delay on the response add a query string or provide a header of <code>@StatusExtensions.SLEEP_HEADER</code> for the sleep duration (the time in ms, max 30 seconds*), like this:
     <a href="/200?sleep=5000" target="_blank">httpstat.us/200?sleep=5000</a>.
     <br />
-    <em>*When using the hosted instance the timeout is actually 230 seconds, which is the max timeout allowed by an Azure App Service (see <a href="https://social.msdn.microsoft.com/Forums/en-US/05f254a6-9b34-4eb2-a5f7-2a82fb40135f/time-out-after-230-seconds?forum=windowsazurewebsitespreview" target="_blank">this thread post</a>). If you host it yourself expect the limits to be different.</em>
+    <em>*The default maximum timeout is 30 seconds, but this can be configured. When using the hosted instance the timeout may be further limited by the hosting environment (such as Azure App Service's 230-second limit).</em>
 </p>
 
 <p>
