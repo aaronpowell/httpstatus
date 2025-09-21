@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.4.1" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>3b816e2f-7d26-44aa-a0fc-f2f5d92206c6</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.4.1" />
+    <PackageReference Include="Aspire.Hosting.Azure.ApplicationInsights" Version="9.4.1" />
+    <PackageReference Include="Aspire.Hosting.Azure.AppService" Version="9.4.1-preview.1.25408.4" />
+    <PackageReference Include="Aspire.Hosting.Azure.Storage" Version="9.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Teapot.Web\Teapot.Web.csproj" />
+    <ProjectReference Include="..\Teapot.LoadTestUI\Teapot.LoadTestUI.csproj" />
+  </ItemGroup>
+
+</Project>

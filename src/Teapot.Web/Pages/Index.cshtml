@@ -1,6 +1,8 @@
 ﻿@page
+@using Microsoft.AspNetCore.RateLimiting
 @using Teapot.Web.Models;
 @inject TeapotStatusCodeMetadataCollection StatusCodes
+@attribute [EnableRateLimiting(FairUseRateLimiterExtensions.PolicyName)]
 
 
 <p>This is a super simple service for generating different HTTP codes.</p>

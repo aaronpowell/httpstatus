@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/.github/">
+    <File Path="../README.md" />
+  </Folder>
+  <Folder Name="/.github/workflows/">
+    <File Path="../.github/workflows/main.yaml" />
+    <File Path="../.github/workflows/staging.yaml" />
+    <File Path="../.github/workflows/tests.yaml" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="../azure.yaml" />
+    <File Path="staging.runsettings" />
+  </Folder>
+  <Project Path="Teapot.AppHost/Teapot.AppHost.csproj" Id="d95b5374-8e3b-4997-958e-973f5320192a" />
+  <Project Path="Teapot.LoadTestUI/Teapot.LoadTestUI.csproj" />
+  <Project Path="Teapot.ServiceDefaults/Teapot.ServiceDefaults.csproj" />
+  <Project Path="Teapot.Web.Tests/Teapot.Web.Tests.csproj" />
+  <Project Path="Teapot.Web/Teapot.Web.csproj" />
+</Solution>

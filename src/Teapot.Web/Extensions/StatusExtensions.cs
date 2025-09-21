@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Teapot.Web.Configuration;
 using Teapot.Web.Models;
@@ -29,17 +25,13 @@ internal static class StatusExtensions
 
     internal static WebApplication MapStatusEndpoints(this WebApplication app, string policyName)
     {
-        app.MapMethods("/{status:int}", httpMethods, HandleStatusRequestAsync);
-        //.RequireRateLimiting(policyName);
-        app.MapMethods("/{status:int}/{*wildcard}", httpMethods, HandleStatusRequestAsync);
-        //.RequireRateLimiting(policyName);
+        app.MapMethods("/{status:int}", httpMethods, HandleStatusRequestAsync).RequireRateLimiting(policyName);
+        app.MapMethods("/{status:int}/{*wildcard}", httpMethods, HandleStatusRequestAsync).RequireRateLimiting(policyName);
 
-        app.MapMethods("/random/{range}", httpMethods, HandleRandomRequest);
-        //.RequireRateLimiting(policyName);
-        app.MapMethods("/random/{range}/{*wildcard}", httpMethods, HandleRandomRequest);
-        //.RequireRateLimiting(policyName);
+        app.MapMethods("/random/{range}", httpMethods, HandleRandomRequest).RequireRateLimiting(policyName);
+        app.MapMethods("/random/{range}/{*wildcard}", httpMethods, HandleRandomRequest).RequireRateLimiting(policyName);
 
-        app.MapGet("im-a-teapot", () => TypedResults.Redirect("https://www.ietf.org/rfc/rfc2324.txt"));
+        app.MapGet("im-a-teapot", () => TypedResults.Redirect("https://www.ietf.org/rfc/rfc2324.txt")).RequireRateLimiting(policyName);
 
         return app;
     }

@@ -1,13 +1,19 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Teapot.Web;
 using Teapot.Web.Configuration;
+using Teapot.Web.Middleware;
 using Teapot.Web.Models;
 using Teapot.Web.Models.Unofficial;
+using Teapot.Web.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 builder.Services.AddRazorPages();
 
@@ -20,20 +26,34 @@ builder.Services.AddSingleton<NginxStatusCodeMetadata>();
 builder.Services.AddSingleton<TwitterStatusCodeMetadata>();
 
 builder.Services.AddSingleton<TeapotStatusCodeMetadataCollection>();
-builder.Services.AddApplicationInsightsTelemetry();
+
+if (builder.Configuration.GetValue("UseAzureTableTokenService", false))
+{
+    // Use Azure Table Storage for token service
+    builder.AddAzureTableServiceClient("tokens");
+    // Add in-memory caching for token lookups
+    builder.Services.AddMemoryCache();
+    builder.Services.AddSingleton<ITokenService, AzureTableTokenService>();
+}
+else
+{
+    // Use in-memory token service for simplicity (not for production use)
+    builder.Services.AddSingleton<ITokenService, InMemoryTokenService>();
+}
 
 // Configure timeout options
 builder.Services.Configure<TimeoutOptions>(builder.Configuration.GetSection(TimeoutOptions.SectionName));
-builder.Services.AddSingleton<TimeoutOptions>(provider => 
-    provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<TimeoutOptions>>().Value);
+builder.Services.AddSingleton(provider => provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<TimeoutOptions>>().Value);
 
-//builder.Services.AddFairUseRateLimiter();
+builder.Services.AddFairUseRateLimiter();
 
 builder.Services.AddCors();
 
 builder.AddAppInfo();
 
 WebApplication app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
@@ -47,6 +67,13 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// Add user identity middleware before routing
+app.UseMiddleware<UserIdentityMiddleware>();
+
+// Reject requests that include timeout parameters when user is not authenticated
+app.UseMiddleware<RequireAuthenticatedForTimeoutMiddleware>();
+
 app.UseRouting();
 
 app.UseCors(builder =>
@@ -66,7 +93,7 @@ app.UseCors(builder =>
         ]);
 });
 
-//app.UseFairUseRateLimiter();
+app.UseFairUseRateLimiter();
 
 app.MapStatusEndpoints(FairUseRateLimiterExtensions.PolicyName);
 

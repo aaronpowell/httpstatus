@@ -6,7 +6,8 @@ namespace Teapot.Web;
 
 public record class ResponseOptions
 {
-    public ResponseOptions(int statusCode,
+    public ResponseOptions(
+        int statusCode,
         TeapotStatusCodeMetadata metadata,
         int? sleep = null,
         int? sleepAfterHeaders = null,

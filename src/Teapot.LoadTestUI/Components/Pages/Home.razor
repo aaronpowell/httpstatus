@@ -1,0 +1,136 @@
+@page "/"
+@using Teapot.LoadTestUI.Models
+@using Teapot.LoadTestUI.Services
+@rendermode InteractiveServer
+
+<PageTitle>Load Test</PageTitle>
+
+<h1>HTTP Load Testing Tool</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <EditForm Model="loadTestRequest" OnValidSubmit="StartLoadTest">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label for="targetUrl" class="form-label">Target URL:</label>
+                <InputText id="targetUrl" class="form-control" @bind-Value="loadTestRequest.TargetUrl" placeholder="https://example.com/api/status/200" />
+                <ValidationMessage For="@(() => loadTestRequest.TargetUrl)" />
+            </div>
+
+            <div class="mb-3">
+                <label for="httpMethod" class="form-label">HTTP Method:</label>
+                <InputSelect id="httpMethod" class="form-control" @bind-Value="loadTestRequest.HttpMethod">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                    <option value="HEAD">HEAD</option>
+                    <option value="PATCH">PATCH</option>
+                </InputSelect>
+            </div>
+
+            <div class="mb-3">
+                <label for="concurrentUsers" class="form-label">Concurrent Users:</label>
+                <InputNumber id="concurrentUsers" class="form-control" @bind-Value="loadTestRequest.ConcurrentUsers" min="1" max="1000" />
+                <ValidationMessage For="@(() => loadTestRequest.ConcurrentUsers)" />
+            </div>
+
+            <div class="mb-3">
+                <label for="requestsPerUser" class="form-label">Requests per User:</label>
+                <InputNumber id="requestsPerUser" class="form-control" @bind-Value="loadTestRequest.RequestsPerUser" min="1" max="1000" />
+                <ValidationMessage For="@(() => loadTestRequest.RequestsPerUser)" />
+            </div>
+
+            <div class="mb-3">
+                <label for="token" class="form-label">Token (Optional):</label>
+                <InputText id="token" class="form-control" @bind-Value="loadTestRequest.Token" placeholder="Enter authentication token (GUID)" />
+                <div class="form-text">Will be sent as 'x-httpstatus-token' header</div>
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary" disabled="@isRunning">
+                    @if (isRunning)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <text>Running Load Test...</text>
+                    }
+                    else
+                    {
+                        <text>Start Load Test</text>
+                    }
+                </button>
+
+                @if (isRunning)
+                {
+                    <button type="button" class="btn btn-danger ms-2" @onclick="CancelLoadTest">Cancel</button>
+                }
+            </div>
+        </EditForm>
+
+        @if (isRunning && progress.HasValue)
+        {
+            <div class="mb-3">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" 
+                         style="width: @(progress.Value.completed * 100.0 / progress.Value.total)%" 
+                         aria-valuenow="@progress.Value.completed" 
+                         aria-valuemin="0" 
+                         aria-valuemax="@progress.Value.total">
+                        @progress.Value.completed / @progress.Value.total
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-md-6">
+        @if (loadTestResult != null)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <h5>Test Results</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Total Requests:</strong> @loadTestResult.TotalRequests<br/>
+                            <strong>Successful:</strong> <span class="text-success">@loadTestResult.SuccessfulRequests</span><br/>
+                            <strong>Failed:</strong> <span class="text-danger">@loadTestResult.FailedRequests</span><br/>
+                            <strong>Success Rate:</strong> @(loadTestResult.TotalRequests > 0 ? (loadTestResult.SuccessfulRequests * 100.0 / loadTestResult.TotalRequests).ToString("F1") : "0")%
+                        </div>
+                        <div class="col-6">
+                            <strong>Duration:</strong> @loadTestResult.Duration.TotalSeconds.ToString("F2")s<br/>
+                            <strong>Req/sec:</strong> @loadTestResult.RequestsPerSecond.ToString("F1")<br/>
+                            <strong>Avg Response:</strong> @loadTestResult.AverageResponseTime.ToString("F0")ms<br/>
+                            <strong>Min/Max:</strong> @loadTestResult.MinResponseTime/@loadTestResult.MaxResponseTime ms
+                        </div>
+                    </div>
+                    
+                    @if (loadTestResult.StatusCodes.Any())
+                    {
+                        <hr />
+                        <h6>Status Code Distribution:</h6>
+                        @foreach (var statusGroup in loadTestResult.StatusCodes.GroupBy(x => x).OrderBy(x => (int)x.Key))
+                        {
+                            var percentage = (statusGroup.Count() * 100.0 / loadTestResult.StatusCodes.Count).ToString("F1");
+                            var cssClass = ((int)statusGroup.Key >= 200 && (int)statusGroup.Key < 300) ? "text-success" : 
+                                          ((int)statusGroup.Key >= 400) ? "text-danger" : "text-warning";
+                            
+                            <span class="@cssClass">@statusGroup.Key: @statusGroup.Count() (@percentage%)</span><br/>
+                        }
+                    }
+                </div>
+            </div>
+        }
+        
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                <strong>Error:</strong> @errorMessage
+            </div>
+        }
+    </div>
+</div>
+

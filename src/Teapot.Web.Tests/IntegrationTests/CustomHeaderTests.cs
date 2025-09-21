@@ -9,6 +9,7 @@ public class CustomHeaderTests
     public void OneTimeSetUp()
     {
         _httpClient = new WebApplicationFactory<Program>().CreateDefaultClient();
+        _httpClient.DefaultRequestHeaders.Add("x-httpstatus-token", "00000000-0000-0000-0000-000000000000");
     }
 
     [OneTimeTearDown]
