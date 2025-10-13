@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Azure.Data.Tables" Version="9.4.1" />
+    <PackageReference Include="Aspire.Azure.Data.Tables" Version="13.0.0-preview.1.25512.2" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="GitVersion.MsBuild" Version="6.0.5">
