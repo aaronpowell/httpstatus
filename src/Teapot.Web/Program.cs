@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Teapot.Web;
+using Teapot.Web.Configuration;
 using Teapot.Web.Models;
 using Teapot.Web.Models.Unofficial;
 
@@ -20,6 +21,11 @@ builder.Services.AddSingleton<TwitterStatusCodeMetadata>();
 
 builder.Services.AddSingleton<TeapotStatusCodeMetadataCollection>();
 builder.Services.AddApplicationInsightsTelemetry();
+
+// Configure timeout options
+builder.Services.Configure<TimeoutOptions>(builder.Configuration.GetSection(TimeoutOptions.SectionName));
+builder.Services.AddSingleton<TimeoutOptions>(provider => 
+    provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<TimeoutOptions>>().Value);
 
 //builder.Services.AddFairUseRateLimiter();
 
