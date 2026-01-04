@@ -115,7 +115,7 @@ public class TeapotStatusCodeMetadataCollection : Dictionary<int, TeapotStatusCo
             Description = "Moved Permanently",
             IncludeHeaders = new Dictionary<string, string>
             {
-                {"Location", "https://httpstat.us/"},
+                {"Location", "https://httpstat.us"},
                 {"Retry-After", "5"}
             }
         });

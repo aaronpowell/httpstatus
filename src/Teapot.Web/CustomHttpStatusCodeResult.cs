@@ -13,7 +13,7 @@ namespace Teapot.Web;
 public class CustomHttpStatusCodeResult(ResponseOptions options, int maxSleepMilliseconds = 30 * 1000) : IResult
 {
     private const int SLEEP_MIN = 0;
-    private readonly int SLEEP_MAX = maxSleepMilliseconds;
+    private const int SLEEP_MAX = 5 * 60 * 1000; // 5 mins in milliseconds
     internal static readonly string[] onlySingleHeader = ["Location", "Retry-After"];
 
     private static readonly MediaTypeHeaderValue jsonMimeType = new("application/json");
